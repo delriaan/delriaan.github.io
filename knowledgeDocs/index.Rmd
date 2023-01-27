@@ -1,0 +1,8 @@
+---
+title: "My Website"
+---
+
+```{css, echo=FALSE}
+/* Custom Styles */
+.quote { font-family:Georgia; text-decoration:italic; }
+```

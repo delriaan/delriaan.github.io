@@ -1,0 +1,32 @@
+/* Tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! :: https://www.w3schools.com/css/css_tooltip.asp*/
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Custom Styles */
+
+.quote { font-family:Georgia; text-decoration:italic; }
+.ref {color: green;}
+blockquote { font-size:10pt; }

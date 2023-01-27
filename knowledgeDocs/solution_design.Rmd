@@ -1,0 +1,93 @@
+---
+title: "Thoughts on Solution Design"
+author: "Chionesu George"
+date: "`r Sys.Date()`"
+output: html_document
+theme: flatly
+---
+
+```{css, echo=FALSE}
+/* Tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! :: https://www.w3schools.com/css/css_tooltip.asp*/
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/* Custom Styles */
+.quote { font-family:Georgia; text-decoration:italic; }
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(htmltools)
+library(data.table)
+library(purrr)
+library(magrittr)
+```
+
+```{r, echo=FALSE}
+tooltips <- list(
+  HTML("Source data exists and is <div class='tooltip'>meaningfully 
+    <span class='tooltiptext'>Meaningful in the sense that the chosen data encodes the information most likely associated with the problem statement</span>
+    related to the problem statement </div>")
+  )
+```
+
+Designing the solution to a problem is something every data practitioner executes in one fashion or another. Two aspects that separate the skill level of solution designers is the degree to which a solution addresses the key features of the problem statement as well as the ease with which the solution was determined. A new data practitioner will engage in a lot of trial-and-error; however, an experienced practitioner will develop a sense of what should characterize the solution's design given the details of the problem statement.
+
+Here's the thing: years of experience and exposure to problems are not the only contributors to proficient solution design. The **quality** of that time and experience is just as important, perhaps more so. What follows is designed to address the problem of increasing the quality of one's experience.
+
+------------------------------------------------------------------------
+
+### Four Causes: Aristotle<sup>[1](#ref1_to){#ref1_fr .ref}</sup>
+
+The phrase ["Start with the end in mind"]{.quote} is worthy of keeping at the forefront of one's thinking. Aristotle's "Four Causes" explanatory framework calls this the *`Final Cause`*, the purpose for which something exists. Now, we'll explore all four causes in order in the context of data analytic solution design:
+
+#### 1. Material Cause: *That out of which, the raw material*
+
+This includes the source data, the background information relevant to the problem statement, and enumerated details characterizing the problem statement. During the research and data exploration phase, it can be easy to gloss over some key assumptions:
+
+-   The source data exists and is meaningfully related (*`i.e., the data encodes relevant information`*) to the problem statement
+
+-   The source data is accessible and able to be processed
+
+-   The problem statement is constructed in a well-formed manner (*`i.e., being unambiguous and possessing logical integrity`*), which is essential for #1 above: [a poorly crafted problem statement sabotages everything]{.underline} 
+
+
+#### 2. Formal Cause: *The form* 
+
+
+#### 3. Efficient Cause: *The source, method, or theory* 
+
+
+#### 4. Final Cause: *The purpose, teleological goal* 
+
+<br>
+
+------------------------------------------------------------------------ 
+
+### References 
+
+<sup>[1](#ref1_fr){#ref1_to .ref}</sup> Falcon, Andrea, "Aristotle on Causality", The Stanford Encyclopedia of Philosophy (Spring 2022 Edition), Edward N. Zalta (ed.), <https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/>
+
