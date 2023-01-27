@@ -75,6 +75,7 @@ This includes the source data, the background information relevant to the proble
 -   The problem statement is constructed in a well-formed manner (*`i.e., being unambiguous and possessing logical integrity`*), which is essential for #1 above: [a poorly crafted problem statement sabotages everything]{.underline} 
 
 
+<<<<<<< Updated upstream
 #### 2. Formal Cause: *The form* 
 
 
@@ -83,6 +84,21 @@ This includes the source data, the background information relevant to the proble
 
 #### 4. Final Cause: *The purpose, teleological goal* 
 
+=======
+
+#### 2. Formal Cause: *The form* 
+
+
+
+#### 3. Efficient Cause: *The source, method, or theory* 
+
+
+
+#### 4. Final Cause: *The purpose, teleological goal* 
+
+
+
+>>>>>>> Stashed changes
 <br>
 
 ------------------------------------------------------------------------ 
