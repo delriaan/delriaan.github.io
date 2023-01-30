@@ -11,11 +11,11 @@
 
 <meta name="author" content="Chionesu George" />
 
-<meta name="date" content="2023-01-26" />
+<meta name="date" content="2023-01-29" />
 
 <title>Thoughts on Solution Design</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -143,11 +143,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -176,8 +180,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -185,16 +189,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -251,9 +248,6 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
-</li>
-<li>
   <a href="solution_design.html">Solution Design</a>
 </li>
       </ul>
@@ -270,42 +264,77 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Thoughts on Solution Design</h1>
 <h4 class="author">Chionesu George</h4>
-<h4 class="date">2023-01-26</h4>
+<h4 class="date">2023-01-29</h4>
 
 </div>
 
 
-<style type="text/css">
-/* Tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
+<pre><code>## Warning in readLines(&quot;../style.css&quot;): incomplete final line found on
+## &#39;../style.css&#39;</code></pre>
+<style>/* ---- Chionesu's Preferred Overrides ---- */
+body { margin-left:10px; margin-right:auto; font-size:12pt; width:100% !important; max-width: 1200px !important;}
+pre  { display: none; }
+table { margin-bottom: 1em; border:solid 2px #888888; }
+td{ padding: 0.25em; border:solid 1px #DDDDDD; }
+sup { font-size: 0.7em; color:#995522; }
+a { color: #333399; }
+p { margin-top: 0.75em; margin-bottom: 0.75em; }
+figcaption { font-size:0.5em; word-wrap: normal; text-overflow:word-break; }
+.math { color:#333393; }
 
-/* Tooltip text :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! :: https://www.w3schools.com/css/css_tooltip.asp*/
-  position: absolute;
-  z-index: 1;
-}
+/* ---- RMarkdown-specific Rules ---- */
+a[aria-expanded='true'] { color:#5555FF; }
+a[role='tab'] { font-size: 13pt; color: #CCCCCC; }
+a[role='tab']:hover { color: #000000; }
 
-/* Show the tooltip text when you mouse over the tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
+.pagedtable { border:none; }
+.listHeader { font-size:larger; font-weight: bold; }
+.container-fluid .main-container { margin:auto !important; width:100% !important; }
 
-/* Custom Styles */
-.quote { font-family:Georgia; text-decoration:italic; }
-</style>
+/* ---- Toggle/Custom Content Rules ---- */
+hint, term { font-variant:small-caps; }
+hint { color: #EE9977; font-weight:bold; font-size: 8pt; font-family: Georgia; }
+comment { color:#339933; font-family:Times; }
+
+[role='toggle']:hover { cursor: pointer; font-weight: bold; }
+.first{ font-variant:small-caps; font-weight:bold; background-color:#EFF4FA; }
+.quote {font-family:times; color:#234234}
+.sidebar { float:right; width:240px; background-color:#EFF4FA; padding:5px; margin:0 0 10 25; }
+.sidebar &gt; term { background-color:#555555; color:#CCCCEE; padding:5px; margin-right:5px; }
+
+code {font-size: 10pt; }
+blockquote { display:block; }
+
+.optional { background-color:#FFEFFF; margin-left:20px; margin-bottom: 10px; border-left:#FFFFEF; }
+.quote { font-family:Georgia; font-style:italic; }
+.ref {color: green;}</style>
+<script>$(document).ready(function(){
+ /* ----------------------------------------
+ R version 4.1.3 (2022-03-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 22621)
+2023-01-28 01:28:37
+ ---------------------------------------- */
+
+  $("div[context='formalCause']").hide();
+  $("blockquote[context='formalCause']").hide();
+  $("[role='toggle'][context='formalCause']").first().find("hint").first().text("[explore]");
+
+  $("[role='toggle']").click(
+    function(){
+      lgrp = $(this).attr("toggleGroup");
+      hint = $(this).find("hint").first();
+
+      if (hint.text() === "[explore]"){ hint.text("[hide]"); } else { hint.text("[explore]"); }
+      $("div[toggleGroup='" + lgrp + "']").fadeToggle(10);
+      $("blockquote[toggleGroup='" + lgrp + "']").fadeToggle(10);
+   });
+});</script>
+<div id="section"
+class="section level1 tabset tabset-fade tabset-pills">
+<h1 class="tabset tabset-fade tabset-pills"></h1>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
 <p>Designing the solution to a problem is something every data
 practitioner executes in one fashion or another. Two aspects that
 separate the skill level of solution designers is the degree to which a
@@ -319,19 +348,21 @@ not the only contributors to proficient solution design. The
 <strong>quality</strong> of that time and experience is just as
 important, perhaps more so. What follows is designed to address the
 problem of increasing the quality of one’s experience.</p>
-<hr />
-<div id="four-causes-aristotle1" class="section level3">
-<h3>Four Causes: Aristotle<sup><a href="#ref1_to" id="ref1_fr"
-class="ref">1</a></sup></h3>
+</div>
+<div id="four-causes-aristotle"
+class="section level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade">Four Causes: Aristotle</h2>
 <p>The phrase <span class="quote">“Start with the end in mind”</span> is
 worthy of keeping at the forefront of one’s thinking. Aristotle’s “Four
-Causes” explanatory framework calls this the
-<em><code>Final Cause</code></em>, the purpose for which something
-exists. Now, we’ll explore all four causes in order in the context of
-data analytic solution design:</p>
-<div id="material-cause-that-out-of-which-the-raw-material"
-class="section level4">
-<h4>1. Material Cause: <em>That out of which, the raw material</em></h4>
+Causes”
+<sup>   <a id="#ref1" href="https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/" target="_blank" class="ref">[1]</a> </sup>
+explanatory framework calls this the <em><code>Final Cause</code></em>,
+the purpose for which something exists. Now, we’ll explore all four
+causes in order in the context of data analytic solution design:</p>
+<div id="material" class="section level3">
+<h3>1. Material</h3>
+<p><u><strong>Material Cause</strong></u><strong>: <em>That out of
+which, the raw material</em></strong></p>
 <p>This includes the source data, the background information relevant to
 the problem statement, and enumerated details characterizing the problem
 statement. During the research and data exploration phase, it can be
@@ -344,30 +375,188 @@ the problem statement</p></li>
 <li><p>The problem statement is constructed in a well-formed manner
 (<em><code>i.e., being unambiguous and possessing logical integrity</code></em>),
 which is essential for #1 above: <u>a poorly crafted problem statement
-sabotages everything</u></p></li>
+wastes time and energy.</u></p></li>
 </ul>
 </div>
-<div id="formal-cause-the-form" class="section level4">
-<h4>2. Formal Cause: <em>The form</em></h4>
+<div id="formal" class="section level3">
+<h3>2. Formal</h3>
+<p><u><strong>Formal Cause</strong></u><strong>: <em>The form or
+structure</em></strong></p>
+<p>The “shape” of the problem statement has direct implication on the
+“shape” of the design of the solution. <span
+style="font-family:Georgia"><em>[Before proceeding, I want to take a
+moment to discuss “shape” in the context of designing a solution to a
+data analytic problem. The shape of something reflects the boundaries
+within which some things exist and other do not. Shape is usually an
+attribute that is described; however, with respect to something
+designed, it is something imputed. It is the latter sense that
+characterizes what follows.]</em></span></p>
+<ul>
+<li><p>The problem statement can be shaped by prescription
+(<em><code>that which much be</code></em>), condition
+(<em><code>limits within a range of possible states or values</code></em>),
+and interrogative elements
+(<em><code>that which is desired to be known</code></em>).</p></li>
+<li><p>The design of the solution can be shaped by software
+(<em><code>Excel, PowerBI, mobile application</code></em>), data
+structure (<em><code>tabular, graph</code></em>), visual design elements
+(<em><code>charts, colors, font, layout</code></em>), and data product
+format
+(<em><code>PDF, interactive dashboard, data table</code></em>).</p></li>
+</ul>
+<p>The shape of the designed solution can be thought of as being
+congruent with the shape of the problem statement. As a simple example,
+if one considers <span class="quote">“not being hungry”</span> as the
+problem statement, the congruent solution is <span class="quote">“eating
+food”</span>.</p>
+<p>Such an example demonstrates a principle that allows one to be
+confident the appropriate solution has been derived for a given problem:
+minimizing the gap between shape of the problem and that of the
+solution, much like a well-fitting article of clothing relative to one’s
+body.</p>
+<span role="toggle" context="formalCause" toggleGroup="0" class="">
+<b>Additional Thoughts ...</b> 
+<hint toggleGroup="0">explore</hint>
+</span>
+<div class="optional" context="formalCause" toggleGroup="0">
+<p>Expressed in equation form:</p>
+<p><span class="math inline">\({Problem} + ({Solution}|{Problem}) =
+0\)</span></p>
+<p>, with the solution being considered as the <em>compliment</em> of
+the problem statement:</p>
+<p><span class="math inline">\({Problem}^{C}\approx
+{Solution}\)</span></p>
+<p>Now, the above conceptual equation represents a <em>perfect</em>
+solution. In data analytics, a <em>best</em> solution is sought, that is
+to say, the solution among competing or possible solutions that
+minimizes the gap (<span class="math inline">\(\Gamma\)</span>) between
+the shapes of the problem statement and solution:</p>
+<p><span class="math inline">\({Arg}_{Solution}Min(\Gamma):{Problem} +
+({Solution}_i|{Problem}) = \Gamma_i\)</span></p>
+<p>Returning to the problem statement of <span class="quote"><em>“not
+being hungry”</em></span>, the size of <span
+class="math inline">\(\Gamma\)</span> might grow with a more complex
+problem such as <span class="quote"><em>“not being hungry with only the
+least favorite foods available”</em></span>. Implicit in the problem
+statement is a desire to not be hungry <strong>and</strong> have one’s
+favorite foods available for consumption. Any solution to this problem
+statement will be less optimal than wanting to not be hungry without
+condition.</p>
 </div>
-<div id="efficient-cause-the-source-method-or-theory"
-class="section level4">
-<h4>3. Efficient Cause: <em>The source, method, or theory</em></h4>
-</div>
-<div id="final-cause-the-purpose-teleological-goal"
-class="section level4">
-<h4>4. Final Cause: <em>The purpose, teleological goal</em></h4>
-<p><br></p>
 <hr />
+<p>Regarding form, what would a well-fitting analytic solution look like
+in practice? Consider the following request: <span class="quote">“We
+want to know why the this month’s report has significantly higher claims
+expenditures for the same period reported in last month’s
+report.”</span></p>
+<span role="toggle" context="formalCause" toggleGroup="1" class="">
+<b>The Shape of the Problem Statement</b> 
+<hint toggleGroup="1">explore</hint>
+</span>
+<div context="formalCause" toggleGroup="1">
+<p><strong>Observation</strong>: Values for the same historical period
+in the current report significantly deviate from expected trends</p>
+<p><strong>Report Data Structure</strong>:</p>
+<ul>
+<li><p>Claims details possess a flattened hierarchy of
+<code>header</code> &gt; <code>line</code>, each represented by
+identifiers unique within each level (<code>clm_header_id,</code>
+<code>clm_line_id</code>). The report is interactive and presents the
+claims data as nested rows that can be expanded by the user.</p></li>
+<li><p>Claims details include a single temporal field:
+<code>service_date</code></p></li>
+<li><p>A line-trend graph is included which shows total claim amounts
+for each historical period in the report (for example, monthly totals
+for the preceding three months visualized by month)</p></li>
+</ul>
+<p><strong>Background Information</strong>:</p>
+<ul>
+<li><p>The report pulls data from the data warehouse which, in turn, is
+populated from the claims processing system</p></li>
+<li><p>For the same historical period, a small degree of variation from
+one monthly report to the next is expected due to claims
+re-adjudication</p></li>
+<li><p>From the business stakeholder’s perspective re-adjudication of a
+prior claim <em>“replaces”</em> prior adjudication information for that
+claim</p></li>
+</ul>
+<p><strong>Deficit</strong>: There is a lack of information available in
+the report that explains the deviation from normal</p>
+</div>
+<span role="toggle" context="formalCause" toggleGroup="2" class="">
+<b>The Shape of the Solution</b> 
+<hint toggleGroup="2">explore</hint>
+</span>
+<div context="formalCause" toggleGroup="2">
+<p><strong>Data Structure</strong>:</p>
+<ul>
+<li><p>Contains the same details fields as the monthly report</p></li>
+<li><p>Contains the additional fields <code>adj_amt</code>,
+<code>adj_date</code>, <code>adj_id</code>, <code>adj_status</code>,
+<code>rec_insrt_date</code>, and <code>rec_upd_date</code> from the
+source data in the data warehouse</p></li>
+<li><p>Columns are ordered in a way that highlights the structural
+hierarchy of the identifiers with rows sorted by chronologically by
+temporal hierarchy:</p></li>
+</ul>
+<table>
+<th>
+<td>
+<code>clm_header_id</code>
+</td>
+<td>
+<code>clm_line_id</code>
+</td>
+<td>
+<code>adj_id</code>
+</td>
+<td>
+<code>service_date</code>
+</td>
+<td>
+<code>adj_date</code>
+</td>
+<td>
+<code>adj_amt</code>
+</td>
+<td>
+<code>adj_status</code>
+</td>
+<td>
+<code>rec_insrt_date</code>
+</td>
+<td>
+<code>rec_upd_date</code>
+</td>
+</th>
+</table>
+<p><strong>Report Format - Excel Workbook</strong>:</p>
+<ul>
+<li><p>Sheet #1 (<em><code>Info</code></em>) contains important metadata
+as well as an overview of findings</p></li>
+<li><p>Sheet #2 (<em><code>Data</code></em>) contains a table containing
+the data structured as described above with an additional
+<em>calculated</em> column entitled <code>current</code></p></li>
+<li><p>Sheet #3 (<em><code>Chart</code></em>) contains a pivot chart
+similar to the monthly report, containing a filter for field
+<code>current</code></p></li>
+</ul>
 </div>
 </div>
-<div id="references" class="section level3">
-<h3>References</h3>
-<p><sup><a href="#ref1_fr" id="ref1_to" class="ref">1</a></sup> Falcon,
-Andrea, “Aristotle on Causality”, The Stanford Encyclopedia of
-Philosophy (Spring 2022 Edition), Edward N. Zalta (ed.), <a
-href="https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/"
-class="uri">https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/</a></p>
+<div id="efficient" class="section level3">
+<h3>3. Efficient</h3>
+<p><u><strong>Efficient Cause</strong></u><strong>: <em>The source,
+method, or theory</em></strong></p>
+</div>
+<div id="final" class="section level3">
+<h3>4. Final</h3>
+<p><u><strong>Final Cause</strong></u><strong>: <em>The purpose,
+teleological goal</em></strong></p>
+<div>
+
+<p><br><br></p>
+</div>
+</div>
 </div>
 
 

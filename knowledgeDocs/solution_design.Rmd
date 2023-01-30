@@ -6,38 +6,6 @@ output: html_document
 theme: flatly
 ---
 
-```{css, echo=FALSE}
-/* Tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! :: https://www.w3schools.com/css/css_tooltip.asp*/
-  position: absolute;
-  z-index: 1;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container :: https://www.w3schools.com/css/css_tooltip.asp*/
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
-
-/* Custom Styles */
-.quote { font-family:Georgia; text-decoration:italic; }
-```
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(htmltools)
@@ -47,24 +15,26 @@ library(magrittr)
 ```
 
 ```{r, echo=FALSE}
-tooltips <- list(
-  HTML("Source data exists and is <div class='tooltip'>meaningfully 
-    <span class='tooltiptext'>Meaningful in the sense that the chosen data encodes the information most likely associated with the problem statement</span>
-    related to the problem statement </div>")
-  )
+source("../markdown.R");
+tags$style(paste(readLines("../style.css"), collapse = "\n")) |> as.character() |> HTML();
+tags$script(paste(readLines("../markdown.js"), collapse = "\n")) |> as.character() |> HTML();
 ```
+
+#  {.tabset .tabset-fade .tabset-pills}
+
+## Introduction
 
 Designing the solution to a problem is something every data practitioner executes in one fashion or another. Two aspects that separate the skill level of solution designers is the degree to which a solution addresses the key features of the problem statement as well as the ease with which the solution was determined. A new data practitioner will engage in a lot of trial-and-error; however, an experienced practitioner will develop a sense of what should characterize the solution's design given the details of the problem statement.
 
 Here's the thing: years of experience and exposure to problems are not the only contributors to proficient solution design. The **quality** of that time and experience is just as important, perhaps more so. What follows is designed to address the problem of increasing the quality of one's experience.
 
-------------------------------------------------------------------------
+## Four Causes: Aristotle {.tabset .tabset-fade}
 
-### Four Causes: Aristotle<sup>[1](#ref1_to){#ref1_fr .ref}</sup>
+The phrase ["Start with the end in mind"]{.quote} is worthy of keeping at the forefront of one's thinking. Aristotle's "Four Causes" `r drop_footnote(text = "[1]", id = "ref1", href = "https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/", class = "ref")` explanatory framework calls this the *`Final Cause`*, the purpose for which something exists. Now, we'll explore all four causes in order in the context of data analytic solution design:
 
-The phrase ["Start with the end in mind"]{.quote} is worthy of keeping at the forefront of one's thinking. Aristotle's "Four Causes" explanatory framework calls this the *`Final Cause`*, the purpose for which something exists. Now, we'll explore all four causes in order in the context of data analytic solution design:
+### 1. Material
 
-#### 1. Material Cause: *That out of which, the raw material*
+[**Material Cause**]{.underline}**: *That out of which, the raw material***
 
 This includes the source data, the background information relevant to the problem statement, and enumerated details characterizing the problem statement. During the research and data exploration phase, it can be easy to gloss over some key assumptions:
 
@@ -72,38 +42,142 @@ This includes the source data, the background information relevant to the proble
 
 -   The source data is accessible and able to be processed
 
--   The problem statement is constructed in a well-formed manner (*`i.e., being unambiguous and possessing logical integrity`*), which is essential for #1 above: [a poorly crafted problem statement sabotages everything]{.underline} 
+-   The problem statement is constructed in a well-formed manner (*`i.e., being unambiguous and possessing logical integrity`*), which is essential for #1 above: [a poorly crafted problem statement wastes time and energy.]{.underline}
 
+### 2. Formal
 
-<<<<<<< Updated upstream
-#### 2. Formal Cause: *The form* 
+[**Formal Cause**]{.underline}**: *The form or structure***
 
+The "shape" of the problem statement has direct implication on the "shape" of the design of the solution. [*[Before proceeding, I want to take a moment to discuss "shape" in the context of designing a solution to a data analytic problem. The shape of something reflects the boundaries within which some things exist and other do not. Shape is usually an attribute that is described; however, with respect to something designed, it is something imputed. It is the latter sense that characterizes what follows.]*]{style="font-family:Georgia"}
 
-#### 3. Efficient Cause: *The source, method, or theory* 
+-   The problem statement can be shaped by prescription (*`that which much be`*), condition (*`limits within a range of possible states or values`*), and interrogative elements (*`that which is desired to be known`*).
 
+-   The design of the solution can be shaped by software (*`Excel, PowerBI, mobile application`*), data structure (*`tabular, graph`*), visual design elements (*`charts, colors, font, layout`*), and data product format (*`PDF, interactive dashboard, data table`*).
 
-#### 4. Final Cause: *The purpose, teleological goal* 
+The shape of the designed solution can be thought of as being congruent with the shape of the problem statement. As a simple example, if one considers ["not being hungry"]{.quote} as the problem statement, the congruent solution is ["eating food"]{.quote}.
 
-=======
+Such an example demonstrates a principle that allows one to be confident the appropriate solution has been derived for a given problem: minimizing the gap between shape of the problem and that of the solution, much like a well-fitting article of clothing relative to one's body.
 
-#### 2. Formal Cause: *The form* 
+```{r echo=FALSE}
+drop_hint(tags$b("Additional Thoughts ...") |> as.character() |> HTML()
+          , context = "formalCause"
+          , toggle.text = "explore"
+          )
+```
 
+::: {.optional context="formalCause" toggleGroup="0"}
+Expressed in equation form:
 
+${Problem} + ({Solution}|{Problem}) = 0$
 
-#### 3. Efficient Cause: *The source, method, or theory* 
+, with the solution being considered as the *compliment* of the problem statement:
 
+${Problem}^{C}\approx {Solution}$
 
+Now, the above conceptual equation represents a *perfect* solution. In data analytics, a *best* solution is sought, that is to say, the solution among competing or possible solutions that minimizes the gap ($\Gamma$) between the shapes of the problem statement and solution:
 
-#### 4. Final Cause: *The purpose, teleological goal* 
+${Arg}_{Solution}Min(\Gamma):{Problem} + ({Solution}_i|{Problem}) = \Gamma_i$
 
+Returning to the problem statement of [*"not being hungry"*]{.quote}, the size of $\Gamma$ might grow with a more complex problem such as [*"not being hungry with only the least favorite foods available"*]{.quote}. Implicit in the problem statement is a desire to not be hungry **and** have one's favorite foods available for consumption. Any solution to this problem statement will be less optimal than wanting to not be hungry without condition.
+:::
 
+------------------------------------------------------------------------
 
->>>>>>> Stashed changes
-<br>
+Regarding form, what would a well-fitting analytic solution look like in practice? Consider the following request: ["We want to know why the this month's report has significantly higher claims expenditures for the same period reported in last month's report."]{.quote}
 
------------------------------------------------------------------------- 
+```{r echo=FALSE}
+drop_hint(tags$b("The Shape of the Problem Statement") |> as.character() |> HTML()
+          , context = "formalCause"
+          , toggle.text = "explore"
+          , toggleGroup = "1"
+          )
+```
 
-### References 
+::: {context="formalCause" toggleGroup="1"}
+**Observation**: Values for the same historical period in the current report significantly deviate from expected trends 
 
-<sup>[1](#ref1_fr){#ref1_to .ref}</sup> Falcon, Andrea, "Aristotle on Causality", The Stanford Encyclopedia of Philosophy (Spring 2022 Edition), Edward N. Zalta (ed.), <https://plato.stanford.edu/archives/spr2022/entries/aristotle-causality/>
+**Report Data Structure**: 
+    
+- Claims details possess a flattened hierarchy of `header` \> `line`, each represented by identifiers unique within each level (`clm_header_id,` `clm_line_id`). The report is interactive and presents the claims data as nested rows that can be expanded by the user. 
 
+- Claims details include a single temporal field: `service_date` 
+
+- A line-trend graph is included which shows total claim amounts for each historical period in the report (for example, monthly totals for the preceding three months visualized by month) 
+
+**Background Information**: 
+    
+- The report pulls data from the data warehouse which, in turn, is populated from the claims processing system 
+
+- For the same historical period, a small degree of variation from one monthly report to the next is expected due to claims re-adjudication 
+
+- From the business stakeholder's perspective re-adjudication of a prior claim *"replaces"* prior adjudication information for that claim 
+    
+**Deficit**: There is a lack of information available in the report that explains the deviation from normal
+:::
+
+```{r echo=FALSE}Observation: Values for the same historical period in the current report significantly deviate from expected trends
+
+Report Data Structure:
+
+Claims details possess a flattened hierarchy of header > line, each represented by identifiers unique within each level (clm_header_id, clm_line_id). The report is interactive and presents the claims data as nested rows that can be expanded by the user.
+
+Claims details include a single temporal field: service_date
+
+A line-trend graph is included which shows total claim amounts for each historical period in the report (for example, monthly totals for the preceding three months visualized by month)
+
+Background Information:
+
+The report pulls data from the data warehouse which, in turn, is populated from the claims processing system
+
+For the same historical period, a small degree of variation from one monthly report to the next is expected due to claims re-adjudication
+
+From the business stakeholder's perspective re-adjudication of a prior claim "replaces" prior adjudication information for that claim
+
+Deficit: There is a lack of information available in the report that explains the deviation from normal
+drop_hint(tags$b("The Shape of the Solution") |> as.character() |> HTML()
+          , context = "formalCause"
+          , toggle.text = "explore"
+          , toggleGroup = "2"
+          )
+```
+
+::: {context="formalCause" toggleGroup="2"}
+**Data Structure**: 
+
+- Contains the same details fields as the monthly report 
+
+- Contains the additional fields `adj_amt`, `adj_date`, `adj_id`, `adj_status`, `rec_insrt_date`, and `rec_upd_date` from the source data in the data warehouse 
+
+- Columns are ordered in a way that highlights the structural hierarchy of the identifiers with rows sorted by chronologically by temporal hierarchy:
+
+```{r, echo=FALSE}{style="display:block"}
+  htmltools::tags$table(
+    htmltools::tags$th(
+      rlang::exprs(clm_header_id, clm_line_id, adj_id, service_date, adj_date, adj_amt, adj_status, rec_insrt_date, rec_upd_date) |>
+      
+    as.character() |>
+     purrr::map(freduce, list(htmltools::code, htmltools::tags$td))
+    )
+  )
+```
+
+**Report Format - Excel Workbook**:
+
+- Sheet #1 (*`Info`*) contains important metadata as well as an overview of findings
+
+- Sheet #2 (*`Data`*) contains a table containing the data structured as described above with an additional *calculated* column entitled `current`
+
+- Sheet #3 (*`Chart`*) contains a pivot chart similar to the monthly report, containing a filter for field `current`
+:::
+
+### 3. Efficient
+
+[**Efficient Cause**]{.underline}**: *The source, method, or theory***
+
+### 4. Final
+
+[**Final Cause**]{.underline}**: *The purpose, teleological goal***
+
+<div>
+
+<br><br>
