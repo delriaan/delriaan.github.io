@@ -1,2 +1,8 @@
+---
+title: "Welcome"
+---
 
-* [Callr ... Check Later](./Callr-Later.html)
+```{r echo=FALSE}
+htmltools::tags$style(paste(readLines("../style.css"), collapse = "\n")) |> as.character() |> htmltools::HTML();
+```
+
