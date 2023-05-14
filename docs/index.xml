@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chionesu By Design</title>
+    <link>/</link>
+    <description>Recent content on Chionesu By Design</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Chionesu By Design</title>
+      <link>/2023/05/13/welcome/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/2023/05/13/welcome/</guid>
+      <description>Welcome to My Site! Greetings and salutations! Chionesu ( cho * nay&amp;rsquo; * su ) here, and as you can see, things are pretty sparse here as the site just launched, so check back regularly.
+Ciao!
+~ Chionesu George</description>
+    </item>
+    
+    <item>
+      <title>R Packages</title>
+      <link>/r-pkgs/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/r-pkgs/</guid>
+      <description>Over the past few years, I&amp;rsquo;ve developed a set of R packages that support my daily work. A few of those packages are linked below. Each package is a work in progress but exists at a functional level.
+Use the links below for descriptions and installation instructions:
+Book of Utilities
+Book of Features
+Book of Workflow
+Architect
+Smart Data
+Event Vectors
+Database Object Explorer</description>
+    </item>
+    
+  </channel>
+</rss>
