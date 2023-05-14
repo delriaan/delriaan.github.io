@@ -14,10 +14,10 @@ permalinks:
   post: /:year/:month/:day/:slug/
 menu:
   main:
-    - name: About
-      url: /about/
     - name: LinkedIn
       url: https://www.linkedin.com/in/chionesu-george-1067b122/
+    - name: R Packages
+      url: /r-pkgs/
 params:
   MathJaxCDN: //cdnjs.cloudflare.com/ajax/libs
   MathJaxVersion: 2.7.5

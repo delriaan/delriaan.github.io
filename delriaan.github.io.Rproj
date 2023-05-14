@@ -20,3 +20,5 @@ BuildType: Website
 UseNativePipeOperator: Yes
 
 QuitChildProcessesOnExit: Yes
+
+ZoteroLibraries: "My Library"
