@@ -19,20 +19,29 @@ Ciao!
     </item>
     
     <item>
+      <title>Data Projects</title>
+      <link>/data-projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/data-projects/</guid>
+      <description> Exploring the MDRP database </description>
+    </item>
+    
+    <item>
       <title>R Packages</title>
       <link>/r-pkgs/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/r-pkgs/</guid>
-      <description>Over the past few years, I&amp;rsquo;ve developed a set of R packages that support my daily work. A few of those packages are linked below. Each package is a work in progress but exists at a functional level.
+      <description>Over the past few years, I&amp;rsquo;ve developed a set of R packages that support my daily work. Those packages are linked below. Each package is a work in progress but exists at a functional level. Colored dots indicate
 Use the links below for descriptions and installation instructions:
-Book of Utilities
-Book of Features
-Book of Workflow
-Architect
-Smart Data
-Event Vectors
-Database Object Explorer</description>
+Book of Utilities ●
+Book of Features ●
+Book of Workflow ●
+Smart Data ●
+Event Vectors ●
+Database Object Explorer ●
+Architect ●</description>
     </item>
     
   </channel>
