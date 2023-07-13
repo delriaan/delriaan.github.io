@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>central tendency on Chionesu By Design</title>
+    <link>/tags/central-tendency/</link>
+    <description>Recent content in central tendency on Chionesu By Design</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 12 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/central-tendency/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Distributions and Some &#34;Mean&#34; Advice</title>
+      <link>/2023/07/12/distributions-measurements-of-scale-and-some-mean-advice/</link>
+      <pubDate>Wed, 12 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/2023/07/12/distributions-measurements-of-scale-and-some-mean-advice/</guid>
+      <description>Focal Thoughts:
+Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong &amp;ldquo;mean&amp;rdquo; can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported? Simply put, the &amp;ldquo;center&amp;rdquo; of observed values.</description>
+    </item>
+    
+  </channel>
+</rss>

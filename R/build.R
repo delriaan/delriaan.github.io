@@ -3,9 +3,9 @@
 file.meta.public <- paste0("public/", dir("public", include.dirs = TRUE)) |> 
   lapply(file.info) |> 
   purrr::reduce(rbind) |>
-  data.table::as.data.table(keep.rownames = TRUE)
+  data.table::as.data.table(keep.rownames = TRUE, key="mtime")
 
-if (any(as.Date(file.meta.public$mtime) == Sys.Date())){
+if (any(as.Date(file.meta.public$mtime, tz = "EST") == Sys.Date())){
   file.copy(
     from = file.meta.public$rn
     , to = "docs"

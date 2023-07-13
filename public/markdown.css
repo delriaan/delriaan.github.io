@@ -1,5 +1,12 @@
 /* ---- Chionesu's Preferred Overrides ---- */
-body { margin-left:10px; margin-right:auto; font-size:12pt; width:100% !important; max-width: 1200px !important;}
+body { 
+  margin-left:10px; 
+  margin-right:auto; 
+  font-size:10pt; 
+  background-color: #C0BEBB;
+  width:100% !important; 
+  min-width: 1200px !important;
+}
 pre  { display: none; }
 table { margin-bottom: 1em; border:solid 2px #888888; }
 td{ padding: 0.25em; border:solid 1px #DDDDDD; }
@@ -29,9 +36,17 @@ comment { color:#339933; font-family:Times; }
 .sidebar { float:right; width:240px; background-color:#EFF4FA; padding:5px; margin:0 0 10 25; }
 .sidebar > term { background-color:#555555; color:#CCCCEE; padding:5px; margin-right:5px; }
 
+/* ---- Other Rules ---- */
 code {font-size: 10pt; }
 blockquote { display:block; }
 
 .optional { background-color:#FFEFFF; margin-left:20px; margin-bottom: 10px; border-left:#FFFFEF; }
 .quote { font-family:Georgia; font-style:italic; }
 .ref {color: green;}
+.footer {
+  background-color: #DDDDDD;
+  color: #555555;
+  border-top: solid 5px #CCC;
+  border-bottom: solid 5px #CCC;
+  text-align: left;
+}
