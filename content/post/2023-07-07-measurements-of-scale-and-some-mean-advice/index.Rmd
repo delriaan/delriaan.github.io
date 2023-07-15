@@ -2,7 +2,7 @@
 title: Distributions and Some "Mean" Advice
 author: Chionesu George
 date: '`r Sys.Date()`'
-slug: distributions-measurements-of-scale-and-some-mean-advice
+slug: distributions-and-some-mean-advice
 categories:
   - Theory
 tags:
