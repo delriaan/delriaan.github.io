@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.111.3">
+
+
+<title>Distributions and Some &#34;Mean&#34; Advice - Chionesu By Design</title>
+<meta property="og:title" content="Distributions and Some &#34;Mean&#34; Advice - Chionesu By Design">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/data-projects/">Data Projects</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">3 min read</span>
+    
+
+    <h1 class="article-title">Distributions and Some &#34;Mean&#34; Advice</h1>
+
+    
+    <span class="article-date">2023-07-12</span>
+    
+
+    <div class="article-content">
+      <p><strong>Focal Thoughts:</strong></p>
+<ol>
+<li>Simply reporting a measure of central tendency presents an incomplete picture of the data under study</li>
+<li>Choosing the wrong &ldquo;mean&rdquo; can mean trouble</li>
+<li>The values in a dataset should not be interpreted apart from the real-world elements they encode</li>
+</ol>
+<h1 id="average-value-is-it-informative">Average Value: Is it Informative?</h1>
+<p>Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?  Simply put, the &ldquo;center&rdquo; of observed values.  That, however, is simply a description of the metric.  A more important question to ask is, <em>&ldquo;Is this value informative or helpful in a decision-support context?&rdquo;</em>:</p>
+<ol>
+<li>
+<p>If all that is needed is a <em>&ldquo;ballpark&rdquo;</em> estimate, the chance that the average value will be informative increases. <em>&ldquo;We need to provide some performance measures for the quarterly newsletter: about how many families do we serve each month?&rdquo;</em> is an example of such a need.</p>
+</li>
+<li>
+<p>If the <em>range</em> of likely values to be observed is of interest, the chance of the average value being informative often decreases.  <em>&ldquo;We&rsquo;re trying to determine if we have enough analysts supporting to Family Services department: what is the average turnaround time for dashboard development?&rdquo;</em>  The average value provides no information regarding how typical or a typical the measure is.  Hiring staff is time-consuming and expensive, so a more complete picture of what to expect is needed.</p>
+</li>
+</ol>
+<p>In the second example, what is needed to properly satisfy the request is the <em>distribution</em> of values from which the average value can be calculated as well as measures of the way the values are distributed.</p>
+<h1 id="central-tendency-_meaningful-measures_">Central Tendency: <em>&ldquo;Mean&quot;ingful measures</em></h1>
+<p>Truth be told, there is a logical fallacy contained in the preceding scenarios: <a href="https://www.merriam-webster.com/dictionary/question-begging"><em>&ldquo;question-begging&rdquo;</em></a>, to be specific.  The question being begged is, <em>&ldquo;Is the average the appropriate central-tendency measure to use?&rdquo;</em> By <em>&ldquo;average&rdquo;</em>, I specifically refer to the arithmetic mean.  Central tendency (CT) can be expressed in statistical and non-statistical terms, but the idea of values being <em>distributed around a centralized reference point</em> remains. There are certain principles that guide the choice of CT measure, but before addressing one such principle, a brief word on <em>why</em> knowing various CT measures matters:</p>
+<h1 id="why-this-matters">Why This Matters</h1>
+<ul>
+<li>As a data practitioner, it is crucial to keep in mind that in using CT measures, you are not just executing mathematical operations on data detached from the real world the data encodes — you are making statements (explicitly or implicitly) about some quantifiable aspect of the real world, which includes the distribution and specific characteristics of the data values.</li>
+<li>The addage <em>&ldquo;If all you have is a hammer, everything looks like a nail&rdquo;</em> applies: the choice of CT measure is not trivial — you are not always dealing with &ldquo;nails&rdquo; and undisciplined use of the arithmetic mean can result in invalid analysis and incorrect inferences as a result</li>
+<li>Knowing various CT measures allows you to be more deliberate regarding design decisions which is faster than having to &ldquo;trial-and-error&rdquo; your way to a solution. An added benefit is being in a better position to detect potential sources of errors in logic when evaluating business requests.</li>
+</ul>
+<hr style="width:100%">
+Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
+
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<span style="font-weight:bold; font-family:Georgia; ">Of Craft and Discipline</span>
+<br>
+Being a data practitioner is a discipline and not just a role with a job description; it should be executed with the skill and deliberation of a craft.
+</p>
+
+
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+    
+
+    
+  </body>
+</html>
+
