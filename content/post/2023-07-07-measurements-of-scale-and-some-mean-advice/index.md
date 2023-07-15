@@ -30,7 +30,7 @@ In the second example, what is needed to properly satisfy the request is the _di
 
 # Central Tendency: _"Mean"ingful measures_
 
-Truth be told, there is a logical fallacy contained in the preceding scenarios: [_"question-begging"_](https://www.merriam-webster.com/dictionary/question-begging), to be specific.  The question being begged is, _"Is the average the appropriate central-tendency measure to use?"_ By _"average"_, I specifically refer to the arithmetic mean.  Central tendency (CT) can be expressed in statistical and non-statistical terms, but the idea of values being _distributed around a centralized reference point_ remains. There are certain principles that guide the choice of CT measure, but before addressing one such principle, a brief word on _why_ knowing various CT measures matters:
+Truth be told, there is a logical fallacy contained in the preceding scenarios: [_"question-begging"_](https://www.merriam-webster.com/dictionary/question-begging), to be specific.  The question being begged is, _"Is the average the appropriate central-tendency measure to use?"_ By _"average"_, I specifically refer to the arithmetic mean.  Central tendency (CT) can be expressed in statistical and non-statistical terms, but the idea of values being _distributed around a centralized reference point_ remains. There are certain principles that guide the choice of CT measure, but for now, a brief word on _why_ knowing various CT measures matters:
 
 # Why This Matters
 
