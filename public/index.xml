@@ -6,13 +6,13 @@
     <description>Recent content on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 12 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Distributions and Some &#34;Mean&#34; Advice</title>
-      <link>/2023/07/12/distributions-measurements-of-scale-and-some-mean-advice/</link>
-      <pubDate>Wed, 12 Jul 2023 00:00:00 +0000</pubDate>
+      <link>/2023/07/15/distributions-measurements-of-scale-and-some-mean-advice/</link>
+      <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/07/12/distributions-measurements-of-scale-and-some-mean-advice/</guid>
+      <guid>/2023/07/15/distributions-measurements-of-scale-and-some-mean-advice/</guid>
       <description>Focal Thoughts:
 Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong &amp;ldquo;mean&amp;rdquo; can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported? Simply put, the &amp;ldquo;center&amp;rdquo; of observed values.</description>
     </item>
