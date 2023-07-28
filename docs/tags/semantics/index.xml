@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>semantics on Chionesu By Design</title>
+    <link>/tags/semantics/</link>
+    <description>Recent content in semantics on Chionesu By Design</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 27 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/semantics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Measurements of Scale, Part One</title>
+      <link>/2023/07/27/measurements-of-scale-part-one/</link>
+      <pubDate>Thu, 27 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/2023/07/27/measurements-of-scale-part-one/</guid>
+      <description>References
+Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim) Scales of Measurement (Byju’s Learning) Level of Measurement (Wikipedia) A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences. References are provided above, so I leave the reader to … well, read. What I’d like to focus on are some specific characteristics about these scales.</description>
+    </item>
+    
+  </channel>
+</rss>
