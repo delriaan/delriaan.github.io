@@ -11,7 +11,7 @@ tags:
 output: html_document
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-07-28 09:41:13</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-07-28 17:30:49</span>
 
 **References**
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)
