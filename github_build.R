@@ -1,3 +1,4 @@
+blogdown::stop_server()
 blogdown::hugo_build(local=TRUE)
 
 file.meta.public <- paste0("public/", dir("public", include.dirs = TRUE)) |> 
