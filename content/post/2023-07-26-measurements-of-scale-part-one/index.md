@@ -11,6 +11,8 @@ tags:
 output: html_document
 ---
 
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-07-28 09:39:32</span>
+
 **References**
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)
 - [Scales of Measurement (Byju’s Learning)](https://byjus.com/maths/scales-of-measurement/)
@@ -25,9 +27,9 @@ To begin, we’ll first consider *nominal* and *ordinal* measurements:
 
 <table style="border:outset 2px; ">
 <tr>
-<th style="background-color:dark-gray; color: #DEDADF; padding:5px; " width="10%">Type</th>
-<th style="background-color:dark-gray; color: #DEDADF; padding:5px; " width="45%">Indicates</th>
-<th style="background-color:dark-gray; color: #DEDADF; padding:5px; " width="45%">Doesn't Indicate</th>
+<th style="background-color:#555555; color:#DEDADF; padding:5px; " width="10%">Type</th>
+<th style="background-color:#555555; color:#DEDADF; padding:5px; " width="45%">Indicates</th>
+<th style="background-color:#555555; color:#DEDADF; padding:5px; " width="45%">Doesn't Indicate</th>
 </tr>
 <tr>
 <td style="padding:5px" width="10%">Nominal</td>

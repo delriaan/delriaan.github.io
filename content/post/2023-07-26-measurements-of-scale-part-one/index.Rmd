@@ -1,7 +1,7 @@
 ---
 title: Measurements of Scale, Part One
 author: Chionesu George
-date: '`r Sys.Date()`'
+date: '2023-07-27'
 slug: measurements-of-scale-part-one
 categories:
   - Theory
@@ -10,6 +10,7 @@ tags:
   - semantics
 output: html_document
 ---
+`r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
 
 **References**
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)
@@ -30,8 +31,8 @@ list(
   , c("Ordinal", "Order, relative position", "Distance between positions; intrinsic value at each position")
   ) |>
 purrr::imap(\(x, y){ 
-    purrr::imap(x, \(i, j) if (y == 1){ 
-        htmltools::tags$th(style = "background-color:dark-gray; color: #DEDADF; padding:5px; ", width = ifelse(j == 1, "10%", "45%"), i) 
+    purrr::imap(x, \(i, j) if (y == "1"){ 
+        htmltools::tags$th(style = "background-color:#555555; color:#DEDADF; padding:5px; ", width = ifelse(j == 1, "10%", "45%"), i) 
       } else { 
         htmltools::tags$td(style = "padding:5px", width = ifelse(j == 1, "10%", "45%"), i) 
       }) |> 
