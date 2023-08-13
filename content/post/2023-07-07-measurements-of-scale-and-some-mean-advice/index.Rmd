@@ -1,7 +1,7 @@
 ---
 title: Distributions and Some "Mean" Advice
 author: Chionesu George
-date: '`r Sys.Date()`'
+date: '2023-07-15'
 slug: distributions-and-some-mean-advice
 categories:
   - Theory
@@ -12,6 +12,7 @@ tags:
   - data
 output: html_document
 ---
+`r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
 
 **Focal Thoughts:**
    1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study
@@ -40,5 +41,3 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 
 <hr style="width:100%">
 Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
-
-{{< footer-include "content/footer.html" >}}

@@ -61,7 +61,7 @@ img_dim <- magick::image_info(img)[c("width", "height")] * 0.8
 htmltools::tags$img(src="3 cats.jpg", width = img_dim["width"], height = img_dim["height"]) |>
 htmltools::span(htmltools::br(), "10, 1, and 3 in order of increasing age")
 
-htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+#htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
 ```
 
 
