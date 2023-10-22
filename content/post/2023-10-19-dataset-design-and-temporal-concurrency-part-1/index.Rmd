@@ -5,7 +5,6 @@ date: '2023-10-21'
 categories:
   - Data Engineering
   - Methodology
-  - Question Answering
   - Theory
 tags:
   - analytics
@@ -14,7 +13,10 @@ tags:
   - semantics
   - time
 slug: dataset-design-and-temporal-concurrency-prologue
+output: html_document
 ---
+
+`r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
 
 ```{r SETUP, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -184,11 +186,11 @@ c("Who?", "When?", "What?", "How?") |> make_checkbox(color = "999999")
 ```
 
 These will be addressed subsequent posts  
-- _Part 1_ will cover [Who?]{.speech} and [Who?]{.speech}
-- _Part 2_ will address [Who?]{.speech}
-- _Part 3_ will cover [Who?]{.speech} as well as provide some concluding thoughts
+- _Part 1_ will cover [Who?]{.speech} and [When?]{.speech}
+- _Part 2_ will address [What?]{.speech}
+- _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts
 
-I look forward to seeing you in Part 1.  Until then, I wish you much success in your data practitioner journey!
+I look forward to seeing you in Part 1.  Until then, I wish you much success in your journey as a data practitioner!
 
 ```{r CLOSE}
 htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())

@@ -1,11 +1,10 @@
 ---
 title: Dataset Design and Temporal Concurrency, Prologue
 author: Chionesu George
-date: '2023-10-19'
+date: '2023-10-21'
 categories:
   - Data Engineering
   - Methodology
-  - Question Answering
   - Theory
 tags:
   - analytics
@@ -14,7 +13,10 @@ tags:
   - semantics
   - time
 slug: dataset-design-and-temporal-concurrency-prologue
+output: html_document
 ---
+
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-21 23:30:13</span>
 
 <style>.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -118,10 +120,10 @@ With that in mind, the business request can be restated in terms of the followin
 </table>
 
 These will be addressed subsequent posts  
-- *Part 1* will cover <span class="speech">Who?</span> and <span class="speech">Who?</span>
-- *Part 2* will address <span class="speech">Who?</span>
-- *Part 3* will cover <span class="speech">Who?</span> as well as provide some concluding thoughts
+- *Part 1* will cover <span class="speech">Who?</span> and <span class="speech">When?</span>
+- *Part 2* will address <span class="speech">What?</span>
+- *Part 3* will cover <span class="speech">How?</span> as well as provide some concluding thoughts
 
-I look forward to seeing you in Part 1. Until then, I wish you much success in your data practitioner journey!
+I look forward to seeing you in Part 1. Until then, I wish you much success in your journey as a data practitioner!
 
 <p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>
