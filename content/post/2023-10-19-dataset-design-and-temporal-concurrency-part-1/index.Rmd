@@ -1,0 +1,195 @@
+---
+title: Dataset Design and Temporal Concurrency, Prologue
+author: Chionesu George
+date: '2023-10-21'
+categories:
+  - Data Engineering
+  - Methodology
+  - Question Answering
+  - Theory
+tags:
+  - analytics
+  - data
+  - engineering
+  - semantics
+  - time
+slug: dataset-design-and-temporal-concurrency-prologue
+---
+
+```{r SETUP, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+spsUtil::quiet({
+  library(book.of.workflow); 
+  load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
+})
+
+tags$style(paste(
+  ".warning {background-color:#DFDFDFEE"
+  , "border-top: solid 2px #AA0000"
+  , "border-bottom: solid 2px #AA0000}"
+  , sep = "; "
+  ))
+
+dir(Sys.getenv('GIT_REPOS'), pattern = "drop_hint", recursive = TRUE, full.names = TRUE) |> source();
+
+hint_js(
+  tags = c("ul","p")
+  , contexts = c("definition", "problemStatement")
+  , out.file = "markdown.js"
+  , fade_speed = 10
+  , toggle.options = list(
+      open = "(show)"
+      , close = "<hide>"
+      )
+  ); 
+
+tags$script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
+
+tags$script(src="markdown.js");
+
+tags$style(
+  "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
+  , ".def_sym {font-weight:bold; color:#5555DD; } "
+  , ".speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }"
+  , "hint:hover {cursor: pointer; }"
+  );
+```
+
+## Introduction
+
+Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries.  Best practices, techniques, and technology are inescapable concepts one will encounter.  What I'd like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
+
+This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I've learned in dealing with temporal co-occurrence.  Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:
+
+1. Reduce trial-and-error data engineering iterations by using a methodological treatment of the _ontology_ (*temporal* ontology for this article series) of the relevant data sources and the *semantic relationships* between data source and the problem statement at hand
+2. Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.
+
+Moving forward, the base unit of time will be days, mainly due to not having had to deal with more frequent units of time but also because it's just easier to think and converse in terms of days.
+
+## Definitions & Conventions
+
+[ $D_{i,j}$ ]{.def_sym}: a tabular dataset of $i$ rows and $j$ columns
+
+[ $Ω_k$ ]{.def_sym}: Row-based dataset qualifiers &mdash; specifically, a set of $k$ rules/criteria $(ω_1, \omega_2, \omega_3, \cdots, \omega_k)$ given as predicate statements, that qualify the rows of dataset $D$ such that $D_\Omega\subset D$.  
+ 
+[ $Y|X$ ]{.def_sym}: Condition, read as *"Y given X"* or *"Y conditioned on X"* &mdash; an existential constraint that subsets the left-hand side to those cases where the right-hand side exists or is true. For example, $\text{Cost}_\text{item}|\big\{\text{Id}_\text{item}=90210\big\}$ is interpreted as *"Item cost where item ID equals 90210"*.
+   
+[ $∧, ∨$ ]{.def_sym}: Logical *"and"* and *"or"*, respectively
+
+```{r echo=FALSE}
+tags$span(
+  tags$b(HTML("Column (&delta;) Taxonomy "))
+  , drop_hint(context="definition")
+  )
+tags$ul(
+  toggleGroup = '0'
+  , context = 'definition'
+  , tags$li(
+      tags$span(class='def_sym', HTML("&delta;<sup>I</sup>"))
+      , ": Information-carrying columns")
+  , tags$li(
+      tags$span(class='def_sym', HTML("&delta;<sup>G</sup>"))
+      , ": Grouping columns (categorical, descriptive)"
+      )
+  , tags$li(
+      tags$span(class='def_sym', HTML("&delta;<sup>Y</sup>"))
+      , ": Measurements (e.g., purchase price, height, product ratings)"
+      )
+  , tags$li(
+      tags$span(class='def_sym', HTML("&delta;<sup>T</sup>"))
+      , ": Temporal columns to include dates and temporal hierarchies"
+      )
+  , tags$li(
+      tags$span(class='def_sym', HTML("&delta;<sup>E</sup>"))
+      , ": Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)"
+      )
+ );
+
+tags$hr(style="width:80%; ");
+```
+ 
+
+## A Motivating Example {.tabset .tabset-fade}
+
+Consider a business request submitted `r Sys.Date()` and stated as follows [*demonstration purposes only, so cut me some slack*  &#128527;]:
+
+```{r echo=FALSE}
+tags$blockquote(
+  id = "problemStatement"
+  , class = "speech"
+  , "\"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
+);
+```
+  
+### Problem Restatement
+
+I mentioned consideration of ["the *semantic relationships* between data source and the problem statement"]{.speech} in my introductory remarks. Two principles I always be kept in mind when working with data are as follows: 
+
+```{r}
+tags$blockquote(
+  class = "speech"
+  , style = "border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; "
+  , drop_hint(
+      "Life is data, but data is not life "
+      , context = "problemStatement"
+      , toggleGroup = "0"
+      # , toggle.text = "(more ...)"
+      )
+  );
+tags$p(
+  style = "margin-left:30px; "
+  , HTML("Life <i>produces</i> information and data <i>encodes</i> it &mdash; <i>always</i> with a loss of information. In the reverse direction, data must be interpreted back to the real-world in order to be considered information precisely because it ties back to the real-world. This semantic map should always be kept in mind.")
+  , context = "problemStatement"
+  , toggleGroup = "0"
+  # , toggle.text = "(more ...)"
+  );
+tags$blockquote(
+  class = "speech"
+  , style = "border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; "
+  , drop_hint(
+      "The language of data follows the language of people "
+      , context = "problemStatement"
+      , toggleGroup = "1"
+      # , toggle.text = "(more ...)"
+      )
+  );
+tags$p(
+  style = "margin-left:30px; "
+  , HTML("A basic framework for interpreting and communicating information is <i>language</i>. Language involves syntax and structure to make distinctions among information and provide meaning on the basis of those distinctions.  Since data encodes information, it loosely follows the semantics and syntax of human language.")
+  , context = "problemStatement"
+  , toggleGroup = "1"
+  # , toggle.text = "(more ...)"
+  );
+  
+```
+
+
+With that in mind, the business request can be restated in terms of the following:
+
+```{r echo=FALSE, warning=FALSE}
+make_checkbox <- function(text, color = "666666"){
+  lapply(text, \(i){
+    list(
+      tags$td(style = sprintf("background-color:#FFFFFF; width:20px; border:outset #%s 4px; ", color))
+      , tags$td(style = "width:100px; align:right", i)
+      )
+    }) |>
+  tags$tr() |>
+  tags$table() |>
+  tagList()
+}
+
+c("Who?", "When?", "What?", "How?") |> make_checkbox(color = "999999")
+```
+
+These will be addressed subsequent posts  
+- _Part 1_ will cover [Who?]{.speech} and [Who?]{.speech}
+- _Part 2_ will address [Who?]{.speech}
+- _Part 3_ will cover [Who?]{.speech} as well as provide some concluding thoughts
+
+I look forward to seeing you in Part 1.  Until then, I wish you much success in your data practitioner journey!
+
+```{r CLOSE}
+htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+```

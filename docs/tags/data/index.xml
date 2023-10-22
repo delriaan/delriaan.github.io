@@ -6,14 +6,24 @@
     <description>Recent content in data on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 15 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/data/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/data/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design and Temporal Concurrency, Prologue</title>
+      <link>/2023/10/19/dataset-design-and-temporal-concurrency-prologue/</link>
+      <pubDate>Thu, 19 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/2023/10/19/dataset-design-and-temporal-concurrency-prologue/</guid>
+      <description>Introduction Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
+This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence.</description>
+    </item>
+    
     <item>
       <title>Distributions and Some &#34;Mean&#34; Advice</title>
       <link>/2023/07/15/distributions-and-some-mean-advice/</link>
       <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>/2023/07/15/distributions-and-some-mean-advice/</guid>
-      <description>Updated 2023-08-13 16:19:37
+      <description>Updated 2023-10-21 20:29:29
 Focal Thoughts:
 Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong “mean” can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported? Simply put, the “center” of observed values.</description>
     </item>

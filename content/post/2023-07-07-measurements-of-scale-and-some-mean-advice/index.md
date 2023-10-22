@@ -13,7 +13,7 @@ tags:
 output: html_document
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-08-13 16:19:37</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-21 20:29:29</span>
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study
@@ -43,3 +43,5 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 <hr style="width:100%">
 
 Congratulations! You made it =) Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
+
+<p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>
