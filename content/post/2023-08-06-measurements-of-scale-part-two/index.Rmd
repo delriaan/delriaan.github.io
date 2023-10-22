@@ -27,8 +27,11 @@ def_of <- \(x){
   GET(url = .url) |> content()
 }
 
-.string <- stri_extract_all_words("I tried to climb the hill but was too tired", simplify = TRUE) |> rlang::set_names()
-dimnames(.string) <- list(NULL, unlist(.string))
+.string <- stri_extract_all_words("I tried to climb the hill but was too tired", simplify = TRUE) |> 
+  rlang::set_names();
+
+dimnames(.string) <- list(NULL, unlist(.string));
+
 attr(.string, "sentence") <- paste(.string, collapse = " ") |> paste0(".")
 
 tags$style(
@@ -317,6 +320,6 @@ tags$table(
 <hr width = "100%">
 Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. Until we meet again, I wish you much success in your journey as a data practitioner!
 
-```{r CLOSE, echo=FALSE, eval=FALSE}
+```{r CLOSE, echo=FALSE}
 htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
 ```

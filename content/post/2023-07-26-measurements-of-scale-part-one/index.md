@@ -11,7 +11,7 @@ tags:
 output: html_document
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-08-13 16:16:17</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-21 20:26:32</span>
 
 **References**
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)
@@ -62,3 +62,4 @@ More can (and will) be said regarding the semantics of data, but for now, I’ll
 <br/>
 10, 1, and 3 in order of increasing age
 </span>
+<p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>

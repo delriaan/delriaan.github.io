@@ -41,3 +41,7 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 
 <hr style="width:100%">
 Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
+
+```{r CLOSE, echo=FALSE}
+htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+```
