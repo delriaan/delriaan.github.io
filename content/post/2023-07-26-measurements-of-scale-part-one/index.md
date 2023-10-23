@@ -14,7 +14,7 @@ tags:
   - data
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 21:51:28</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 23:47:47</span>
 
 **References**
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)

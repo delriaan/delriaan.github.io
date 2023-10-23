@@ -14,7 +14,7 @@ tags:
   - data
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 21:51:26</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 23:47:43</span>
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study

@@ -7,17 +7,20 @@
   --coolPurple: #3333DD55
   --footerBg: #DDDDDD; 
   --footerBorder: #BBB;
+  
+  --theme_background: #333;
+  --theme_font_color: #CDECDE;
 }
 
 /* :::::: FIXED RULES :::::: */
-body { 
+body {
   margin-left: 10px; 
   margin-right: auto; 
   width:100% !important; 
   min-width: 1200px !important;
 }
 
-p { 
+p {
   margin-top: 0.75em; 
   margin-bottom: 0.75em; 
 }
@@ -32,20 +35,20 @@ code {
   font-size: 10pt; 
 }
 
-blockquote { 
+blockquote {
   display:block; 
 }
 
-pre  { 
+pre  {
   display: none; 
 }
 
-table { 
+table {
   margin-bottom: 1em; 
   border:solid 2px var(--gray);
 }
 
-td { 
+td {
   padding: 0.25em; 
   border:solid 1px var(--offwhite); 
 }
@@ -55,17 +58,17 @@ sup {
   color:#995522; 
 }
 
-a { 
+a {
   color: var(--coolPurple); 
 }
 
 /* Toggle Content */
-hint, term { 
+hint, term {
   font-variant:small-caps; 
   font-style: italic;
 }
 
-[role='toggle']:hover { 
+[role='toggle']:hover {
   cursor: pointer; 
   font-weight: bold; 
 }
@@ -79,30 +82,32 @@ hint, term {
 /* ::::::::: <END> :::::::: */
 
 /* :::::: THEMED RULES :::::: */
-body { 
-  background-color: var(--pale);
+body {
+  background-color: var(--theme_background);
+  color: var(--theme_font_color);
 }
 
-hint { 
+[role='toggle'] {
   color: #EE9977; 
   font-weight:bold; 
   font-size: 8pt; 
   font-family: Georgia; 
+  font-variant: small-caps italic;
   text-decoration: underline;
 }
 
-comment { 
+comment {
   color: var(--pine); 
   font-family:Times; 
 }
 
-.first{ 
+.first{
   font-variant:small-caps; 
   font-weight:bold; 
   background-color:#EFF4FA; 
 }
 
-.sidebar { 
+.sidebar {
   float:right; 
   display:block;
   width:240px; 
@@ -111,7 +116,7 @@ comment {
   margin:0 0 10 25; 
 }
   
-.sidebar > term { 
+.sidebar > term {
   background-color: var(--gray); 
   color:#CCCCEE; 
   padding:5px; 
@@ -128,14 +133,14 @@ comment {
   border-bottom: var(--coolPurple); 
 }
 
-.optional { 
+.optional {
   background-color:#FFEFFF; 
   margin-left:20px; 
   margin-bottom: 10px; 
   border-left: var(--gray); 
 }
 
-.quote { 
+.quote {
   font-family:Georgia; 
   font-style:italic; 
   color: var(--pine)

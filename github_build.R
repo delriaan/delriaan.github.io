@@ -2,7 +2,7 @@ blogdown::stop_server()
 
 file.copy(from = c("markdown.css"), to = "content", overwrite = TRUE)
 
-blogdown::build_site(local = TRUE, run_hugo = !TRUE, build_rmd = TRUE)
+blogdown::build_site(local = TRUE, run_hugo = TRUE, build_rmd = !TRUE)
 
 blogdown::serve_site(port = 4321, daemon = TRUE)
 
