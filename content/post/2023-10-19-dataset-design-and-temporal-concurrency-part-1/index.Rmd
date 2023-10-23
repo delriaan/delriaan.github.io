@@ -1,61 +1,60 @@
 ---
-title: Dataset Design and Temporal Concurrency, Prologue
-author: Chionesu George
-date: '2023-10-21'
+title: "Dataset Design and Temporal Concurrency, Prologue"
+author: "Chionesu George"
+date: "2023-10-21"
+slug: "dataset-design-and-temporal-concurrency-prologue"
+series: Dataset Design and Temporal Concurrency
 categories:
-  - Data Engineering
-  - Methodology
-  - Theory
+- Data Engineering
+- Methodology
+- Theory
 tags:
-  - analytics
-  - data
-  - engineering
-  - semantics
-  - time
-slug: dataset-design-and-temporal-concurrency-prologue
-output: html_document
+- analytics
+- data
+- engineering
+- semantics
+- time
+
 ---
 
 `r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
 
 ```{r SETUP, echo=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE);
 
 spsUtil::quiet({
   library(book.of.workflow); 
   load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
-})
+});
 
-tags$style(paste(
-  ".warning {background-color:#DFDFDFEE"
-  , "border-top: solid 2px #AA0000"
-  , "border-bottom: solid 2px #AA0000}"
-  , sep = "; "
-  ))
+tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
 
-dir(Sys.getenv('GIT_REPOS'), pattern = "drop_hint", recursive = TRUE, full.names = TRUE) |> source();
+dir(Sys.getenv('GIT_REPOS'), pattern = "jav.+help.+R$", recursive = TRUE, full.names = TRUE) |> source();
 
 hint_js(
   tags = c("ul","p")
   , contexts = c("definition", "problemStatement")
   , out.file = "markdown.js"
   , fade_speed = 10
-  , toggle.options = list(
-      open = "(show)"
-      , close = "<hide>"
-      )
+  , toggle.options = list(open = "(show)", close = "<hide>")
   ); 
 
-tags$script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
-
-tags$script(src="markdown.js");
+tags$script(src = "markdown.js");
 
 tags$style(
-  "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
+  paste(
+    ".warning {background-color:#DFDFDFEE"
+    , "border-top: solid 2px #AA0000"
+    , "border-bottom: solid 2px #AA0000}"
+    , sep = "; "
+    )
+  , "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
   , ".def_sym {font-weight:bold; color:#5555DD; } "
   , ".speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }"
-  , "hint:hover {cursor: pointer; }"
-  );
+  , "hint {font-size: 14pt; font-family: Georgia; font-variant: small-caps italic;  text-decoration: underline;}"
+  , "hint:hover {cursor: pointer; font-weight: bold; }"
+  , "[id^='Math'] {font-size;10pt; }"
+  ); 
 ```
 
 ## Introduction
@@ -71,44 +70,48 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## Definitions & Conventions
 
-[ $D_{i,j}$ ]{.def_sym}: a tabular dataset of $i$ rows and $j$ columns
+- [ $D_{i,j}$ ]{.def_sym}: a tabular dataset of $i$ rows and $j$ columns
 
-[ $Ω_k$ ]{.def_sym}: Row-based dataset qualifiers &mdash; specifically, a set of $k$ rules/criteria $(ω_1, \omega_2, \omega_3, \cdots, \omega_k)$ given as predicate statements, that qualify the rows of dataset $D$ such that $D_\Omega\subset D$.  
+- [ $Ω_k$ ]{.def_sym}: Row-based dataset qualifiers &mdash; specifically, a set of $k$ rules/criteria $(ω_1, \omega_2, \omega_3, \cdots, \omega_k)$ given as predicate statements, that qualify the rows of dataset $D$ such that $D_\Omega\subset D$.  
  
-[ $Y|X$ ]{.def_sym}: Condition, read as *"Y given X"* or *"Y conditioned on X"* &mdash; an existential constraint that subsets the left-hand side to those cases where the right-hand side exists or is true. For example, $\text{Cost}_\text{item}|\big\{\text{Id}_\text{item}=90210\big\}$ is interpreted as *"Item cost where item ID equals 90210"*.
+- [ $Y|X$ ]{.def_sym}: Condition, read as *"Y given X"* or *"Y conditioned on X"* &mdash; an existential constraint that subsets the left-hand side to those cases where the right-hand side exists or is true. For example, $\text{Cost}_\text{item}|\big\{\text{Id}_\text{item}=90210\big\}$ is interpreted as *"Item cost where item ID equals 90210"*.
    
-[ $∧, ∨$ ]{.def_sym}: Logical *"and"* and *"or"*, respectively
+- [ $∧, ∨$ ]{.def_sym}: Logical *"and"* and *"or"*, respectively
 
 ```{r echo=FALSE}
-tags$span(
+tags$p(
   tags$b(HTML("Column (&delta;) Taxonomy "))
-  , drop_hint(context="definition")
-  )
-tags$ul(
-  toggleGroup = '0'
-  , context = 'definition'
-  , tags$li(
-      tags$span(class='def_sym', HTML("&delta;<sup>I</sup>"))
-      , ": Information-carrying columns")
-  , tags$li(
-      tags$span(class='def_sym', HTML("&delta;<sup>G</sup>"))
-      , ": Grouping columns (categorical, descriptive)"
-      )
-  , tags$li(
-      tags$span(class='def_sym', HTML("&delta;<sup>Y</sup>"))
-      , ": Measurements (e.g., purchase price, height, product ratings)"
-      )
-  , tags$li(
-      tags$span(class='def_sym', HTML("&delta;<sup>T</sup>"))
-      , ": Temporal columns to include dates and temporal hierarchies"
-      )
-  , tags$li(
-      tags$span(class='def_sym', HTML("&delta;<sup>E</sup>"))
-      , ": Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)"
-      )
- );
+  , drop_hint(context = "definition", toggleGroup = "0")
+  );
 
-tags$hr(style="width:80%; ");
+tags$p(
+  tags$ul(
+    toggleGroup = "0"
+    , context = "definition"
+    , tags$li(
+        tags$span(class='def_sym', HTML("&delta;<sup>I</sup>"))
+        , ": Information-carrying columns"
+        )
+    , tags$li(
+        tags$span(class='def_sym', HTML("&delta;<sup>G</sup>"))
+        , ": Grouping columns (categorical, descriptive)"
+        )
+    , tags$li(
+        tags$span(class='def_sym', HTML("&delta;<sup>Y</sup>"))
+        , ": Measurements (e.g., purchase price, height, product ratings)"
+        )
+    , tags$li(
+        tags$span(class='def_sym', HTML("&delta;<sup>T</sup>"))
+        , ": Temporal columns to include dates and temporal hierarchies"
+        )
+    , tags$li(
+        tags$span(class='def_sym', HTML("&delta;<sup>E</sup>"))
+        , ": Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)"
+        )
+      )
+    );
+
+tags$hr(style="width:100%; ");
 ```
  
 
@@ -122,6 +125,7 @@ tags$blockquote(
   , class = "speech"
   , "\"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
 );
+
 ```
   
 ### Problem Restatement
@@ -135,7 +139,7 @@ tags$blockquote(
   , drop_hint(
       "Life is data, but data is not life "
       , context = "problemStatement"
-      , toggleGroup = "0"
+      , toggleGroup = "1"
       # , toggle.text = "(more ...)"
       )
   );
@@ -143,7 +147,7 @@ tags$p(
   style = "margin-left:30px; "
   , HTML("Life <i>produces</i> information and data <i>encodes</i> it &mdash; <i>always</i> with a loss of information. In the reverse direction, data must be interpreted back to the real-world in order to be considered information precisely because it ties back to the real-world. This semantic map should always be kept in mind.")
   , context = "problemStatement"
-  , toggleGroup = "0"
+  , toggleGroup = "1"
   # , toggle.text = "(more ...)"
   );
 tags$blockquote(
@@ -152,7 +156,7 @@ tags$blockquote(
   , drop_hint(
       "The language of data follows the language of people "
       , context = "problemStatement"
-      , toggleGroup = "1"
+      , toggleGroup = "2"
       # , toggle.text = "(more ...)"
       )
   );
@@ -160,7 +164,7 @@ tags$p(
   style = "margin-left:30px; "
   , HTML("A basic framework for interpreting and communicating information is <i>language</i>. Language involves syntax and structure to make distinctions among information and provide meaning on the basis of those distinctions.  Since data encodes information, it loosely follows the semantics and syntax of human language.")
   , context = "problemStatement"
-  , toggleGroup = "1"
+  , toggleGroup = "2"
   # , toggle.text = "(more ...)"
   );
   
@@ -173,8 +177,8 @@ With that in mind, the business request can be restated in terms of the followin
 make_checkbox <- function(text, color = "666666"){
   lapply(text, \(i){
     list(
-      tags$td(style = sprintf("background-color:#FFFFFF; width:20px; border:outset #%s 4px; ", color))
-      , tags$td(style = "width:100px; align:right", i)
+      tags$td(style = sprintf("background-color:#FFFFFF; width:20px; height:20px; border:outset #%s 2px; ", color))
+      , tags$td(style = "width:100px; padding-left:5px; align:right", i)
       )
     }) |>
   tags$tr() |>
@@ -185,7 +189,8 @@ make_checkbox <- function(text, color = "666666"){
 c("Who?", "When?", "What?", "How?") |> make_checkbox(color = "999999")
 ```
 
-These will be addressed subsequent posts  
+These will be addressed subsequent posts:
+
 - _Part 1_ will cover [Who?]{.speech} and [When?]{.speech}
 - _Part 2_ will address [What?]{.speech}
 - _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts

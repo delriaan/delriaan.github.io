@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Series on Chionesu By Design</title>
+    <link>/series/</link>
+    <description>Recent content in Series on Chionesu By Design</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&lt;a href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CC BY-NC 4.0&lt;/a&gt;</copyright>
+    <lastBuildDate>Sat, 21 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design and Temporal Concurrency</title>
+      <link>/series/dataset-design-and-temporal-concurrency/</link>
+      <pubDate>Sat, 21 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/series/dataset-design-and-temporal-concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Measurements of Scale</title>
+      <link>/series/measurements-of-scale/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/series/measurements-of-scale/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

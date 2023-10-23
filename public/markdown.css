@@ -9,16 +9,36 @@
   --footerBorder: #BBB;
 }
 
+/* :::::: FIXED RULES :::::: */
 body { 
   margin-left: 10px; 
   margin-right: auto; 
-  font-size: 9pt; 
-  background-color: var(--pale);
   width:100% !important; 
   min-width: 1200px !important;
 }
 
-pre  { display: none; }
+p { 
+  margin-top: 0.75em; 
+  margin-bottom: 0.75em; 
+}
+
+figcaption {
+  font-size:0.5em; 
+  word-wrap: normal; 
+  text-overflow:word-break; 
+}
+
+code {
+  font-size: 10pt; 
+}
+
+blockquote { 
+  display:block; 
+}
+
+pre  { 
+  display: none; 
+}
 
 table { 
   margin-bottom: 1em; 
@@ -35,59 +55,45 @@ sup {
   color:#995522; 
 }
 
-a { color: var(--coolPurple); }
-
-p { 
-  margin-top: 0.75em; 
-  margin-bottom: 0.75em; 
+a { 
+  color: var(--coolPurple); 
 }
 
-figcaption {
-  font-size:0.5em; 
-  word-wrap: normal; 
-  text-overflow:word-break; 
-}
-  
-.math { color: var(--gray); }
-
-/* ---- RMarkdown-specific Rules ---- */
-a[aria-expanded='true'] { color: var(--coolPurple); }
-a[role='tab']:hover { color: #000000; }
-a[role='tab'] { 
-  font-size: 13pt; 
-  color: var(--lightGray); 
+/* Toggle Content */
+hint, term { 
+  font-variant:small-caps; 
+  font-style: italic;
 }
 
-.pagedtable { border:none; }
-
-.listHeader { 
-  font-size:larger; 
+[role='toggle']:hover { 
+  cursor: pointer; 
   font-weight: bold; 
 }
 
+/* Rmarkdown */
 .container-fluid .main-container { 
   margin:auto !important; 
   width:100% !important; 
 }
 
-/* ---- Toggle/Custom Content Rules ---- */
-hint, term { font-variant:small-caps; }
+/* ::::::::: <END> :::::::: */
+
+/* :::::: THEMED RULES :::::: */
+body { 
+  background-color: var(--pale);
+}
 
 hint { 
   color: #EE9977; 
   font-weight:bold; 
   font-size: 8pt; 
   font-family: Georgia; 
+  text-decoration: underline;
 }
 
 comment { 
   color: var(--pine); 
   font-family:Times; 
-}
-
-[role='toggle']:hover { 
-  cursor: pointer; 
-  font-weight: bold; 
 }
 
 .first{ 
@@ -111,11 +117,6 @@ comment {
   padding:5px; 
   margin-right:5px; 
 }
-
-/* ---- Other Rules ---- */
-code {font-size: 10pt; }
-
-blockquote { display:block; }
 
 .definition {
   display:block; 
@@ -149,3 +150,4 @@ blockquote { display:block; }
   border-bottom: solid 5px var(--footerBorder);
   text-align: left;
 }
+/* ::::::::: <END> :::::::: */

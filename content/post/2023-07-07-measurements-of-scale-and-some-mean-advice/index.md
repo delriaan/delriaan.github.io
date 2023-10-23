@@ -3,6 +3,8 @@ title: Distributions and Some "Mean" Advice
 author: Chionesu George
 date: '2023-07-15'
 slug: distributions-and-some-mean-advice
+series:
+  - Measurements of Scale
 categories:
   - Theory
 tags:
@@ -10,10 +12,9 @@ tags:
   - distributions
   - statistics
   - data
-output: html_document
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-21 20:29:29</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 21:51:26</span>
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study
