@@ -7,37 +7,20 @@
   --coolPurple: #3333DD55
   --footerBg: #DDDDDD; 
   --footerBorder: #BBB;
+  
+  --theme_background: #333;
+  --theme_font_color: #CDECDE;
 }
 
-body { 
+/* :::::: FIXED RULES :::::: */
+body {
   margin-left: 10px; 
   margin-right: auto; 
-  font-size: 9pt; 
-  background-color: var(--pale);
   width:100% !important; 
   min-width: 1200px !important;
 }
 
-pre  { display: none; }
-
-table { 
-  margin-bottom: 1em; 
-  border:solid 2px var(--gray);
-}
-
-td { 
-  padding: 0.25em; 
-  border:solid 1px var(--offwhite); 
-}
-
-sup { 
-  font-size: 0.7em; 
-  color:#995522; 
-}
-
-a { color: var(--coolPurple); }
-
-p { 
+p {
   margin-top: 0.75em; 
   margin-bottom: 0.75em; 
 }
@@ -47,56 +30,84 @@ figcaption {
   word-wrap: normal; 
   text-overflow:word-break; 
 }
-  
-.math { color: var(--gray); }
 
-/* ---- RMarkdown-specific Rules ---- */
-a[aria-expanded='true'] { color: var(--coolPurple); }
-a[role='tab']:hover { color: #000000; }
-a[role='tab'] { 
-  font-size: 13pt; 
-  color: var(--lightGray); 
+code {
+  font-size: 10pt; 
 }
 
-.pagedtable { border:none; }
+blockquote {
+  display:block; 
+}
 
-.listHeader { 
-  font-size:larger; 
+pre  {
+  display: none; 
+}
+
+table {
+  margin-bottom: 1em; 
+  border:solid 2px var(--gray);
+}
+
+td {
+  padding: 0.25em; 
+  border:solid 1px var(--offwhite); 
+}
+
+sup { 
+  font-size: 0.7em; 
+  color:#995522; 
+}
+
+a {
+  color: var(--coolPurple); 
+}
+
+/* Toggle Content */
+hint, term {
+  font-variant:small-caps; 
+  font-style: italic;
+}
+
+[role='toggle']:hover {
+  cursor: pointer; 
   font-weight: bold; 
 }
 
+/* Rmarkdown */
 .container-fluid .main-container { 
   margin:auto !important; 
   width:100% !important; 
 }
 
-/* ---- Toggle/Custom Content Rules ---- */
-hint, term { font-variant:small-caps; }
+/* ::::::::: <END> :::::::: */
 
-hint { 
+/* :::::: THEMED RULES :::::: */
+body {
+  background-color: var(--theme_background);
+  color: var(--theme_font_color);
+}
+
+[role='toggle'] {
   color: #EE9977; 
   font-weight:bold; 
   font-size: 8pt; 
   font-family: Georgia; 
+  font-variant: small-caps italic;
+  text-decoration: underline;
 }
 
-comment { 
+comment {
   color: var(--pine); 
   font-family:Times; 
 }
 
-[role='toggle']:hover { 
-  cursor: pointer; 
-  font-weight: bold; 
-}
-
-.first{ 
+.first{
   font-variant:small-caps; 
   font-weight:bold; 
   background-color:#EFF4FA; 
 }
 
-.sidebar { 
+.sidebar {
   float:right; 
   display:block;
   width:240px; 
@@ -105,17 +116,12 @@ comment {
   margin:0 0 10 25; 
 }
   
-.sidebar > term { 
+.sidebar > term {
   background-color: var(--gray); 
   color:#CCCCEE; 
   padding:5px; 
   margin-right:5px; 
 }
-
-/* ---- Other Rules ---- */
-code {font-size: 10pt; }
-
-blockquote { display:block; }
 
 .definition {
   display:block; 
@@ -127,14 +133,14 @@ blockquote { display:block; }
   border-bottom: var(--coolPurple); 
 }
 
-.optional { 
+.optional {
   background-color:#FFEFFF; 
   margin-left:20px; 
   margin-bottom: 10px; 
   border-left: var(--gray); 
 }
 
-.quote { 
+.quote {
   font-family:Georgia; 
   font-style:italic; 
   color: var(--pine)
@@ -149,3 +155,4 @@ blockquote { display:block; }
   border-bottom: solid 5px var(--footerBorder);
   text-align: left;
 }
+/* ::::::::: <END> :::::::: */

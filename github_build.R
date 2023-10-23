@@ -8,17 +8,23 @@ blogdown::serve_site(port = 4321, daemon = TRUE)
 
 browseURL("http://localhost:4321")
 
-file.meta.public <- paste0("public/", dir("public", include.dirs = TRUE)) |> 
+file_meta.public <- paste0("public/", dir("public", include.dirs = TRUE)) |> 
   lapply(file.info) |> 
   purrr::reduce(rbind) |>
   data.table::as.data.table(keep.rownames = TRUE, key="mtime") 
 
-updated_file_check <- file.meta.public$mtime >= (Sys.time() - lubridate::hours(4)); 
+updated_file_check <- file_meta.public$mtime >= (Sys.time() - lubridate::hours(12)); 
+
 if (any(updated_file_check)){
   file.copy(
-    from = file.meta.public[updated_file_check, rn]
+    from = file_meta.public[updated_file_check, rn]
     , to = "docs"
     , overwrite = TRUE
     , recursive = TRUE
     )
   }
+
+file_meta.docs <- paste0("docs/", dir("docs", include.dirs = TRUE)) |> 
+  lapply(file.info) |> 
+  purrr::reduce(rbind) |>
+  data.table::as.data.table(keep.rownames = TRUE, key="mtime") 

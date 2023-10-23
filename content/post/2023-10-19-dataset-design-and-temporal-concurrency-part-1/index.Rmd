@@ -14,7 +14,6 @@ tags:
 - engineering
 - semantics
 - time
-
 ---
 
 `r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
@@ -31,7 +30,7 @@ spsUtil::quiet({
 
 tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
 
-dir(ifelse(Sys.getenv('GIT_REPOS') == "", Sys.getenv("GIT_Imperial"), Sys.getenv('GIT_REPOS')), pattern = "jav.+help.+R$", recursive = TRUE, full.names = TRUE) |> source();
+dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "((jav.+help)|(blog_footer)).+R$)", recursive = TRUE, full.names = TRUE) |> walk(source);
 
 hint_js(
   tags = c("ul","p")
@@ -200,5 +199,5 @@ These will be addressed subsequent posts:
 I look forward to seeing you in Part 1.  Until then, I wish you much success in your journey as a data practitioner!
 
 ```{r CLOSE}
-htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+blog_footer()
 ```

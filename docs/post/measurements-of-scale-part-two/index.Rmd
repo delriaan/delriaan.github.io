@@ -1,0 +1,330 @@
+---
+title: Measurements of Scale, Part Two
+author: Chionesu George
+date: '2023-08-06'
+slug: measurements-of-scale-part-two
+series:
+  - Measurements of Scale
+categories:
+  - Theory
+tags:
+  - central tendency
+  - distributions
+  - statistics
+  - data
+---
+
+`r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
+
+```{r SETUP, echo=FALSE}
+options(dictionaryAPI = "https://api.dictionaryapi.dev/api/v2/entries/en/%s");
+
+spsUtil::quiet({
+  library(book.of.workflow); 
+  load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
+})
+
+tags$script(src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML");
+tags$script(src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML");
+
+def_of <- \(x){ 
+  .url <- sprintf(getOption("dictionaryAPI"), x)
+  GET(url = .url) |> content()
+}
+
+.string <- stri_extract_all_words("I tried to climb the hill but was too tired", simplify = TRUE) |> 
+  rlang::set_names();
+
+dimnames(.string) <- list(NULL, unlist(.string));
+
+attr(.string, "sentence") <- paste(.string, collapse = " ") |> paste0(".")
+
+tags$style(
+  paste(".warning {background-color:#DFDFDFEE"
+        , "border-top: solid 2px #AA0000"
+        , "border-bottom: solid 2px #AA0000}"
+        , sep = "; "
+  )
+)
+```
+
+**References** 
+
+-   [Nominal, Ordinal, Interval, and Ratio Scales](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/) (Statistics by Jim)
+
+-   [Scales of Measurement](https://byjus.com/maths/scales-of-measurement/) (Byju's Learning)
+
+-   [Level of Measurement](https://en.wikipedia.org/wiki/Level_of_measurement#) (Wikipedia)
+
+-   [Levels of Measurement](https://www.scribbr.com/statistics/levels-of-measurement/) (Scribbr)
+
+And we're back!
+
+Be sure to check out Measurements of Scale part one, [here](https://delriaan.github.io/2023/07/27/measurements-of-scale-part-one/). Now, we'll tackle *interval* and *ratio* measurements.
+
+<p class='warning'><span style="color:#AA0000; font-weight:bold">Warning</span>: This entry is considerably longer than Part One.  If you suffer from <code>TL;DR</code>, please use the "back" button to return to safety.</p>
+
+## Interval Scale: It's all about distance
+
+In the previous article, it was stated that an ordinal scale does not indicate *"[d]istance between positions"* or *"intrinsic value at each position"*. An interval scale, however, possesses the qualities of an ordinal scale **and** includes information about the *distance* between positions.
+
+As a data practitioner, keep in mind that distance is not a strictly geo-spatial term.  For example, consider the words in the sentence _"`r attr(.string, "sentence")`"_:
+
+-   The **position** of appearance of words the words are on an _ordinal_ scale
+
+-   The **distances** between word positions are also on an _interval_ scale: 
+```{r INTV_EX_0, echo=FALSE}
+seq_along(.string) |> 
+  rlang::set_names(names(.string)) |> 
+  (\(x) outer(x, x, `-`) |> data.table::as.data.table(keep.rownames = TRUE))() |> 
+  (\(i){
+    rlang::inject(tags$table(
+      style = "margin-left:50px; font-size:smaller; "
+      , stri_replace_first_fixed(names(i), "rn", "") |>
+        imap(\(x, y){
+          tags$th(
+            style = paste(
+              ifelse(y == 1, "text-align: right; padding-right:10px; ", "text-align: center")
+              , ifelse(grepl("[-]", x), "color: red", "color: black")
+              , sep = "; "
+              )
+            , x
+            )
+        }) |> 
+        tags$tr()
+      , !!!apply(i, 1, \(j){
+            rlang::set_names(j, seq_along(j)) |>
+            imap(\(x, y){ 
+              tags$td(
+                style = paste(
+                  ifelse(y == 1, "font-weight:bold; text-align: right", "text-align: center")
+                  , ifelse(grepl("[-]", x), "color: red", "color: black")
+                  , sep = "; "
+                  )
+                , x
+                )
+            }) |> 
+            tags$tr()
+          }, simplify = FALSE)
+      ))
+  })()
+```
+
+In addition, interval scales have an infinite domain and no **true** zero point:
+ 
+-   Latitude and longitude are on an interval scale.  The "zero" location on the globe (<span style="font-family: Georgia; ">0 &deg; long., 0 &deg; lat.</span>) is arbitrary, only having value for the purpose of providing a reference point from which distance is measured. 
+
+-   Temporal demarcations (e.g., dates, timestamps, etc.) are also on an interval scale <sup style="color:red">*</sup>. "Nine o'clock" is not three times as "big" as "three o'clock".  Also, there would be no reason one should consider a clock divided into 27 partitions as invalid as long as the partitions are equal. 
+
+<span style="font-size:smaller"><sup style="color:red">*</sup> Yes, one could point to [cosmological theories](https://plato.stanford.edu/entries/cosmological-argument/) of the origin of the universe as a rebuttal, so I ask for your indulgence.</span>
+
+By way of example:
+
+```{r INTV_EX_1, echo=FALSE, cache=TRUE}
+ex_data <- sample(100, 10)
+
+ordinal <- seq_along(ex_data)
+
+interval <- round(ex_data - mean(ex_data), 2)
+
+ex_data.html <- tags$span(sprintf("[%s]", paste(ex_data, collapse = ", ")))
+
+ordinal.html <- tags$span(sprintf("[%s]", paste(ordinal, collapse = ", ")))
+
+interval.html<- tags$span(sprintf("[%s]", paste(interval, collapse = ", ")))
+```
+
+-   $X:$ _a vector of data_ <br> `r ex_data.html`
+
+-   **Ordinal:** positions of each value in $X$<br> `r ordinal.html`
+
+-   **Interval:** distances from the mean $(X - \bar{X})$<br> `r interval.html`<br>
+
+Division and multiplication are not allowed on an interval scale: fortunately, we have our final measurement scale &mdash; the _ratio_ scale.
+
+## Ratio
+
+```{r RATIO_DATA, echo=FALSE}
+fun <- \(j){
+  rgb.vec <- c("black"
+               , rgb(red = (1 - as.numeric(j[-1])) |> modify_if(\(x) x > 0.75, \(x) 0.75)
+                    , green = (1 - sqrt(as.numeric(j[-1]) * 0.85)) |> modify_if(\(x) x > 0.75, \(x) 0.75)
+                    , blue = (1 - as.numeric(j[-1])/max(as.numeric(j[-1]))) |> modify_if(\(x) x > 0.75, \(x) 0.75)
+                    ))
+  
+  imap(rgb.vec, \(x, y){
+    tags$td(
+      style = paste(
+        ifelse(y == 1, "font-weight:bold; width:100px; text-align: right", "text-align: center")
+        , glue::glue("color: {x}")
+        , sep = "; "
+        )
+      , j[y]
+      )
+  }) |> 
+  tags$tr()
+}
+
+.string_sim <- .string |> 
+  stringsimmatrix(method = "jw", useNames = TRUE) |> 
+  as.matrix() |> 
+  round(4)
+  
+.string_sim.viz <- data.table::as.data.table(.string_sim, keep.rownames = TRUE) |>
+  (\(i){
+      rlang::inject(tags$table(
+        style = "margin-left:25px; font-size:smaller; "
+        , stri_replace_first_fixed(names(i), "rn", "") |>
+          imap(\(x, y){ tags$th(
+            style = ifelse(y == 1, "font-weight:bold; width:100px; text-align: right", "text-align: center")
+            , x)
+          }) |> 
+          tags$tr()
+        , !!!apply(i, 1, fun, simplify = FALSE)
+        ))
+    })()
+
+ratio.data <- list()
+ratio.data$entrance <- c(LETTERS[1:4])
+ratio.data$entered <- book.of.utilities::factor.int(96) |> sample(4)
+ratio.data$exited <- sample(max(ratio.data$entered), 4)
+ratio.data$entered[3] <- 0
+ratio.data$exited[2] <- 0
+ratio.data$entered[4] <- ratio.data$exited[1]
+
+# Hard-code values once satisfactory values have been generated
+ratio.data$entered <- c(12,6,0,1)
+ratio.data$exited <- c(1,0,4,6)
+```
+<span style="font-family: Georgia; font-size: 14pt;">“Alas, poor Yorick! I knew him, Ho</span><span style="font-style: italic; font-weight:bold; ">ratio</span>"</span>
+
+Not only does the ratio scale contain the winning personality of an interval scale, it possesses the distinguishing feature of having an absolute zero point beyond which nothing exists.  Physical measurements such as _weight_ and _height_ are examples.  Returning to our example sentence, we have the concept of _string similarity_ which is also on a ratio scale (_Jaro-Winkler_ string similarity values generated with the R package [stringdist](https://github.com/markvanderloo/stringdist)):
+
+`r .string_sim.viz`
+
+**The Importance of Absolute Zero**
+
+What makes a ratio scale so great is that it provides an objective, uniform way to communicate information about the values at each location as well as the distances between values.  Count data is a great example of this. For example, consider a set of counts of unique people entering or leaving an auditorium (for the first time) though one of four entrances:
+
+```{r ABS_ZERO, echo=FALSE}
+ratio.data |> 
+  transpose() |> 
+  (\(x){ 
+    rlang::inject(
+      tags$table(
+        style = "margin-left:50px; font-size:smaller; "
+        , lapply(names(ratio.data) |> stri_trans_totitle(),\(i) tags$th(style = "width:80px; ", i)) |> tags$tr()
+        , !!!map(x, \(i) lapply(i, \(j) tags$td(style = "text-align:center", j)) |> tags$tr())
+        )
+      ) 
+  })()
+```
+
+Having an absolute zero point allows us to objectively state that nobody entered through **Entrance C** or exited through **Door B** for the first time during the measurement period.  Another example is a sequence of notes played at certain volumes (measured in _decibels_): 
+
+```{r MUSIC_DATA, echo=FALSE}
+interval.music <- { list(
+  A = 220.00
+  , `A#` = 233.08
+  , B = 246.94
+  , `C (middle)` = 261.63
+  , `C#` = 277.18
+  , D = 293.66
+  , `D#` = 311.13
+  , E = 329.63
+  )}
+
+interval.music %<>% list_merge(!!!(seq_along(interval.music)-4)/2);
+
+interval.music %<>% list_merge(!!!(rnorm(n = length(interval.music), mean = 20, sd = 60) |> round(2)));
+
+sigmoid.viz <- (\(x){
+  plot_ly(
+    x = x
+    , y = book.of.features::sigmoid(x, k = .1)
+    ) |> 
+    config(mathjax = "cdn") |>
+    layout(
+      title = "<span style='font-family:Georgia'>Sigmoid Function</span><br><sup>Note the ranges of both axes</sup>"
+      , xaxis = list(title = TeX("\\text{X}"), showgrid = FALSE, zeroline=FALSE)
+      , yaxis = list(title = TeX("f(x)"), showgrid=FALSE)
+      , margin = list(b = -10, t = -.75)
+      ) |>
+    add_annotations(
+      text = TeX("f(x)=\\frac{L}{1 + e^{-k(x-x_0)}}")
+      , font = list(size = 50)
+      , x = -5, y = 0.85, ax = -20
+      , showarrow = FALSE
+      ) |>
+    add_annotations(
+      text = TeX("\\text{lim}_{x\\to\\infty}f(x)=0")
+      , font = list(size = 15)
+      , x = -10, y = 0.03, ax = 50, ay = -50
+      )
+})(-10:10)
+
+papercut.viz <- spsUtil::quiet({ book.of.utilities::call.recursion(
+    x = 0
+    , fun = \(i) list(x = i, y = 2^(-i))
+    , test = \(i) i$x < 20
+    , nxt = \(i) i$x + 1
+    , max.iter = 20
+    , simplify = FALSE
+    ) |>
+  map_dfr(unlist) |>
+  as.data.table() |>
+  architect::define(text = (\(x){
+          i <- c("Small", "Smaller", "Really small", "Get a microscope!", "Approaching zero!!!")
+          k <- outer(x, c(1E-0, 1E-1, 1E-2, 1E-3, 1E-4), `<`) |> rowSums()
+          i[k]
+        })(y)) |>
+  plot_ly(
+    x = ~x
+    , y = ~y
+    , color = ~y
+    , size = ~10 * y
+    , width = 720
+    , height = 550
+    , name = "The half of it"
+    , hoverinfo = "text+info"
+    , hovertext = ~glue::glue("Piece size: {ifelse(y < 0.125, text, y)}")
+    , stroke = I("#000000")
+    , type = "scatter"
+    , mode = "markers"
+    ) |> 
+  config(mathjax = "cdn") |>
+  # hide_colorbar() |>
+  colorbar(title = list(text = "<span style='font-family: Georgia'>f(x) = 2<sup>-x</sup></span>")) |>
+  layout(
+    title = "Cutting Into Halves<br><span style='font-size:smaller; font-family: Georgia; ' >(How 1,000 papercuts happen)</span>"
+    , margin = list(t = -11, b = -11)
+    , plot_bgcolor = "#EFEFEF"
+    , xaxis = list(title = TeX("x\\text{ (# of halves)}"), gridcolor = "#CCCCCC")
+    , yaxis = list(title = TeX("f(x)"), gridcolor = "#CCCCCC")
+    )
+})
+
+tags$table(
+  style = "margin-left:50px; font-size:smaller; "
+  , c("Note", "Freq (Hz)", "Distance<br>from C", "dB") |> 
+    lapply(\(i) tags$th(style = "width:90px; ", HTML(i))) |> 
+    tags$tr()
+  , as.list(interval.music) |>
+      imap(\(i, k){
+        lapply(c(k, i), \(j) tags$td(style = "text-align:center", j)) |> tags$tr()
+      })
+  )
+```
+
+-   With an interval scale, one can correctly state that the `E` is two steps (distance) from the `C`, but it would be incorrect to state that `E` is twice as "high" as `D`.  
+
+-   With a ratio scale, once correctly state that `r interval.music$E[1] - interval.music$C[1]` Hz separates `E` and `C` and that `E` has `r round(interval.music$E[1] / interval.music[["C (middle)"]][1], 1)` times as high a frequency as `C`.
+
+-   A final ... note (_sorry_): column "dB" is on a ratio scale, but it isn't obvious.  There doesn't appear to be an absolute zero given the negative values, so what gives? Decibels (dB) are [logarithmic.](https://www.mathsisfun.com/algebra/logarithms.html)  Negative logarithms result in smaller values. To illustrate, consider taking a piece of paper, cutting it in half, and then repeating this process many times: $\frac{1}{2^0}, \frac{1}{2^1}, \frac{1}{2^2}, \cdots, \frac{1}{2^x}\equiv 2^{-x}: x\in [0, \infty)$. With each iteration, the halves become smaller and smaller.  At some point, there would be *virtually* nothing left to cut:
+`r papercut.viz`
+<hr width = "100%">
+Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. Until we meet again, I wish you much success in your journey as a data practitioner!
+
+```{r CLOSE, echo=FALSE}
+htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+```
