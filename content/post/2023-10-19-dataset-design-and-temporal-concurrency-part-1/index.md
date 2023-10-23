@@ -17,7 +17,7 @@ tags:
 
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 23:47:56</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 00:37:35</span>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
@@ -86,7 +86,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-10-22 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-10-23 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 

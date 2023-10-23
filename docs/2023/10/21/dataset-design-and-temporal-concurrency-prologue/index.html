@@ -41,13 +41,13 @@
 
   <ul class="nav-links">
     
-    <li><a href="/">Articles</a></li>
+    <li><a href="/post/">Articles</a></li>
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
     
     <li><a href="/data-projects/">Data Projects</a></li>
     
     <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
-    
-    <li><a href="/r-pkgs/">R Packages</a></li>
     
   </ul>
 </nav>
@@ -59,19 +59,16 @@
 
   <article class="article">
     
-    <span class="article-duration">4 min read</span>
-    
 
     <h1 class="article-title">Dataset Design and Temporal Concurrency, Prologue</h1>
 
     
-    <span class="article-date">2023-10-21</span>
-    
 
     <div class="article-content">
-      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-21 23:30:13</span></p>
+      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-22 20:24:29</span></p>
 <style>.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script src="markdown.js"></script>
 <style>
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
@@ -122,7 +119,7 @@ hint:hover {cursor: pointer; }
 </ul>
 <hr style="width:80%; "/>
 <h2 id="a-motivating-example">A Motivating Example</h2>
-<p>Consider a business request submitted 2023-10-21 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<p>Consider a business request submitted 2023-10-22 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 <h3 id="problem-restatement">Problem Restatement</h3>
 <p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>

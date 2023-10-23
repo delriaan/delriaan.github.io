@@ -23,13 +23,15 @@ tags:
 knitr::opts_chunk$set(echo = FALSE);
 
 spsUtil::quiet({
+  library(rlang, include.only = "%||%")
   library(book.of.workflow); 
   load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
 });
 
+
 tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
 
-dir(Sys.getenv('GIT_REPOS'), pattern = "jav.+help.+R$", recursive = TRUE, full.names = TRUE) |> source();
+dir(ifelse(Sys.getenv('GIT_REPOS') == "", Sys.getenv("GIT_Imperial"), Sys.getenv('GIT_REPOS')), pattern = "jav.+help.+R$", recursive = TRUE, full.names = TRUE) |> source();
 
 hint_js(
   tags = c("ul","p")
