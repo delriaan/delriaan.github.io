@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.111.3">
+
+
+<title>Dataset Design and Temporal Concurrency, Prologue - Chionesu By Design</title>
+<meta property="og:title" content="Dataset Design and Temporal Concurrency, Prologue - Chionesu By Design">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
+    
+    <li><a href="/data-projects/">Data Projects</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Dataset Design and Temporal Concurrency, Prologue</h1>
+
+    
+    <span class="article-date">2023-10-21</span>
+    
+
+    <div class="article-content">
+      
+      
+
+
+<p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 22:25:35</span></p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="markdown.js"></script>
+<style>
+.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}
+#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
+.def_sym {font-weight:bold; color:#5555DD; } 
+.speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
+hint {font-size: 14pt; font-family: Georgia; font-variant: small-caps italic;  text-decoration: underline;}
+hint:hover {cursor: pointer; font-weight: bold; }
+[id^='Math'] {font-size;10pt; }
+</style>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
+<p>This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Reduce trial-and-error data engineering iterations by using a methodological treatment of the <em>ontology</em> (<em>temporal</em> ontology for this article series) of the relevant data sources and the <em>semantic relationships</em> between data source and the problem statement at hand</li>
+<li>Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.</li>
+</ol>
+<p>Moving forward, the base unit of time will be days, mainly due to not having had to deal with more frequent units of time but also because it’s just easier to think and converse in terms of days.</p>
+</div>
+<div id="definitions-conventions" class="section level2">
+<h2>Definitions &amp; Conventions</h2>
+<ul>
+<li><p><span class="def_sym"><span class="math inline">\(D_{i,j}\)</span></span>: a tabular dataset of <span class="math inline">\(i\)</span> rows and <span class="math inline">\(j\)</span> columns</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(Ω_k\)</span></span>: Row-based dataset qualifiers — specifically, a set of <span class="math inline">\(k\)</span> rules/criteria <span class="math inline">\((ω_1, \omega_2, \omega_3, \cdots, \omega_k)\)</span> given as predicate statements, that qualify the rows of dataset <span class="math inline">\(D\)</span> such that <span class="math inline">\(D_\Omega\subset D\)</span>.</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(Y|X\)</span></span>: Condition, read as <em>“Y given X”</em> or <em>“Y conditioned on X”</em> — an existential constraint that subsets the left-hand side to those cases where the right-hand side exists or is true. For example, <span class="math inline">\(\text{Cost}_\text{item}|\big\{\text{Id}_\text{item}=90210\big\}\)</span> is interpreted as <em>“Item cost where item ID equals 90210”</em>.</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(∧, ∨\)</span></span>: Logical <em>“and”</em> and <em>“or”</em>, respectively</p></li>
+</ul>
+<p>
+<b>Column (&delta;) Taxonomy </b>
+<span role="toggle" context="definition" toggleGroup="0" class="">
+
+<hint toggleGroup="0">(show)</hint>
+</span>
+</p>
+<p>
+<ul toggleGroup="0" context="definition">
+<li>
+<span class="def_sym">&delta;<sup>I</sup></span>
+: Information-carrying columns
+</li>
+<li>
+<span class="def_sym">&delta;<sup>G</sup></span>
+: Grouping columns (categorical, descriptive)
+</li>
+<li>
+<span class="def_sym">&delta;<sup>Y</sup></span>
+: Measurements (e.g., purchase price, height, product ratings)
+</li>
+<li>
+<span class="def_sym">&delta;<sup>T</sup></span>
+: Temporal columns to include dates and temporal hierarchies
+</li>
+<li>
+<span class="def_sym">&delta;<sup>E</sup></span>
+: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
+</li>
+</ul>
+</p>
+<hr style="width:100%; "/>
+</div>
+<div id="a-motivating-example" class="section level2 tabset tabset-fade">
+<h2>A Motivating Example</h2>
+<p>Consider a business request submitted 2023-10-23 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
+<div id="problem-restatement" class="section level3">
+<h3>Problem Restatement</h3>
+<p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>
+<blockquote class="speech" style="border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; ">
+<span role="toggle" context="problemStatement" toggleGroup="1" class="">
+Life is data, but data is not life  
+<hint toggleGroup="1">(show)</hint>
+</span>
+</blockquote>
+<p style="margin-left:30px; " context="problemStatement" toggleGroup="1">Life <i>produces</i> information and data <i>encodes</i> it &mdash; <i>always</i> with a loss of information. In the reverse direction, data must be interpreted back to the real-world in order to be considered information precisely because it ties back to the real-world. This semantic map should always be kept in mind.</p>
+<blockquote class="speech" style="border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; ">
+<span role="toggle" context="problemStatement" toggleGroup="2" class="">
+The language of data follows the language of people  
+<hint toggleGroup="2">(show)</hint>
+</span>
+</blockquote>
+<p style="margin-left:30px; " context="problemStatement" toggleGroup="2">A basic framework for interpreting and communicating information is <i>language</i>. Language involves syntax and structure to make distinctions among information and provide meaning on the basis of those distinctions.  Since data encodes information, it loosely follows the semantics and syntax of human language.</p>
+<p>With that in mind, the business request can be restated in terms of the following:</p>
+<table>
+<tr>
+<td style="background-color:#FFFFFF; width:20px; height:20px; border:outset #999999 2px; "></td>
+<td style="width:100px; padding-left:5px; align:right">Who?</td>
+<td style="background-color:#FFFFFF; width:20px; height:20px; border:outset #999999 2px; "></td>
+<td style="width:100px; padding-left:5px; align:right">When?</td>
+<td style="background-color:#FFFFFF; width:20px; height:20px; border:outset #999999 2px; "></td>
+<td style="width:100px; padding-left:5px; align:right">What?</td>
+<td style="background-color:#FFFFFF; width:20px; height:20px; border:outset #999999 2px; "></td>
+<td style="width:100px; padding-left:5px; align:right">How?</td>
+</tr>
+</table>
+<p>These will be addressed subsequent posts:</p>
+<ul>
+<li><em>Part 1</em> will cover <span class="speech">Who?</span> and <span class="speech">When?</span></li>
+<li><em>Part 2</em> will address <span class="speech">What?</span></li>
+<li><em>Part 3</em> will cover <span class="speech">How?</span> as well as provide some concluding thoughts</li>
+</ul>
+<p>I look forward to seeing you in Part 1. Until then, I wish you much success in your journey as a data practitioner!</p>
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>
+</div>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

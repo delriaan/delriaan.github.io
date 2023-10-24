@@ -22,7 +22,7 @@
     <loc>/categories/data-engineering/</loc>
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/dataset-design-and-temporal-concurrency-prologue/</loc>
+    <loc>/2023/10/21/dataset-design-and-temporal-concurrency-prologue/</loc>
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/engineering/</loc>
@@ -49,20 +49,23 @@
     <loc>/tags/distributions/</loc>
     <lastmod>2023-08-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/measurements-of-scale-part-two/</loc>
+    <loc>/2023/08/06/measurements-of-scale-part-two/</loc>
     <lastmod>2023-08-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/statistics/</loc>
     <lastmod>2023-08-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/measurements-of-scale-part-one/</loc>
+    <loc>/2023/07/27/measurements-of-scale-part-one/</loc>
     <lastmod>2023-07-27T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/distributions-and-some-mean-advice/</loc>
+    <loc>/2023/07/15/distributions-and-some-mean-advice/</loc>
     <lastmod>2023-07-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>/post/welcome/</loc>
+    <loc>/2023/05/13/welcome/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/about/</loc>
+    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
   </url><url>
     <loc>/data-projects/</loc>
   </url><url>
