@@ -43,7 +43,7 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 <hr style="width:100%">
 Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
 
-```{r CLOSE}
+```{r CLOSE, echo=FALSE}
 ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
   dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
   purrr::walk(source);
