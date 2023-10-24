@@ -14,7 +14,7 @@ tags:
   - data
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 00:37:28</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 21:02:16</span>
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study
@@ -45,4 +45,14 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 
 Congratulations! You made it =) Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
 
-<p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>
+``` r
+ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
+  dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
+  purrr::walk(source);
+
+get_footer()
+```
+
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>

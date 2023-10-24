@@ -1,6 +1,6 @@
 blogdown::stop_server()
 
-file.copy(from = c("markdown.css"), to = "content", overwrite = TRUE)
+# file.copy(from = c("markdown.css"), to = "content", overwrite = TRUE)
 
 blogdown::build_site(local = TRUE, run_hugo = TRUE, build_rmd = TRUE)
 # blogdown::hugo_build(local = TRUE)
@@ -13,7 +13,7 @@ file_meta.public <- paste0("public/", dir("public", include.dirs = TRUE)) |>
   purrr::reduce(rbind) |>
   data.table::as.data.table(keep.rownames = TRUE, key="mtime") 
 
-updated_file_check <- file_meta.public$mtime >= (Sys.time() - lubridate::hours(12)); 
+updated_file_check <- file_meta.public$mtime >= (Sys.time() - lubridate::hours(72)); 
 
 if (any(updated_file_check)){
   file.copy(

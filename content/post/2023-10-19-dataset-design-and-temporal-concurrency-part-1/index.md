@@ -16,7 +16,7 @@ tags:
 - time
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 09:15:15</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 21:02:25</span>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
@@ -131,4 +131,6 @@ These will be addressed subsequent posts:
 
 I look forward to seeing you in Part 1. Until then, I wish you much success in your journey as a data practitioner!
 
-<p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>

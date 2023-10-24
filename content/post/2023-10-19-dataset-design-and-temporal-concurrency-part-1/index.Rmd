@@ -30,7 +30,7 @@ spsUtil::quiet({
 
 tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
 
-dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "((jav.+help)|(blog_footer)).+R$)", recursive = TRUE, full.names = TRUE) |> walk(source);
+dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "(javascript|footer).+R$", recursive = TRUE, full.names = TRUE) |> walk(source);
 
 hint_js(
   tags = c("ul","p")
@@ -199,5 +199,5 @@ These will be addressed subsequent posts:
 I look forward to seeing you in Part 1.  Until then, I wish you much success in your journey as a data practitioner!
 
 ```{r CLOSE}
-blog_footer()
+get_footer()
 ```

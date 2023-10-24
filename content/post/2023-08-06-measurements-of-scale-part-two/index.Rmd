@@ -325,6 +325,10 @@ tags$table(
 <hr width = "100%">
 Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. Until we meet again, I wish you much success in your journey as a data practitioner!
 
-```{r CLOSE, echo=FALSE}
-htmltools::tags$p(readLines("../../footer.html") |> paste(collapse="") |> htmltools::HTML())
+```{r CLOSE}
+ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
+  dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
+  purrr::walk(source);
+
+get_footer()
 ```

@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -69,7 +74,7 @@
     
 
     <div class="article-content">
-      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 00:37:28</span></p>
+      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 21:02:16</span></p>
 <p><strong>Focal Thoughts:</strong></p>
 <ol>
 <li>Simply reporting a measure of central tendency presents an incomplete picture of the data under study</li>
@@ -97,7 +102,14 @@
 </ul>
 <hr style="width:100%">
 <p>Congratulations! You made it =) Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!</p>
-<p><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; "><span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span></p></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-r" data-lang="r"><span style="display:flex;"><span><span style="color:#a6e22e">ifelse</span>(<span style="color:#a6e22e">Sys.getenv</span>(<span style="color:#e6db74">&#39;GIT_REPOS&#39;</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;&#39;</span>, <span style="color:#a6e22e">Sys.getenv</span>(<span style="color:#e6db74">&#39;GIT_Imperial&#39;</span>), <span style="color:#a6e22e">Sys.getenv</span>(<span style="color:#e6db74">&#39;GIT_REPOS&#39;</span>)) <span style="color:#f92672">|&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">dir</span>(pattern <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;blog&#34;</span>, recursive <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>, full.names <span style="color:#f92672">=</span> <span style="color:#66d9ef">TRUE</span>) <span style="color:#f92672">|&gt;</span> 
+</span></span><span style="display:flex;"><span>  purrr<span style="color:#f92672">::</span><span style="color:#a6e22e">walk</span>(source);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">get_footer</span>()
+</span></span></code></pre></div><p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>
 
     </div>
   </article>
@@ -120,6 +132,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 
