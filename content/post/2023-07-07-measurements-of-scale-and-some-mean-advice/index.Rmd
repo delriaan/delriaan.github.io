@@ -35,12 +35,11 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 - Knowing various CT measures allows you to be more deliberate regarding design decisions which is faster than having to "trial-and-error" your way to a solution. An added benefit is being in a better position to detect potential sources of errors in logic when evaluating business requests.
 
 <hr style="width:100%">
-Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
-
+Congratulations!  You made it =)  Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. 
 ```{r CLOSE, echo=FALSE}
 ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
   dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
-  purrr::walk(source);
-
-get_footer()
+  purrr::walk(source)
 ```
+
+{{% blogdown/footer %}}

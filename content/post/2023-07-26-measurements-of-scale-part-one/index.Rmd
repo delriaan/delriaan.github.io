@@ -53,17 +53,29 @@ In both contexts, one should separate _syntax_ from _semantics_; that is to say,
 For nominal and (especially) ordinal scales, there is often antecedent background information that implicitly governs how values in the real world are mapped to measurements on a scale.  For example, consider the qualifying decisions that are first made in determining how movies in a series are mapped to the ordinal scale $\{\text{awful}, \text{meh}, \text{awesome}\}$.  Ordinal scales provide _no prima facie information_ about such decisions.
 
 <hr style="width:100%">
-More can (and will) be said regarding the semantics of data, but for now, I'll end things here and address _interval_ and _ratio_ MoS in a subsequent post. Until we meet again, I wish you much success in your journey as a data practitioner!
+More can (and will) be said regarding the semantics of data, but for now, I'll end things here and address _interval_ and _ratio_ MoS in a subsequent post. 
 
 ```{r echo=FALSE, eval=TRUE}
 img <- magick::image_read("3 cats.jpg")
 img_dim <- magick::image_info(img)[c("width", "height")] * 0.8
-htmltools::tags$img(src="3 cats.jpg", width = img_dim["width"], height = img_dim["height"]) |>
-htmltools::span(htmltools::br(), "10, 1, and 3 in order of increasing age")
+htmltools::tags$img(src="3 cats.jpg"
+                    , width = img_dim["width"]
+                    , height = img_dim["height"]
+                    ) |>
+htmltools::span(style = "font-family: Georgia; color: #444444; font-size: smaller; "
+                , htmltools::br()
+                , "10, 1, and 3 in order of increasing age"
+                )
 
-ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
-  dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
-  purrr::walk(source);
-
-get_footer()
+ifelse(Sys.getenv('GIT_REPOS') == ''
+       , Sys.getenv('GIT_Imperial')
+       , Sys.getenv('GIT_REPOS')
+       ) |>
+  dir(pattern = "blog"
+      , recursive = TRUE
+      , full.names = TRUE
+      ) |> 
+  purrr::walk(source)
 ```
+
+{{% blogdown/footer %}}

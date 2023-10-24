@@ -317,12 +317,12 @@ tags$table(
 -   A final ... note (_sorry_): column "dB" is on a ratio scale, but it isn't obvious.  There doesn't appear to be an absolute zero given the negative values, so what gives? Decibels (dB) are [logarithmic.](https://www.mathsisfun.com/algebra/logarithms.html)  Negative logarithms result in smaller values. To illustrate, consider taking a piece of paper, cutting it in half, and then repeating this process many times: $\frac{1}{2^0}, \frac{1}{2^1}, \frac{1}{2^2}, \cdots, \frac{1}{2^x}\equiv 2^{-x}: x\in [0, \infty)$. With each iteration, the halves become smaller and smaller.  At some point, there would be *virtually* nothing left to cut:
 `r papercut.viz`
 <hr width = "100%">
-Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. Until we meet again, I wish you much success in your journey as a data practitioner!
+Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. 
 
 ```{r CLOSE, echo=FALSE}
 ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
   dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
-  purrr::walk(source);
-
-get_footer()
+  purrr::walk(source)
 ```
+
+{{% blogdown/footer %}}

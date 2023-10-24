@@ -188,8 +188,6 @@ These will be addressed subsequent posts:
 - _Part 2_ will address [What?]{.speech}
 - _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts
 
-I look forward to seeing you in Part 1.  Until then, I wish you much success in your journey as a data practitioner!
+I look forward to seeing you in Part 1.
 
-```{r CLOSE}
-get_footer()
-```
+{{% blogdown/footer %}}
