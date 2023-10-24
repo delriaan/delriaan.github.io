@@ -62,3 +62,8 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
     unsafe = true  # Enable user to embed HTML snippets in Markdown content.
   [markup.highlight]
     codeFences = false
+
+[taxonomies]
+  category = 'categories'
+  series = 'series'
+  tag = 'tags'
