@@ -9,6 +9,8 @@ tags: ['central tendency', 'distributions', 'statistics', 'data']
 ---
 `r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
 
+{{% blogdown/style %}}
+
 **References**
 
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)

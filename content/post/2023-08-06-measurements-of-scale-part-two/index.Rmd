@@ -42,6 +42,8 @@ tags$style(
 )
 ```
 
+{{% blogdown/style %}}
+
 **References** 
 
 -   [Nominal, Ordinal, Interval, and Ratio Scales](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/) (Statistics by Jim)
@@ -315,8 +317,12 @@ tags$table(
 -   With a ratio scale, once correctly state that `r interval.music$E[1] - interval.music$C[1]` Hz separates `E` and `C` and that `E` has `r round(interval.music$E[1] / interval.music[["C (middle)"]][1], 1)` times as high a frequency as `C`.
 
 -   A final ... note (_sorry_): column "dB" is on a ratio scale, but it isn't obvious.  There doesn't appear to be an absolute zero given the negative values, so what gives? Decibels (dB) are [logarithmic.](https://www.mathsisfun.com/algebra/logarithms.html)  Negative logarithms result in smaller values. To illustrate, consider taking a piece of paper, cutting it in half, and then repeating this process many times: $\frac{1}{2^0}, \frac{1}{2^1}, \frac{1}{2^2}, \cdots, \frac{1}{2^x}\equiv 2^{-x}: x\in [0, \infty)$. With each iteration, the halves become smaller and smaller.  At some point, there would be *virtually* nothing left to cut:
-`r papercut.viz`
-<hr width = "100%">
+
+```{r echo=FALSE}
+papercut.viz
+```
+
+<hr>
 Congratulations &mdash; you made it!  Thanks for taking this brief journey into measurements of scale.  In a future post, I'll relate measurements of scale and central-tendency to satisfying analytic requests, but before that, I'll address the *deconstruction* of analytic requests after I complete my research. 
 
 ```{r CLOSE, echo=FALSE}

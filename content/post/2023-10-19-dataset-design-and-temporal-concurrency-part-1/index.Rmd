@@ -1,5 +1,5 @@
 ---
-title: "Dataset Design and Temporal Concurrency, Prologue"
+title: "Dataset Design: Temporal Concurrency - Prologue"
 author: "Chionesu George"
 date: "2023-10-21"
 slug: "dataset-design-and-temporal-concurrency-prologue"
@@ -19,7 +19,6 @@ spsUtil::quiet({
   load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
 });
 
-
 tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
 
 dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "(javascript|footer).+R$", recursive = TRUE, full.names = TRUE) |> walk(source);
@@ -35,26 +34,28 @@ hint_js(
 tags$script(src = "markdown.js");
 
 tags$style(
-  paste(
-    ".warning {background-color:#DFDFDFEE"
-    , "border-top: solid 2px #AA0000"
-    , "border-bottom: solid 2px #AA0000}"
-    , sep = "; "
-    )
-  , "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
+  "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
   , ".def_sym {font-weight:bold; color:#5555DD; } "
   , ".speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }"
-  , "hint {font-size: 14pt; font-family: Georgia; font-variant: small-caps italic;  text-decoration: underline;}"
-  , "hint:hover {cursor: pointer; font-weight: bold; }"
-  , "[id^='Math'] {font-size;10pt; }"
+  , "[id^='Math'] {font-size: 14pt; }"
+  , paste(
+      "body {background-image: url(multicolored_lights.jpg)"
+      , "background-size: 2048px 300px"
+      , "background-repeat: no-repeat"
+      , "}"
+      , sep = "; "
+      )
   ); 
+
 ```
+
+{{% blogdown/style %}}
 
 ## Introduction
 
 Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries.  Best practices, techniques, and technology are inescapable concepts one will encounter.  What I'd like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 
-This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I've learned in dealing with temporal co-occurrence.  Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:
+This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I've learned in dealing with temporal co-occurrence.  Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:
 
 1. Reduce trial-and-error data engineering iterations by using a methodological treatment of the _ontology_ (*temporal* ontology for this article series) of the relevant data sources and the *semantic relationships* between data source and the problem statement at hand
 2. Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.

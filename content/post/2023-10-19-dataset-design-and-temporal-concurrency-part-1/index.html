@@ -1,5 +1,5 @@
 ---
-title: "Dataset Design and Temporal Concurrency, Prologue"
+title: "Dataset Design: Temporal Concurrency - Prologue"
 author: "Chionesu George"
 date: "2023-10-21"
 slug: "dataset-design-and-temporal-concurrency-prologue"
@@ -10,22 +10,21 @@ tags: ['analytics', 'data', 'engineering', 'semantics', 'time']
 
 
 
-<p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-24 09:03:18</span></p>
+<p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-24 20:59:42</span></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
 <style>
-.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
 .def_sym {font-weight:bold; color:#5555DD; } 
 .speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
-hint {font-size: 14pt; font-family: Georgia; font-variant: small-caps italic;  text-decoration: underline;}
-hint:hover {cursor: pointer; font-weight: bold; }
-[id^='Math'] {font-size;10pt; }
+[id^='Math'] {font-size: 14pt; }
+body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
 </style>
+<p>{{% blogdown/style %}}</p>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
-<p>This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
+<p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Reduce trial-and-error data engineering iterations by using a methodological treatment of the <em>ontology</em> (<em>temporal</em> ontology for this article series) of the relevant data sources and the <em>semantic relationships</em> between data source and the problem statement at hand</li>
 <li>Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.</li>

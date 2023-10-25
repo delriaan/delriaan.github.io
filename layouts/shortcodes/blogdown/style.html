@@ -1,3 +1,4 @@
+<style>
 :root {
   --pale: #DEDEDE;
   --offwhite: #FFFFEF;
@@ -13,28 +14,6 @@
 }
 
 /* :::::: FIXED RULES :::::: */
-body {
-  margin-left: auto; 
-  margin-right: auto; 
-  width:100% !important; 
-  min-width: 1200px !important;
-}
-
-p {
-  margin-top: 0.75em; 
-  margin-bottom: 0.75em; 
-}
-
-figcaption {
-  font-size:0.5em; 
-  word-wrap: normal; 
-  text-overflow:word-break; 
-}
-
-code {
-  font-size: 10pt; 
-}
-
 blockquote {
   display:block; 
 }
@@ -43,14 +22,9 @@ pre  {
   display: none; 
 }
 
-table {
-  margin-bottom: 1em; 
-  border:solid 2px var(--gray);
-}
-
-td {
-  padding: 0.25em; 
-  border:solid 1px var(--offwhite); 
+hr {
+  width:100%; 
+  border-top: 5px;
 }
 
 sup { 
@@ -64,11 +38,12 @@ a {
 
 /* Toggle Content */
 hint, term {
-  font-variant:small-caps; 
-  font-style: italic;
+  font-size: 14pt; 
+  font-family: Georgia; 
+  text-decoration: underline;
 }
 
-[role='toggle']:hover {
+hint:hover {
   cursor: pointer; 
   font-weight: bold; 
 }
@@ -85,6 +60,11 @@ hint, term {
   padding:20px; 
   border-radius: 20px
 }
+
+[id ~= "htmlwidget"] {
+  z-index:2;
+  width:120%;
+}
 /* ::::::::: <END> :::::::: */
 
 /* :::::: THEMED RULES :::::: */
@@ -93,18 +73,16 @@ body {
   color: var(--theme_font_color);
 }
 
-[role='toggle'] {
-  color: #EE9977; 
-  font-weight:bold; 
-  font-size: 8pt; 
-  font-family: Georgia; 
-  font-variant: small-caps italic;
-  text-decoration: underline;
-}
-
 comment {
   color: var(--pine); 
   font-family:Times; 
+}
+
+.warning {
+  background-color:#DFDFDFEE; 
+  border-top: solid 2px #AA0000; 
+  border-bottom: solid 2px #AA0000;
+  
 }
 
 .first{
@@ -154,11 +132,5 @@ comment {
 
 .ref {color: green;}
 
-.footer {
-  background-color: var(--footerBg);
-  color: var(--gray);
-  border-top: solid 5px var(--footerBorder);
-  border-bottom: solid 5px var(--footerBorder);
-  text-align: left;
-}
 /* ::::::::: <END> :::::::: */
+</style>
