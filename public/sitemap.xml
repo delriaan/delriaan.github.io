@@ -2,18 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/</loc>
-    <lastmod>2023-10-21T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url><url>
-    <loc>/post/</loc>
-    <lastmod>2023-10-21T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url><url>
     <loc>/tags/analytics/</loc>
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
+    <lastmod>2023-10-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/data/</loc>
@@ -32,6 +27,9 @@
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/categories/methodology/</loc>
+    <lastmod>2023-10-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
     <lastmod>2023-10-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>/tags/semantics/</loc>

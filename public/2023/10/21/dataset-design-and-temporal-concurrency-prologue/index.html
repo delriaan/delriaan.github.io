@@ -6,8 +6,8 @@
 <meta name="generator" content="Hugo 0.111.3">
 
 
-<title>Dataset Design and Temporal Concurrency, Prologue - Chionesu By Design</title>
-<meta property="og:title" content="Dataset Design and Temporal Concurrency, Prologue - Chionesu By Design">
+<title>Dataset Design: Temporal Concurrency - Prologue - Chionesu By Design</title>
+<meta property="og:title" content="Dataset Design: Temporal Concurrency - Prologue - Chionesu By Design">
 
 
   <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -60,7 +60,7 @@
     <span class="article-duration">4 min read</span>
     
 
-    <h1 class="article-title">Dataset Design and Temporal Concurrency, Prologue</h1>
+    <h1 class="article-title">Dataset Design: Temporal Concurrency - Prologue</h1>
 
     
     <span class="article-date">2023-10-21</span>
@@ -71,22 +71,156 @@
       
 
 
-<p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 23:21:41</span></p>
+<p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-24 21:25:04</span></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
 <style>
-.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
 .def_sym {font-weight:bold; color:#5555DD; } 
 .speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
-hint {font-size: 14pt; font-family: Georgia; font-variant: small-caps italic;  text-decoration: underline;}
-hint:hover {cursor: pointer; font-weight: bold; }
-[id^='Math'] {font-size;10pt; }
+[id^='Math'] {font-size: 14pt; }
+body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
 </style>
+<p><style>
+:root {
+  --pale: #DEDEDE;
+  --offwhite: #FFFFEF;
+  --pine: #234234;
+  --gray: #555555;
+  --lightGray: #CCCCCC;
+  --coolPurple: #3333DD55
+  --footerBg: #DDDDDD; 
+  --footerBorder: #BBB;
+  
+  --theme_background: #333;
+  --theme_font_color: #CDECDE;
+}
+
+ 
+blockquote {
+  display:block; 
+}
+
+pre  {
+  display: none; 
+}
+
+hr {
+  width:100%; 
+  border-top: 5px;
+}
+
+sup { 
+  font-size: 0.7em; 
+  color:#995522; 
+}
+
+a {
+  color: var(--coolPurple); 
+}
+
+ 
+hint, term {
+  font-size: 14pt; 
+  font-family: Georgia; 
+  text-decoration: underline;
+}
+
+hint:hover {
+  cursor: pointer; 
+  font-weight: bold; 
+}
+
+ 
+.container-fluid .main-container { 
+  margin:auto !important; 
+  width:100% !important; 
+}
+
+.article {
+  background-color: #EFEFEF; 
+  width: 120%; 
+  padding:20px; 
+  border-radius: 20px
+}
+
+[id ~= "htmlwidget"] {
+  z-index:2;
+  width:120%;
+}
+ 
+
+ 
+body {
+  background-color: var(--theme_background);
+  color: var(--theme_font_color);
+}
+
+comment {
+  color: var(--pine); 
+  font-family:Times; 
+}
+
+.warning {
+  background-color:#DFDFDFEE; 
+  border-top: solid 2px #AA0000; 
+  border-bottom: solid 2px #AA0000;
+  
+}
+
+.first{
+  font-variant:small-caps; 
+  font-weight:bold; 
+  background-color:#EFF4FA; 
+}
+
+.sidebar {
+  float:right; 
+  display:block;
+  width:240px; 
+  background-color:#EFF4FA; 
+  padding:5px; 
+  margin:0 0 10 25; 
+}
+  
+.sidebar > term {
+  background-color: var(--gray); 
+  color:#CCCCEE; 
+  padding:5px; 
+  margin-right:5px; 
+}
+
+.definition {
+  display:block; 
+  font-style: italic;
+  font-family: Georgia;
+  color: var(--coolPurple); 
+  background-color: var(--pale); 
+  border-top: var(--coolPurple); 
+  border-bottom: var(--coolPurple); 
+}
+
+.optional {
+  background-color:#FFEFFF; 
+  margin-left:20px; 
+  margin-bottom: 10px; 
+  border-left: var(--gray); 
+}
+
+.quote {
+  font-family:Georgia; 
+  font-style:italic; 
+  color: var(--pine)
+}
+
+.ref {color: green;}
+
+ 
+</style></p>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
-<p>This article serves as the introduction to a short series articles drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
+<p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Reduce trial-and-error data engineering iterations by using a methodological treatment of the <em>ontology</em> (<em>temporal</em> ontology for this article series) of the relevant data sources and the <em>semantic relationships</em> between data source and the problem statement at hand</li>
 <li>Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.</li>
@@ -136,7 +270,7 @@ hint:hover {cursor: pointer; font-weight: bold; }
 </div>
 <div id="a-motivating-example" class="section level2 tabset tabset-fade">
 <h2>A Motivating Example</h2>
-<p>Consider a business request submitted 2023-10-23 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<p>Consider a business request submitted 2023-10-24 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 <div id="problem-restatement" class="section level3">
 <h3>Problem Restatement</h3>
@@ -174,9 +308,12 @@ The language of data follows the language of people
 <li><em>Part 2</em> will address <span class="speech">What?</span></li>
 <li><em>Part 3</em> will cover <span class="speech">How?</span> as well as provide some concluding thoughts</li>
 </ul>
-<p>I look forward to seeing you in Part 1. Until then, I wish you much success in your journey as a data practitioner!</p>
-<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
+<p>I look forward to seeing you in Part 1.</p>
+<p>Until next time, I wish you much success in your journey as a data practitioner!
+
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>
 </p>
 </div>
 </div>

@@ -14,7 +14,7 @@
 
 /* :::::: FIXED RULES :::::: */
 body {
-  margin-left: 10px; 
+  margin-left: auto; 
   margin-right: auto; 
   width:100% !important; 
   min-width: 1200px !important;
@@ -79,6 +79,12 @@ hint, term {
   width:100% !important; 
 }
 
+.article {
+  background-color: #EFEFEF; 
+  width: 120%; 
+  padding:20px; 
+  border-radius: 20px
+}
 /* ::::::::: <END> :::::::: */
 
 /* :::::: THEMED RULES :::::: */
