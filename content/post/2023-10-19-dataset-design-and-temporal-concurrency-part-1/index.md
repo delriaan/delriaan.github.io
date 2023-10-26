@@ -8,7 +8,7 @@ categories: ['Data Engineering', 'Methodology', 'Theory']
 tags: ['analytics', 'data', 'engineering', 'semantics', 'time']
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 18:52:33</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 19:00:17</span>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
