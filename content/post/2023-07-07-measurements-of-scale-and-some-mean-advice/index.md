@@ -1,20 +1,16 @@
 ---
-title: Distributions and Some "Mean" Advice
-author: Chionesu George
+title: 'Distributions and Some "Mean" Advice'
+author: 'Chionesu George'
 date: '2023-07-15'
-slug: distributions-and-some-mean-advice
-series:
-  - Measurements of Scale
-categories:
-  - Theory
-tags:
-  - central tendency
-  - distributions
-  - statistics
-  - data
+slug: 'distributions-and-some-mean-advice'
+series: 'Measurements of Scale'
+categories: 'Theory'
+tags: ['central tendency', 'distributions', 'statistics', 'data']
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 21:36:21</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 18:52:26</span>
+
+{{% blogdown/style %}}
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study
@@ -43,16 +39,6 @@ Truth be told, there is a logical fallacy contained in the preceding scenarios: 
 
 <hr style="width:100%">
 
-Congratulations! You made it =) Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful. Until we meet again, I wish you much success in your journey as a data practitioner!
+Congratulations! You made it =) Thanks for allowing me to share a few nuggets of knowledge that I have personally found useful.
 
-``` r
-ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')) |>
-  dir(pattern = "blog", recursive = TRUE, full.names = TRUE) |> 
-  purrr::walk(source);
-
-get_footer()
-```
-
-<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
-<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
-</p>
+{{% blogdown/footer %}}

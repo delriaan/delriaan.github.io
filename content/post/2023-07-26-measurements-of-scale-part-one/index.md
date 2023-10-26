@@ -1,24 +1,23 @@
 ---
-title: Measurements of Scale, Part One
-author: Chionesu George
+title: 'Measurements of Scale, Part One'
+author: 'Chionesu George'
 date: '2023-07-27'
-slug: measurements-of-scale-part-one
-series:
-  - Measurements of Scale
-categories:
-  - Theory
-tags:
-  - central tendency
-  - distributions
-  - statistics
-  - data
+slug: 'measurements-of-scale-part-one'
+series: 'Measurements of Scale'
+categories: 'Theory'
+tags: ['central tendency', 'distributions', 'statistics', 'data']
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-23 21:36:24</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 18:52:28</span>
+
+{{% blogdown/style %}}
 
 **References**
+
 - [Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)](https://statisticsbyjim.com/basics/nominal-ordinal-interval-ratio-scales/)
+
 - [Scales of Measurement (Byju’s Learning)](https://byjus.com/maths/scales-of-measurement/)
+
 - [Level of Measurement (Wikipedia)](https://en.wikipedia.org/wiki/Level_of_measurement#)
 
 A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences. References are provided above, so I leave the reader to … well, *read*.
@@ -58,13 +57,12 @@ For nominal and (especially) ordinal scales, there is often antecedent backgroun
 
 <hr style="width:100%">
 
-More can (and will) be said regarding the semantics of data, but for now, I’ll end things here and address *interval* and *ratio* MoS in a subsequent post. Until we meet again, I wish you much success in your journey as a data practitioner!
+More can (and will) be said regarding the semantics of data, but for now, I’ll end things here and address *interval* and *ratio* MoS in a subsequent post.
 
-<span>
+<span style="font-family: Georgia; color: #444444; font-size: smaller; ">
 <img src="3 cats.jpg" width="512" height="350.4"/>
 <br/>
 10, 1, and 3 in order of increasing age
 </span>
-<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; ">
-<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
-</p>
+
+{{% blogdown/footer %}}

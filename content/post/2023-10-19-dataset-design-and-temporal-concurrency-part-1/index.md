@@ -8,12 +8,11 @@ categories: ['Data Engineering', 'Methodology', 'Theory']
 tags: ['analytics', 'data', 'engineering', 'semantics', 'time']
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-24 20:44:15</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 18:52:33</span>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
 <style>
-.warning {background-color:#DFDFDFEE; border-top: solid 2px #AA0000; border-bottom: solid 2px #AA0000}
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
 .def_sym {font-weight:bold; color:#5555DD; } 
 .speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
@@ -78,7 +77,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-10-24 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-10-26 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 
