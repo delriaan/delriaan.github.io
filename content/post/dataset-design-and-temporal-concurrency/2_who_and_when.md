@@ -1,0 +1,54 @@
+---
+title: 'Dataset Design: Temporal Concurrency - Who and When'
+author: Chionesu George
+date: '2023-10-31'
+slug: who-and-when
+series: 'Dataset Design and Temporal Concurrency'
+categories:
+  - Data Engineering
+  - Theory
+tags:
+  - analytics
+  - engineering
+  - time
+  - data
+  - semantics
+---
+
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 22:54:39</span>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="markdown.js"></script>
+<style>
+#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
+.def_sym {font-weight:bold; color:#5555DD; } 
+.speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
+[id^='Math'] {font-size: 14pt; }
+body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
+</style>
+
+{{% blogdown/style %}}
+{{% blogdown/markdown_js %}}
+
+Welcome back! Before getting started, let’s revisit out problem statement from the introduction:
+
+<span class="speech" style="font-size: 0.9em; ">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</span>
+
+The conventions I’ll use are also defined in the introduction <a href="../introduction#definitions--conventions" target="_blank">here</a>.
+
+# 
+
+## When
+
+Identifying the global temporal window ( `\(W\)` ) is important as defines the frame of reference within which temporal relations are queried and transformed. In this case, the window is defined as all records having temporal columns with at least one value falling within the period *2019-01-01* to *2020-12-31*:
+
+<span class="mathblock">`\(\forall W, D^λ \Rightarrow D^\lambda_\Omega:= \Bigg\{\matrix{ W_\text{start} \le \delta^T \le W_\text{end},\enspace\enspace\#\delta^T= 1\\ \\ W_\text{start} \le \delta^T_\text{end} \wedge W_\text{end} \ge \delta^T_\text{start},\enspace\enspace\#\delta^T= 2 }\Bigg\}\)`</span>
+
+, where `\(D^\lambda\)` is the data source for context `\(\lambda\)` (i.e., *demographics*, *claims*, *prescriptions*) and `\(W\)` the lower and upper dates of the global window. The first form of `\(D^\lambda\)` above reflects the case of a *single* time column in `\(D\)` and the second form when there are two.
+
+Regarding the second form:
+
+- It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of `\(\delta^I\)` is duplicative along `\(\delta^T\)` (more on this in a future article)
+
+- It allows for `\(\delta^T\)` to extend outside of the bounds of `\(W\)` while preserving the ability to detect temporal concurrency relative to `\(W\)`
+
+- ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`.

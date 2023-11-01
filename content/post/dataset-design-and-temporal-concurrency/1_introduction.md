@@ -1,15 +1,22 @@
 ---
-title: "Dataset Design: Temporal Concurrency - Prologue"
-author: "Chionesu George"
-date: "2023-10-21"
-slug: "dataset-design-and-temporal-concurrency-prologue"
+title: 'Dataset Design: Temporal Concurrency - Prologue'
+
+author: Chionesu George
+date: '2023-10-21'
+slug: introduction
 series: 'Dataset Design and Temporal Concurrency'
-categories: ['Data Engineering', 'Methodology', 'Theory']
-tags: ['analytics', 'data', 'engineering', 'semantics', 'time']
+categories:
+  - Data Engineering
+  - Theory
+tags:
+  - analytics
+  - engineering
+  - time
+  - data
+  - semantics
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-26 19:00:17</span>
-
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 22:54:27</span>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="markdown.js"></script>
 <style>
@@ -21,6 +28,7 @@ body {background-image: url(multicolored_lights.jpg); background-size: 2048px 30
 </style>
 
 {{% blogdown/style %}}
+{{% blogdown/markdown_js %}}
 
 ## Introduction
 
@@ -77,7 +85,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-10-26 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-10-31 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 

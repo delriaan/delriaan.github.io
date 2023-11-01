@@ -60,9 +60,27 @@ hint:hover {
 
 .article {
   background-color: #EFEFEF; 
-  /*width: 120%; */
+  display:block;
   padding:20px; 
   border-radius: 20px
+  display: inline;
+}
+
+.content {
+  width: 100% !important;
+  max-width: 960px !important;
+  align: center;
+}
+
+.mathblock {
+  margin-left:5%;
+  padding-left:20px;
+  margin-top: 5px;
+  padding-right: auto;
+  display:block;
+  max-width: 60%;
+  color: var(--lightGray);
+  border-left: solid 5px var(--pine);
 }
 
 [id ~= "htmlwidget"] {

@@ -6,15 +6,26 @@
     <description>Recent content in analytics on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sat, 21 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/analytics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 31 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/analytics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design: Temporal Concurrency - Who and When</title>
+      <link>/post/dataset-design-and-temporal-concurrency/who-and-when/</link>
+      <pubDate>Tue, 31 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/who-and-when/</guid>
+      <description>Updated 2023-10-31 22:20:58
+Welcome back! Before getting started, let’s revisit out problem statement from the introduction:
+&amp;ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period.</description>
+    </item>
+    
     <item>
       <title>Dataset Design: Temporal Concurrency - Prologue</title>
-      <link>/2023/10/21/dataset-design-and-temporal-concurrency-prologue/</link>
+      <link>/post/dataset-design-and-temporal-concurrency/introduction/</link>
       <pubDate>Sat, 21 Oct 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/10/21/dataset-design-and-temporal-concurrency-prologue/</guid>
-      <description>Updated 2023-10-24 21:25:04
-IntroductionNumerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
+      <guid>/post/dataset-design-and-temporal-concurrency/introduction/</guid>
+      <description>Updated 2023-10-31 22:20:53
+Introduction Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence.</description>
     </item>
     

@@ -6,8 +6,8 @@ googleAnalytics = ""
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
 
-[permalinks]
-    post = "/:year/:month/:day/:slug/"
+#[permalinks]
+#    post = "/:year/:month/:day/:slug/"
 
 #[[menu.main]]
 #    name = "About"
@@ -18,7 +18,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$"]
 #[[menu.main]]
 #    name = "Twitter"
 #    url = "https://twitter.com/rstudio"
-#[[menu.main]]
+[[menu.main]]
     name = "Articles"
     url = "/post/"
     weight = 10

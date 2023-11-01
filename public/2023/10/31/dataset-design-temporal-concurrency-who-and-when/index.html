@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.111.3">
+
+
+<title>Dataset Design: Temporal Concurrency - Who and When - Chionesu By Design</title>
+<meta property="og:title" content="Dataset Design: Temporal Concurrency - Who and When - Chionesu By Design">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
+    
+    <li><a href="/data-projects/">Data Projects</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">1 min read</span>
+    
+
+    <h1 class="article-title">Dataset Design: Temporal Concurrency - Who and When</h1>
+
+    
+    <span class="article-date">2023-10-31</span>
+    
+
+    <div class="article-content">
+      
+      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 21:15:33</span></p>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="markdown.js"></script>
+<style>
+#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
+.def_sym {font-weight:bold; color:#5555DD; } 
+.speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
+[id^='Math'] {font-size: 14pt; }
+body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
+</style>
+<style>
+:root {
+  --pale: #DEDEDE;
+  --offwhite: #FFFFEF;
+  --pine: #234234;
+  --gray: #555555;
+  --lightGray: #CCCCCC;
+  --coolPurple: #3333DD55
+  --footerBg: #DDDDDD; 
+  --footerBorder: #BBB;
+  
+  --theme_background: #333;
+  --theme_font_color: #CDECDE;
+}
+
+ 
+blockquote {
+  display:block; 
+}
+
+pre  {
+  display: none; 
+}
+
+hr {
+  width:100%; 
+  border-top: 5px;
+}
+
+sup { 
+  font-size: 0.7em; 
+  color:#995522; 
+}
+
+a {
+  color: var(--coolPurple); 
+}
+
+ 
+hint, term {
+  font-size: 14pt; 
+  font-family: Georgia; 
+  text-decoration: underline;
+}
+
+hint:hover {
+  cursor: pointer; 
+  font-weight: bold; 
+}
+
+ 
+.container-fluid .main-container .wrapper { 
+  margin:auto !important; 
+  width:100% !important; 
+}
+
+.wrapper { 
+  overflow: auto;
+}
+
+.article {
+  background-color: #EFEFEF; 
+   
+  padding:20px; 
+  border-radius: 20px
+}
+
+[id ~= "htmlwidget"] {
+  z-index:2;
+  width:120%;
+}
+ 
+
+ 
+body {
+  background-color: var(--theme_background);
+  color: var(--theme_font_color);
+}
+
+comment {
+  color: var(--pine); 
+  font-family:Times; 
+}
+
+.warning {
+  background-color:#DFDFDFEE; 
+  border-top: solid 2px #AA0000; 
+  border-bottom: solid 2px #AA0000;
+  
+}
+
+.first{
+  font-variant:small-caps; 
+  font-weight:bold; 
+  background-color:#EFF4FA; 
+}
+
+.sidebar {
+  float:right; 
+  display:block;
+  width:240px; 
+  background-color:#EFF4FA; 
+  padding:5px; 
+  margin:0 0 10 25; 
+}
+  
+.sidebar > term {
+  background-color: var(--gray); 
+  color:#CCCCEE; 
+  padding:5px; 
+  margin-right:5px; 
+}
+
+.definition {
+  display:block; 
+  font-style: italic;
+  font-family: Georgia;
+  color: var(--coolPurple); 
+  background-color: var(--pale); 
+  border-top: var(--coolPurple); 
+  border-bottom: var(--coolPurple); 
+}
+
+.optional {
+  background-color:#FFEFFF; 
+  margin-left:20px; 
+  margin-bottom: 10px; 
+  border-left: var(--gray); 
+}
+
+.quote {
+  font-family:Georgia; 
+  font-style:italic; 
+  color: var(--pine)
+}
+
+.ref {color: green;}
+
+ 
+</style>
+<script>
+$(document).ready(function(){
+  $("ul[context='definition']").hide();
+  $("p[context='problemStatement']").hide();
+  $("[role='toggle']").click(
+    function(){
+      lgrp = $(this).attr("toggleGroup");
+      hint = $(this).find("hint").first();
+      
+      if (hint.text() == "(show)"){ hint.text("<hide>"); }
+      else { hint.text("(show)"); }
+      
+      $("ul[toggleGroup='" + lgrp + "']").fadeToggle(10);
+      $("p[toggleGroup='" + lgrp + "']").fadeToggle(10);
+    }); 
+  $("ul[context='definition']").first().click();
+  $("p[context='problemStatement']").first().click();
+})
+</script>
+<p>Welcome back! Before getting started, let’s revisit out problem statement from the introduction:</p>
+<p><span class="speech" style="font-size: 0.9em; ">&ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.&quot;</span></p>
+<p>The conventions I’ll use are also defined in the introduction [here]({{&lt; ref “1_introduction#defs-and-symbols” &gt;}}).</p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

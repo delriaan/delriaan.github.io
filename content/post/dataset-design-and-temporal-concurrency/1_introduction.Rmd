@@ -1,17 +1,27 @@
 ---
-title: "Dataset Design: Temporal Concurrency - Prologue"
-author: "Chionesu George"
-date: "2023-10-21"
-slug: "dataset-design-and-temporal-concurrency-prologue"
-series: 'Dataset Design and Temporal Concurrency'
-categories: ['Data Engineering', 'Methodology', 'Theory']
-tags: ['analytics', 'data', 'engineering', 'semantics', 'time']
----
+title: 'Dataset Design: Temporal Concurrency - Prologue'
 
-`r htmltools::tags$span(style='font-size:smaller; text-decoration:italic; color:#999999; ', glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}"))`
+author: Chionesu George
+date: '2023-10-21'
+slug: introduction
+series: 'Dataset Design and Temporal Concurrency'
+categories:
+  - Data Engineering
+  - Theory
+tags:
+  - analytics
+  - engineering
+  - time
+  - data
+  - semantics
+---
 
 ```{r SETUP, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE);
+htmltools::tags$span(
+  style='font-size:smaller; text-decoration:italic; color:#999999; '
+  , glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}")
+  );
 
 spsUtil::quiet({
   library(rlang, include.only = "%||%")
@@ -50,6 +60,7 @@ tags$style(
 ```
 
 {{% blogdown/style %}}
+{{% blogdown/markdown_js %}}
 
 ## Introduction
 

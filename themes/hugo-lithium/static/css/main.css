@@ -95,8 +95,10 @@ img {
 }
 
 .content {
-  max-width: 700px;
-  margin: 40px auto 10px;
+  max-width: 960px;
+  /*margin: 40px auto 10px;*/
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 15px;
   font-size: 16px;
   line-height: 1.7;

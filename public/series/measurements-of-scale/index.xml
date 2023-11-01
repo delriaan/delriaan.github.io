@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/series/measurements-of-scale/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Measurements of Scale, Part Two</title>
-      <link>/2023/08/06/measurements-of-scale-part-two/</link>
+      <link>/post/measurements-of-scale-part-two/</link>
       <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/08/06/measurements-of-scale-part-two/</guid>
+      <guid>/post/measurements-of-scale-part-two/</guid>
       <description>Updated 2023-10-24 21:25:00
 References
 Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)
@@ -26,10 +26,10 @@ Warning: This entry is considerably longer than Part One. If you suffer from TL;
     
     <item>
       <title>Measurements of Scale, Part One</title>
-      <link>/2023/07/27/measurements-of-scale-part-one/</link>
+      <link>/post/measurements-of-scale-part-one/</link>
       <pubDate>Thu, 27 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/07/27/measurements-of-scale-part-one/</guid>
+      <guid>/post/measurements-of-scale-part-one/</guid>
       <description>Updated 2023-10-24 21:24:58
 References
 Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)
@@ -40,10 +40,10 @@ A good understanding of measurements of scale (MoS) is essential in both metric 
     
     <item>
       <title>Distributions and Some &#34;Mean&#34; Advice</title>
-      <link>/2023/07/15/distributions-and-some-mean-advice/</link>
+      <link>/post/distributions-and-some-mean-advice/</link>
       <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/07/15/distributions-and-some-mean-advice/</guid>
+      <guid>/post/distributions-and-some-mean-advice/</guid>
       <description>Updated 2023-10-24 21:24:56
 Focal Thoughts:1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study2. Choosing the wrong “mean” can mean trouble3. The values in a dataset should not be interpreted apart from the real-world elements they encode
 Average Value: Is it Informative?Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?</description>
