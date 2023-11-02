@@ -41,6 +41,8 @@
 
   <ul class="nav-links">
     
+    <li><a href="/post/">Articles</a></li>
+    
     <li><a href="/r-pkgs/">R Packages</a></li>
     
     <li><a href="/data-projects/">Data Projects</a></li>
@@ -68,9 +70,8 @@
 
     <div class="article-content">
       
-      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 22:20:53</span></p>
+      <p><span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-01 22:10:33</span></p>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="markdown.js"></script>
 <style>
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
 .def_sym {font-weight:bold; color:#5555DD; } 
@@ -78,6 +79,22 @@
 [id^='Math'] {font-size: 14pt; }
 body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
 </style>
+<script>
+$(document).ready(function(){
+  $("ul[context='definition']").hide();
+  $("p[context='problemStatement']").hide();
+  $("[role='toggle']").click(
+    function(){
+      lgrp = $(this).attr("toggleGroup");
+      hint = $(this).find("hint").first();
+      &#10;      if (hint.text() == "(show)"){ hint.text("&lt;hide&gt;"); }
+      else { hint.text("(show)"); }
+      &#10;      $("ul[toggleGroup='" + lgrp + "']").fadeToggle(10);
+      $("p[toggleGroup='" + lgrp + "']").fadeToggle(10);
+    }); 
+  $("ul[context='definition']").first().click();
+  $("p[context='problemStatement']").first().click();
+})</script>
 <style>
 :root {
   --pale: #DEDEDE;
@@ -140,12 +157,30 @@ hint:hover {
 
 .article {
   background-color: #EFEFEF; 
-  width: 120% !important;
-  max-width: 1154 !important;
-  margin-left: 2% !important
   display:block;
   padding:20px; 
   border-radius: 20px
+  display: inline;
+}
+
+.content {
+  width: 100% !important;
+  max-width: 960px !important;
+  align: center;
+}
+
+.MathJax {
+  font-size: larger;
+}
+.mathblock {
+  margin-left:5%;
+  padding-left:20px;
+  margin-top: 5px;
+  padding-right: auto;
+  display:block;
+  max-width: 60%;
+  color: #111111;
+  border-left: solid 5px var(--pine);
 }
 
 [id ~= "htmlwidget"] {
@@ -242,7 +277,7 @@ $(document).ready(function(){
 </script>
 <h2 id="introduction">Introduction</h2>
 <p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
-<p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
+<p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but <em>especially</em> when dealing with resolving temporal concurrency are as follows:</p>
 <ol>
 <li>Reduce trial-and-error data engineering iterations by using a methodological treatment of the <em>ontology</em> (<em>temporal</em> ontology for this article series) of the relevant data sources and the <em>semantic relationships</em> between data source and the problem statement at hand</li>
 <li>Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.</li>
@@ -295,7 +330,7 @@ $(document).ready(function(){
 </p>
 <hr style="width:100%; "/>
 <h2 id="a-motivating-example">A Motivating Example</h2>
-<p>Consider a business request submitted 2023-10-31 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<p>Consider a business request submitted 2023-11-01 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 <h3 id="problem-restatement">Problem Restatement</h3>
 <p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>
@@ -332,6 +367,7 @@ The language of data follows the language of people
 <li><em>Part 2</em> will address <span class="speech">What?</span></li>
 <li><em>Part 3</em> will cover <span class="speech">How?</span> as well as provide some concluding thoughts</li>
 </ul>
+<p>Before closing things out, I want to make sure to note that the articles in this mini-series <em>will</em> be lengthy. Who I have in mind are the less-experienced data practitioners who haven’t had much exposure in navigating the challenges of data retrieval with temporal concurrency. Take your time: there’s no need to rush through the content — you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request <strong>before</strong> coding begins. Errors in logic are easier to detect using such an approach and can help avoid <em>“spaghetti”</em> code, down the road.</p>
 <p>I look forward to seeing you in Part 1.</p>
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
 <p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">

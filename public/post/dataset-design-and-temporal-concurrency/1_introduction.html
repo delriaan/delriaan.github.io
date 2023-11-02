@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chionesu George">
+<meta name="dcterms.date" content="2023-10-21">
+
+<title>Dataset Design: Temporal Concurrency - Prologue</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="1_introduction_files/libs/clipboard/clipboard.min.js"></script>
+<script src="1_introduction_files/libs/quarto-html/quarto.js"></script>
+<script src="1_introduction_files/libs/quarto-html/popper.min.js"></script>
+<script src="1_introduction_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="1_introduction_files/libs/quarto-html/anchor.min.js"></script>
+<link href="1_introduction_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="1_introduction_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="1_introduction_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="1_introduction_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="1_introduction_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Dataset Design: Temporal Concurrency - Prologue</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Data Engineering</div>
+    <div class="quarto-category">Theory</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chionesu George </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 21, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="cell-output-display">
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-01 19:09:46</span>
+</div>
+<div class="cell-output-display">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</div>
+<div class="cell-output-display">
+<script src="markdown.js"></script>
+</div>
+<div class="cell-output-display">
+<style>
+#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
+.def_sym {font-weight:bold; color:#5555DD; } 
+.speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }
+[id^='Math'] {font-size: 14pt; }
+body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
+</style>
+</div>
+</div>
+<p>{{% blogdown/style %}} {{% blogdown/markdown_js %}}</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
+<p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:</p>
+<ol type="1">
+<li>Reduce trial-and-error data engineering iterations by using a methodological treatment of the <em>ontology</em> (<em>temporal</em> ontology for this article series) of the relevant data sources and the <em>semantic relationships</em> between data source and the problem statement at hand</li>
+<li>Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.</li>
+</ol>
+<p>Moving forward, the base unit of time will be days, mainly due to not having had to deal with more frequent units of time but also because it’s just easier to think and converse in terms of days.</p>
+</section>
+<section id="definitions-conventions" class="level2">
+<h2 class="anchored" data-anchor-id="definitions-conventions">Definitions &amp; Conventions</h2>
+<ul>
+<li><p><span class="def_sym"><span class="math inline">\(D_{i,j}\)</span></span>: a tabular dataset of <span class="math inline">\(i\)</span> rows and <span class="math inline">\(j\)</span> columns</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(Ω_k\)</span></span>: Row-based dataset qualifiers — specifically, a set of <span class="math inline">\(k\)</span> rules/criteria <span class="math inline">\((ω_1, \omega_2, \omega_3, \cdots, \omega_k)\)</span> given as predicate statements, that qualify the rows of dataset <span class="math inline">\(D\)</span> such that <span class="math inline">\(D_\Omega\subset D\)</span>.</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(Y|X\)</span></span>: Condition, read as <em>“Y given X”</em> or <em>“Y conditioned on X”</em> — an existential constraint that subsets the left-hand side to those cases where the right-hand side exists or is true. For example, <span class="math inline">\(\text{Cost}_\text{item}|\big\{\text{Id}_\text{item}=90210\big\}\)</span> is interpreted as <em>“Item cost where item ID equals 90210”</em>.</p></li>
+<li><p><span class="def_sym"><span class="math inline">\(∧, ∨\)</span></span>: Logical <em>“and”</em> and <em>“or”</em>, respectively</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p>
+<b>Column (δ) Taxonomy </b>
+<span role="toggle" context="definition" togglegroup="0" class="">
+
+<hint togglegroup="0">(show)</hint>
+</span>
+</p>
+</div>
+<div class="cell-output-display">
+<p>
+</p><ul togglegroup="0" context="definition">
+<li>
+<span class="def_sym">δ<sup>I</sup></span>
+: Information-carrying columns
+</li>
+<li>
+<span class="def_sym">δ<sup>G</sup></span>
+: Grouping columns (categorical, descriptive)
+</li>
+<li>
+<span class="def_sym">δ<sup>Y</sup></span>
+: Measurements (e.g., purchase price, height, product ratings)
+</li>
+<li>
+<span class="def_sym">δ<sup>T</sup></span>
+: Temporal columns to include dates and temporal hierarchies
+</li>
+<li>
+<span class="def_sym">δ<sup>E</sup></span>
+: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
+</li>
+</ul>
+<p></p>
+</div>
+<div class="cell-output-display">
+<hr style="width:100%; ">
+</div>
+</div>
+</section>
+<section id="a-motivating-example" class="level2 tabset tabset-fade">
+<h2 class="tabset tabset-fade anchored" data-anchor-id="a-motivating-example">A Motivating Example</h2>
+<p>Consider a business request submitted 2023-11-01 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<div class="cell">
+<div class="cell-output-display">
+<blockquote id="problemStatement" class="speech blockquote">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
+</div>
+</div>
+<section id="problem-restatement" class="level3">
+<h3 class="anchored" data-anchor-id="problem-restatement">Problem Restatement</h3>
+<p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>
+<div class="cell">
+<div class="cell-output-display">
+<blockquote class="speech blockquote" style="border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; ">
+<span role="toggle" context="problemStatement" togglegroup="1" class="">
+Life is data, but data is not life  
+<hint togglegroup="1">(show)</hint>
+</span>
+</blockquote>
+</div>
+<div class="cell-output-display">
+<p style="margin-left:30px; " context="problemStatement" togglegroup="1">Life <i>produces</i> information and data <i>encodes</i> it — <i>always</i> with a loss of information. In the reverse direction, data must be interpreted back to the real-world in order to be considered information precisely because it ties back to the real-world. This semantic map should always be kept in mind.</p>
+</div>
+<div class="cell-output-display">
+<blockquote class="speech blockquote" style="border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; ">
+<span role="toggle" context="problemStatement" togglegroup="2" class="">
+The language of data follows the language of people  
+<hint togglegroup="2">(show)</hint>
+</span>
+</blockquote>
+</div>
+<div class="cell-output-display">
+<p style="margin-left:30px; " context="problemStatement" togglegroup="2">A basic framework for interpreting and communicating information is <i>language</i>. Language involves syntax and structure to make distinctions among information and provide meaning on the basis of those distinctions.  Since data encodes information, it loosely follows the semantics and syntax of human language.</p>
+</div>
+</div>
+<p>With that in mind, the business request can be restated in terms of the following:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table data-quarto-postprocess="true" class="table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td style="background-color: #FFFFFF; width: 20px; height: 20px; border: outset #999999 2px"></td>
+<td style="width: 100px; padding-left: 5px; align: right">Who?</td>
+<td style="background-color: #FFFFFF; width: 20px; height: 20px; border: outset #999999 2px"></td>
+<td style="width: 100px; padding-left: 5px; align: right">When?</td>
+<td style="background-color: #FFFFFF; width: 20px; height: 20px; border: outset #999999 2px"></td>
+<td style="width: 100px; padding-left: 5px; align: right">What?</td>
+<td style="background-color: #FFFFFF; width: 20px; height: 20px; border: outset #999999 2px"></td>
+<td style="width: 100px; padding-left: 5px; align: right">How?</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>These will be addressed subsequent posts:</p>
+<ul>
+<li><em>Part 1</em> will cover <span class="speech">Who?</span> and <span class="speech">When?</span></li>
+<li><em>Part 2</em> will address <span class="speech">What?</span></li>
+<li><em>Part 3</em> will cover <span class="speech">How?</span> as well as provide some concluding thoughts</li>
+</ul>
+<p>I look forward to seeing you in Part 1.</p>
+<p>{{% blogdown/footer %}}</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

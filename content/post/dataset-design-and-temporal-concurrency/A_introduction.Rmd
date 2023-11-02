@@ -1,6 +1,5 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - Prologue'
-
 author: Chionesu George
 date: '2023-10-21'
 slug: introduction
@@ -17,6 +16,9 @@ tags:
 ---
 
 ```{r SETUP, echo=FALSE}
+#| label: SETUP
+#| echo: false
+
 knitr::opts_chunk$set(echo = FALSE);
 htmltools::tags$span(
   style='font-size:smaller; text-decoration:italic; color:#999999; '
@@ -35,13 +37,11 @@ dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv
 
 hint_js(
   tags = c("ul","p")
-  , contexts = c("definition", "problemStatement")
+  , contexts = c("definition", "problemStatement", "default")
   , out.file = "markdown.js"
   , fade_speed = 10
   , toggle.options = list(open = "(show)", close = "<hide>")
   ); 
-
-tags$script(src = "markdown.js");
 
 tags$style(
   "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
@@ -57,6 +57,7 @@ tags$style(
       )
   ); 
 
+htmltools::tags$script(readLines("markdown.js") |> paste(collapse = "\n"));
 ```
 
 {{% blogdown/style %}}
@@ -66,7 +67,7 @@ tags$style(
 
 Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries.  Best practices, techniques, and technology are inescapable concepts one will encounter.  What I'd like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 
-This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I've learned in dealing with temporal co-occurrence.  Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:
+This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I've learned in dealing with temporal co-occurrence.  Two overarching goals that guide my design thinking in general, but *especially* when dealing with resolving temporal concurrency are as follows:
 
 1. Reduce trial-and-error data engineering iterations by using a methodological treatment of the _ontology_ (*temporal* ontology for this article series) of the relevant data sources and the *semantic relationships* between data source and the problem statement at hand
 2. Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.
@@ -83,7 +84,9 @@ Moving forward, the base unit of time will be days, mainly due to not having had
    
 - [ $∧, ∨$ ]{.def_sym}: Logical *"and"* and *"or"*, respectively
 
-```{r echo=FALSE}
+```{r TAXONOMY, echo=FALSE}
+#| label: TAXONOMY
+#| echo: false
 tags$p(
   tags$b(HTML("Column (&delta;) Taxonomy "))
   , drop_hint(context = "definition", toggleGroup = "0")
@@ -124,7 +127,10 @@ tags$hr(style="width:100%; ");
 
 Consider a business request submitted `r Sys.Date()` and stated as follows [*demonstration purposes only, so cut me some slack*  &#128527;]:
 
-```{r echo=FALSE}
+```{r PROBLEM_STATEMENT, echo=FALSE}
+#| label: PROBLEM_STATEMENT
+#| echo: false
+
 tags$blockquote(
   id = "problemStatement"
   , class = "speech"
@@ -137,7 +143,10 @@ tags$blockquote(
 
 I mentioned consideration of ["the *semantic relationships* between data source and the problem statement"]{.speech} in my introductory remarks. Two principles I always be kept in mind when working with data are as follows: 
 
-```{r}
+```{r PROBLEM_RESTATEMENT, echo=FALSE}
+#| label: PROBLEM_RESTATEMENT
+#| echo: false
+
 tags$blockquote(
   class = "speech"
   , style = "border-left: solid 3px #6666CC; padding-left: 10px; margin-left: 0px; "
@@ -178,7 +187,11 @@ tags$p(
 
 With that in mind, the business request can be restated in terms of the following:
 
-```{r echo=FALSE, warning=FALSE}
+```{r WHO_WHAT_WHEN_HOW, echo=FALSE}
+#| label: WHO_WHAT_WHEN_HOW
+#| echo: false
+#| warning: false
+
 make_checkbox <- function(text, color = "666666"){
   lapply(text, \(i){
     list(
@@ -199,6 +212,8 @@ These will be addressed subsequent posts:
 - _Part 1_ will cover [Who?]{.speech} and [When?]{.speech}
 - _Part 2_ will address [What?]{.speech}
 - _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts
+
+Before closing things out, I want to make sure to note that the articles in this mini-series *will* be lengthy.  Who I have in mind are the less-experienced data practitioners who haven't had much exposure in navigating the challenges of data retrieval with temporal concurrency. Take your time: there's no need to rush through the content &mdash; you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request **before** coding begins. Errors in logic are easier to detect using such an approach and can help avoid *"spaghetti"* code, down the road.
 
 I look forward to seeing you in Part 1.
 

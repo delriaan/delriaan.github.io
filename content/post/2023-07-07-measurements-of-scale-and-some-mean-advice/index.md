@@ -8,7 +8,7 @@ categories: 'Theory'
 tags: ['central tendency', 'distributions', 'statistics', 'data']
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 22:20:44</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-01 21:29:58</span>
 
 {{% blogdown/style %}}
 

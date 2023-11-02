@@ -1,6 +1,5 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - Prologue'
-
 author: Chionesu George
 date: '2023-10-21'
 slug: introduction
@@ -16,9 +15,8 @@ tags:
   - semantics
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-10-31 22:54:27</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-01 22:11:07</span>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="markdown.js"></script>
 <style>
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
 .def_sym {font-weight:bold; color:#5555DD; } 
@@ -26,6 +24,22 @@ tags:
 [id^='Math'] {font-size: 14pt; }
 body {background-image: url(multicolored_lights.jpg); background-size: 2048px 300px; background-repeat: no-repeat; }
 </style>
+<script>
+$(document).ready(function(){
+  $("ul[context='definition']").hide();
+  $("p[context='problemStatement']").hide();
+  $("[role='toggle']").click(
+    function(){
+      lgrp = $(this).attr("toggleGroup");
+      hint = $(this).find("hint").first();
+      &#10;      if (hint.text() == "(show)"){ hint.text("&lt;hide&gt;"); }
+      else { hint.text("(show)"); }
+      &#10;      $("ul[toggleGroup='" + lgrp + "']").fadeToggle(10);
+      $("p[toggleGroup='" + lgrp + "']").fadeToggle(10);
+    }); 
+  $("ul[context='definition']").first().click();
+  $("p[context='problemStatement']").first().click();
+})</script>
 
 {{% blogdown/style %}}
 {{% blogdown/markdown_js %}}
@@ -34,7 +48,7 @@ body {background-image: url(multicolored_lights.jpg); background-size: 2048px 30
 
 Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 
-This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but especially when dealing with resolving temporal concurrency are as follows:
+This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but *especially* when dealing with resolving temporal concurrency are as follows:
 
 1.  Reduce trial-and-error data engineering iterations by using a methodological treatment of the *ontology* (*temporal* ontology for this article series) of the relevant data sources and the *semantic relationships* between data source and the problem statement at hand
 2.  Increase the likelihood of creating a minimal number of datasets that both satisfies the immediate task at hand as well as allows for some ability to address related inquiries not yet posed.
@@ -85,7 +99,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-10-31 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-11-01 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 
@@ -128,6 +142,8 @@ These will be addressed subsequent posts:
 - *Part 1* will cover <span class="speech">Who?</span> and <span class="speech">When?</span>
 - *Part 2* will address <span class="speech">What?</span>
 - *Part 3* will cover <span class="speech">How?</span> as well as provide some concluding thoughts
+
+Before closing things out, I want to make sure to note that the articles in this mini-series *will* be lengthy. Who I have in mind are the less-experienced data practitioners who haven’t had much exposure in navigating the challenges of data retrieval with temporal concurrency. Take your time: there’s no need to rush through the content — you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request **before** coding begins. Errors in logic are easier to detect using such an approach and can help avoid *“spaghetti”* code, down the road.
 
 I look forward to seeing you in Part 1.
 

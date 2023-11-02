@@ -2,6 +2,7 @@
 $(document).ready(function(){
   $("ul[context='definition']").hide();
   $("p[context='problemStatement']").hide();
+  $("span[context='default']").hide();
   $("[role='toggle']").click(
     function(){
       lgrp = $(this).attr("toggleGroup");
@@ -12,7 +13,9 @@ $(document).ready(function(){
       
       $("ul[toggleGroup='" + lgrp + "']").fadeToggle(10);
       $("p[toggleGroup='" + lgrp + "']").fadeToggle(10);
+      $("span[toggleGroup='" + lgrp + "']").fadeToggle(10);
     }); 
   $("ul[context='definition']").first().click();
   $("p[context='problemStatement']").first().click();
+  $("span[context='default']").first().click();
 })
