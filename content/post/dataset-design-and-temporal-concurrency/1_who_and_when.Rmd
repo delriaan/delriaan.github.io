@@ -39,7 +39,7 @@ tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min
 dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "(javascript|footer).+R$", recursive = TRUE, full.names = TRUE) |> walk(source);
 
 window_example <- magick::image_read("./Window Example.png") |> 
-  magick::image_resize(geometry = magick::geometry_size_percent(35));
+  magick::image_resize(geometry = magick::geometry_size_percent(20));
 
 hint_js(
   tags = c("ul","p")
@@ -90,10 +90,10 @@ Identifying the global temporal window ( $W$ ) is important as defines the frame
 [ $\forall W, D^λ \Rightarrow D^\lambda_\Omega:= \Bigg\{\matrix{ W_\text{start} \le \delta^T \le W_\text{end},\enspace\enspace\#\delta^T= 1\\ \\ W_\text{start} \le \delta^T_\text{end} \wedge W_\text{end} \ge \delta^T_\text{start},\enspace\enspace\#\delta^T= 2 }\Bigg\}$ ]{.mathblock}
 
 , where $D^\lambda$ is the data source for context $\lambda$ (i.e., *demographics*, *claims*, *prescriptions*) and $W$ the lower and upper dates of the global window. The first form of $D^\lambda$ above reflects the case of a *single* time column in $D$ and the second form when there are two.
+```{r}
+drop_hint("Regarding the second form:", context = "posthoc", toggleGroup = 0)
+```
 
-Regarding the second form:
-
->
 - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of $\delta^I$ is duplicative along $\delta^T$ (more on this in a future article)
 - It allows for $\delta^T$ to extend outside of the bounds of $W$ while preserving the ability to detect temporal concurrency relative to $W$
 - ***Do not*** use the following logic to detect concurrency of the dual-date form with $W$ (or any other dual-date range):<br>[ $(W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})$ ]{.mathblock} This logical statement **will** fail to capture cases where $\delta^T$ extends outside of $W$:<br><br>`r window_example`
@@ -102,15 +102,22 @@ Regarding the second form:
 
 The "Who" aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction *"and"*) and a possible, third:
 
-- $\omega_1$: ["... members between 30 and 50 years old"]{.speech}
-- $\omega_2$: ["... have had at least two Inpatient visits within a six-week period"](#omega-2){.speech}
-- $\omega_3$: [$f(\omega_1, \omega_2)$ &mdash](#omega-3) ... [hierarchical concurrency]{.speech}
+- [ $\omega_1$]{.bigMath}: ["... members between 30 and 50 years old"]{.speech #omega-1-def}
+- [ $\omega_2$]{.bigMath}: ["... have had at least two Inpatient visits within a six-week period"]{.speech #omega-2-def}
+- [ $\omega_3$]{.bigMath}: $f(\omega_1, \omega_2)$ &mdash; [hierarchical concurrency]{.speech #omega-3-def}
 
-### [ $\omega_1$: Age vs. Report Window]{#omega-1}
+### [Age vs. Report Window]{#omega-1} ([ $\omega_1$]{.medMath omega_id=1}) 
 
-$\omega_1$ is the first opportunity to greatly trim down your data pull and presents a great case-in-point as to why carefully reading over a request **before** thrashing away at the keyboard is important.  Since ["When"]{.speech} ( $W$ ) is in the past, $\omega_1$ must qualified *relative to the global window of time*, not ["as of today"]{.speech}. This is not *explicitly* stated, but think about it: ["... for the period between January first of 2019 and the end of 2020"]{.speech} is your hint.  Of course, when in doubt, check with the requester just to be sure. 
+[ $\omega_1$]{.medMath omega_id=1} is the first opportunity to greatly trim down your data pull.
 
-Also, note that the span of time that $W$ covers is *two* years, which means that everyone under consideration could have had at least *one* birthday. For those members who make the cut (relative to $W$), which age should be returned in those cases? Well, rather than inflating a dataset by returning a row for each detected age (resulting in wasteful duplication), you could just return the member's date of birth. By this point, only those who meet the age requirement in general have been retained. ***How*** they met the requirement is not important at this stage. When going about designing a query for retrieving observation data, I've learned to look for opportunities to return columns/features that allow me to use logic to derive the ["how"]{.speech} when I need it rather than trying to do so from the start (only to then have to conduct data wrangling contortions at a later stage to de-duplicate an interim dataset).
+```{r}
+drop_hint("It also presents a great case-in-point as to why carefully reading over a request <i>before</i> thrashing away at the keyboard is important:", context = "posthoc", toggleGroup = 1)
+```
+
+- [ $\omega_1$]{.medMath omega_id=1} must qualified relative to [ $W$]{.medMath} and not ["as of today"]{.speech}. Granted: this is not *explicitly* stated, but think about it: ["... for the period between January first of 2019 and the end of 2020"]{.speech} is your cue. Of course, when in doubt, check with the requester just to be sure.
+- [ $W$]{.medMath} covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes ([ $\delta^T$]{.medMath}) which should carried forward (I'll demonstrate this shortly).
 
 
-### [ $\omega_2$: Events vs. Report Window]{#omega-2}
+
+### [Events vs. Report Window]{#omega-2} ([ $\omega_2$]{.medMath omega_id=2})
+

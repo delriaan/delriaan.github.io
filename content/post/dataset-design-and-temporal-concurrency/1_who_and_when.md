@@ -18,7 +18,7 @@ toc:
   toc_float: true
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-01 22:45:45</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-02 17:52:26</span>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
@@ -61,24 +61,33 @@ Identifying the global temporal window ( `\(W\)` ) is important as defines the f
 
 , where `\(D^\lambda\)` is the data source for context `\(\lambda\)` (i.e., *demographics*, *claims*, *prescriptions*) and `\(W\)` the lower and upper dates of the global window. The first form of `\(D^\lambda\)` above reflects the case of a *single* time column in `\(D\)` and the second form when there are two.
 
-Regarding the second form:
+<span role="toggle" context="posthoc" toggleGroup="0" class="">
+Regarding the second form: 
+<hint toggleGroup="0">(show)</hint>
+</span>
 
-> - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of `\(\delta^I\)` is duplicative along `\(\delta^T\)` (more on this in a future article)
-> - It allows for `\(\delta^T\)` to extend outside of the bounds of `\(W\)` while preserving the ability to detect temporal concurrency relative to `\(W\)`
-> - ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/PROBLEM_STATEMENT-1.png" width="774" />
+- It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of `\(\delta^I\)` is duplicative along `\(\delta^T\)` (more on this in a future article)
+- It allows for `\(\delta^T\)` to extend outside of the bounds of `\(W\)` while preserving the ability to detect temporal concurrency relative to `\(W\)`
+- ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-3-1.png" width="442" />
 
 ## Who
 
 The “Who” aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction *“and”*) and a possible, third:
 
-- `\(\omega_1\)`: <span class="speech">“… members between 30 and 50 years old”</span>
-- `\(\omega_2\)`: <a href="#omega-2" class="speech">“… have had at least two Inpatient visits within a six-week period”</a>
-- `\(\omega_3\)`: [$f(\omega_1, \omega_2)$ &mdash](#omega-3) … <span class="speech">hierarchical concurrency</span>
+- <span class="bigMath">`\(\omega_1\)`</span>: <span id="omega-1-def" class="speech">“… members between 30 and 50 years old”</span>
+- <span class="bigMath">`\(\omega_2\)`</span>: <span id="omega-2-def" class="speech">“… have had at least two Inpatient visits within a six-week period”</span>
+- <span class="bigMath">`\(\omega_3\)`</span>: `\(f(\omega_1, \omega_2)\)` — <span id="omega-3-def" class="speech">hierarchical concurrency</span>
 
-### <span id="omega-1">`\(\omega_1\)`: Age vs. Report Window</span>
+### <span id="omega-1">Age vs. Report Window</span> (<span class="medMath" omega_id="1">`\(\omega_1\)`</span>)
 
-`\(\omega_1\)` is the first opportunity to greatly trim down your data pull and presents a great case-in-point as to why carefully reading over a request **before** thrashing away at the keyboard is important. Since <span class="speech">“When”</span> ( `\(W\)` ) is in the past, `\(\omega_1\)` must qualified *relative to the global window of time*, not <span class="speech">“as of today”</span>. This is not *explicitly* stated, but think about it: <span class="speech">“… for the period between January first of 2019 and the end of 2020”</span> is your hint. Of course, when in doubt, check with the requester just to be sure.
+<span class="medMath" omega_id="1">`\(\omega_1\)`</span> is the first opportunity to greatly trim down your data pull.
 
-Also, note that the span of time that `\(W\)` covers is *two* years, which means that everyone under consideration could have had at least *one* birthday. For those members who make the cut (relative to `\(W\)`), which age should be returned in those cases? Well, rather than inflating a dataset by returning a row for each detected age (resulting in wasteful duplication), you could just return the member’s date of birth. By this point, only those who meet the age requirement in general have been retained. ***How*** they met the requirement is not important at this stage. When going about designing a query for retrieving observation data, I’ve learned to look for opportunities to return columns/features that allow me to use logic to derive the <span class="speech">“how”</span> when I need it rather than trying to do so from the start (only to then have to conduct data wrangling contortions at a later stage to de-duplicate an interim dataset).
+<span role="toggle" context="posthoc" toggleGroup="1" class="">
+It also presents a great case-in-point as to why carefully reading over a request <i>before</i> thrashing away at the keyboard is important: 
+<hint toggleGroup="1">(show)</hint>
+</span>
 
-### <span id="omega-2">`\(\omega_2\)`: Events vs. Report Window</span>
+- <span class="medMath" omega_id="1">`\(\omega_1\)`</span> must qualified relative to <span class="medMath">`\(W\)`</span> and not <span class="speech">“as of today”</span>. Granted: this is not *explicitly* stated, but think about it: <span class="speech">“… for the period between January first of 2019 and the end of 2020”</span> is your cue. Of course, when in doubt, check with the requester just to be sure.
+- <span class="medMath">`\(W\)`</span> covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes (<span class="medMath">`\(\delta^T\)`</span>) which should carried forward (I’ll demonstrate this shortly).
+
+### <span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2">`\(\omega_2\)`</span>)

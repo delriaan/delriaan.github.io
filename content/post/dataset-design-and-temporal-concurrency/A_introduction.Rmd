@@ -213,7 +213,7 @@ These will be addressed subsequent posts:
 - _Part 2_ will address [What?]{.speech}
 - _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts
 
-Before closing things out, I want to make sure to note that the articles in this mini-series *will* be lengthy.  Who I have in mind are the less-experienced data practitioners who haven't had much exposure in navigating the challenges of data retrieval with temporal concurrency. Take your time: there's no need to rush through the content &mdash; you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request **before** coding begins. Errors in logic are easier to detect using such an approach and can help avoid *"spaghetti"* code, down the road.
+[Before closing things out, I want to make sure to note that the articles in this mini-series *will* be lengthy.  Who I have in mind are the less-experienced data practitioners who haven't had much exposure in navigating the challenges of data retrieval with temporal concurrency. ***Take your time***: there's no need to rush through the content &mdash; you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request **before** coding begins. Errors in logic are easier to detect using such an approach and can help avoid writing *"spaghetti"* code.]{.speech style="display:block; padding: 1.1em; font-size:1em; background-color:#CCCCCC55;"}
 
 I look forward to seeing you in Part 1.
 

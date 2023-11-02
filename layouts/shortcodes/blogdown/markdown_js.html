@@ -15,5 +15,17 @@ $(document).ready(function(){
     }); 
   $("ul[context='definition']").first().click();
   $("p[context='problemStatement']").first().click();
-})
+  $(".medMath").each(function(){
+  	id = $("#omega-" + $(this).attr("omega_id") + "-def");
+  	$(this).attr("title", id.text());
+  });
+  $("[role^=\"toggle\"]").each(function(){
+  	toggle = $(this);
+  	if (toggle.attr("context") == "posthoc"){
+     	obj = toggle.next();
+    	obj.hide()
+     	obj.attr({"context" : toggle.attr("context"), "toggleGroup" : toggle.attr("toggleGroup")});
+  	}
+  });
+});
 </script>
