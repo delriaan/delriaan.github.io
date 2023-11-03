@@ -41,6 +41,9 @@ dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv
 window_example <- magick::image_read("./Window Example.png") |> 
   magick::image_resize(geometry = magick::geometry_size_percent(20));
 
+waypoint.png <- magick::image_read("./waypoint.png") |> 
+  magick::image_resize(geometry = magick::geometry_size_percent(20));
+
 hint_js(
   tags = c("ul","p")
   , contexts = c("definition", "problemStatement", "default")
@@ -117,7 +120,12 @@ drop_hint("It also presents a great case-in-point as to why carefully reading ov
 - [ $\omega_1$]{.medMath omega_id=1} must qualified relative to [ $W$]{.medMath} and not ["as of today"]{.speech}. Granted: this is not *explicitly* stated, but think about it: ["... for the period between January first of 2019 and the end of 2020"]{.speech} is your cue. Of course, when in doubt, check with the requester just to be sure.
 - [ $W$]{.medMath} covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes ([ $\delta^T$]{.medMath}) which should carried forward (I'll demonstrate this shortly).
 
+[ &#10024; ]{.bigMath style="color:#330033; "} At this stage, we've defined the first portion of ["Who"]{.speech} is related to the problem statement.  An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined:
 
+$$
+D_{\Omega}:=\big(\delta^T,\delta^I\big)_{i}\\
+\enspace\enspace \delta^T:=\text{"date of birth"}
+$$
 
 ### [Events vs. Report Window]{#omega-2} ([ $\omega_2$]{.medMath omega_id=2})
 

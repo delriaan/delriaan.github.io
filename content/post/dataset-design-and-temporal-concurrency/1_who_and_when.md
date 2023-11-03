@@ -18,7 +18,7 @@ toc:
   toc_float: true
 ---
 
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-02 17:52:26</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-02 21:56:23</span>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <style>
 #problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }
@@ -89,5 +89,12 @@ It also presents a great case-in-point as to why carefully reading over a reques
 
 - <span class="medMath" omega_id="1">`\(\omega_1\)`</span> must qualified relative to <span class="medMath">`\(W\)`</span> and not <span class="speech">“as of today”</span>. Granted: this is not *explicitly* stated, but think about it: <span class="speech">“… for the period between January first of 2019 and the end of 2020”</span> is your cue. Of course, when in doubt, check with the requester just to be sure.
 - <span class="medMath">`\(W\)`</span> covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes (<span class="medMath">`\(\delta^T\)`</span>) which should carried forward (I’ll demonstrate this shortly).
+
+<span class="bigMath" style="color:#330033; ">✨</span> At this stage, we’ve defined the first portion of <span class="speech">“Who”</span> is related to the problem statement. An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined:
+
+$$
+D_{\Omega}:=\big(\delta^T,\delta^I\big)_{i}\\
+\enspace\enspace \delta^T:=\text{"date of birth"}
+$$
 
 ### <span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2">`\(\omega_2\)`</span>)
