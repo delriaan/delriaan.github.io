@@ -92,7 +92,7 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:21:34</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 14:12:05</span>
 <h2 id="introduction">Introduction</h2>
 <p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
 <p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but <em>especially</em> when dealing with resolving temporal concurrency are as follows:</p>
@@ -148,7 +148,7 @@
 </p>
 <img src="/decorative_line.png" class="decorative-line" />
 <h2 id="a-motivating-example">A Motivating Example</h2>
-<p>Consider a business request submitted 2023-11-03 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<p>Consider a business request submitted 2023-11-04 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 <h3 id="problem-re-statement">Problem <em>Re</em>-statement</h3>
 <p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>

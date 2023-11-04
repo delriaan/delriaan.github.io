@@ -5,8 +5,7 @@
     <link>/post/measurements-of-scale/</link>
     <description>Recent content in Measurements of Scale on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language>
-    <lastBuildDate>Sun, 06 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/post/measurements-of-scale/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-US</language><atom:link href="/post/measurements-of-scale/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Measurements of Scale, Part Two</title>
       <link>/post/measurements-of-scale/measurements-of-scale-part-two/</link>
@@ -33,7 +32,7 @@ Warning: This entry is considerably longer than Part One. If you suffer from TL;
       <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/measurements-of-scale/distributions-and-some-mean-advice/</guid>
-      <description>## Updated 2023-11-03 20:21:41Focal Thoughts:
+      <description>## Updated 2023-11-03 20:24:12Focal Thoughts:
 Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong “mean” can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?</description>
     </item>
     

@@ -30,6 +30,20 @@ source(file = "setup.R", local = environment());
 tags$link(rel="stylesheet", href="/markdown.css");
 tags$script(src = "/markdown.js");
 last_mod
+break_time <- tags$p(
+  tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
+  , tags$span(
+      style = "font-size:4em;"
+      , class = "speech"
+      , tags$img(
+          src = "/hourglass.png"
+          , caption="Take a Break!"
+          , style="height:3.5em; vertical-align:top; top:-5px; float:left"
+          )
+      , "Take a Break!"
+      )
+  , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
+  )
 ```
 
 Welcome back!
@@ -78,17 +92,78 @@ drop_hint("It also presents a great case-in-point as to why carefully reading ov
 - [ $\omega_1$]{.medMath omega_id=1} must qualified relative to [ $W$]{.medMath} and not ["as of today"]{.speech}. Granted: this is not *explicitly* stated, but think about it: ["... for the period between January first of 2019 and the end of 2020"]{.speech} is your cue. Of course, when in doubt, check with the requester just to be sure.
 - [ $W$]{.medMath} covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes ([ $\delta^T$]{.medMath}) which should carried forward (I'll demonstrate this shortly).
 
-![](/decorative_line.png){.decorative-line}
+[ &#10024; ]{.bigMath style="color:#330033; "} At this stage, we've defined the first portion of ["Who"]{.speech} is related to the problem statement. An advantage of starting in this manner is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined. 
 
-[ &#10024; ]{.bigMath style="color:#330033; "} At this stage, we've defined the first portion of ["Who"]{.speech} is related to the problem statement.  An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined: $D_{\Omega}:=\Big\{\delta^T \cup \delta^I\Big\}_{i}$ 
-
+For the sake of demonstration, assume the existence of a member demographics table $(M)$. Satisfying [ $\omega_1$]{.medMath omega_id=1} results in our first dataset: $D^M:=\sigma_{\omega_1}(M)$
+, where [ $\sigma$]{.medMath} represents a [*selection*](https://en.wikipedia.org/wiki/Selection_(relational_algebra) "Selection (Relational Algebra)"){.speech target="_blank"} operation.
 
 ```{r}
+break_time
+```
+
+### [Events vs. Report Window]{#omega-2} ([ $\omega_2$]{.medMath omega_id=2})
+
+Now, we move on to defining ([ $\omega_2$]{.medMath omega_id=2}).  Assume a claims dataset $(L)$ containing multiple service types $(\delta^G: \text{Inpt}\in G)$. To satisfy this requirement, *three* conditionals need to be addressed:
+
+```{r COND_I}
+drop_hint("<b>c<sub>1</sub></b> &mdash; Has inpatient visits within <span style='font-family:Georgia;'>W</span>:"
+          , context = "posthoc"
+          , toggleGroup = 1
+          )
+```
+
+[ $c_1:= W_\text{start} \le \dot{\delta^T} \le{W}_\text{end}; \enspace\dot{\delta^T}\equiv\text{service date}$]{.mathblock toggleGroup=1 context="posthoc"}
+
+<br>
+```{r COND_II}
+drop_hint("<b>c<sub>2</sub></b> &mdash; Number of inpatient visits greater than one:"
+          , context = "posthoc"
+          , toggleGroup = 2
+          )
+```
+
+[If dataset $L$ has well-defined indicators for admissions (and discharges), detecting distinct events is easy. For the sake of this scenario, I will assume this to be the case [[scenarios where the beginning and ending of a series are not well-defined will be covered in a separate article &mdash; eventually]]{.speech}:
+[ $c_2:=\#\big(\dot{\delta^T|}c_1\big) > 1;\enspace\dot{\delta^T}\equiv\text{admission date}$]{.mathblock}
+]{toggleGroup=2 context="posthoc" style="right:20px; "}
+
+<br>
+```{r COND_III}
+drop_hint("<b>c<sub>3</sub></b> &mdash; Time between inpatient admissions less than or equal to six weeks:"
+          , context = "posthoc"
+          , toggleGroup = 3
+          )
+```
+
+[
+[ $c_3:=\big({\Delta\\^n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}$]{.mathblock}
+[ ${\Delta\\^n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}$]{.mathblock}
+]{toggleGroup=3 context="posthoc"}
+
+<p></p>
+```{r COND_ORDER}
+drop_hint("Before moving on, I want to point out that for performance considerations, the order in which the conditionals are resolved can become very important.  Normally, I would first try the following:"
+          , context = "posthoc"
+          , toggleGroup = 4
+          )
+```
+
+
+[&nbsp;&nbsp; **1<sup>st</sup> $c_1$:** This is the most restrictive and is easily accomplished with a join operation over datasets $M$ and $S$: $M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}$<br>
+&nbsp;&nbsp; **2<sup>nd</sup> $c_3$:** Resolving $c_3$ gives you $c_2$ for free (I'll leave that as *"thought homework"* for you to ponder)<br>
+&nbsp;&nbsp; **3<sup>rd</sup> $c_2$:** This is easily resolved by counting over $c_3$ and qualifying based on the prescribed threshold<br>
+[The second and third steps can easily be flipped depending on the number of `TRUE` cases at each step. Use your domain knowledge (or someone else's) in these cases or, if all else fails, use multple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.]{.speech}
+]{toggleGroup=4 context="posthoc" style="display:block"}
+
+![](/decorative_line.png){.decorative-line}
+
+### [Temporal Hierarchy vs. Independence]{#omega-3} ([ $\omega_3$]{.medMath omega_id=3})
+
+
+```{r eval=FALSE}
 drop_hint("Here's the symbol taxonomy for columns: ", context = "definition", toggleGroup = 0)
 taxonomy
 ```
 
-### [Events vs. Report Window]{#omega-2} ([ $\omega_2$]{.medMath omega_id=2})
 
 
 {{% blogdown/footer %}}

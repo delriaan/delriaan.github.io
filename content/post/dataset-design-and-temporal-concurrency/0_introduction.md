@@ -25,7 +25,7 @@ toc:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:21:34</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 14:12:05</span>
 
 ## Introduction
 
@@ -83,7 +83,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-11-03 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-11-04 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 

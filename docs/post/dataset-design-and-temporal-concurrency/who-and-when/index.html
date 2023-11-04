@@ -92,7 +92,7 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:21:37</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 14:12:08</span>
 <p>Welcome back!</p>
 <p>Before getting started, let’s revisit out problem statement from the introduction:</p>
 <p><span class="speech" style="font-size: 0.9em; ">&ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.&quot;</span></p>
@@ -128,36 +128,13 @@ It also presents a great case-in-point as to why carefully reading over a reques
 <li><span class="medMath"><code>\(W\)</code></span> covers <em>two</em> years which will result in <em>two</em> ages for each member not filtered out. <strong>Question</strong>: Which age should be returned at this point? My preference would be <em>neither</em> and instead return the dates of birth. <em>Age</em> is a derived measure and is only needed to qualify records at this point; <em>dates of birth</em> are the temporal attributes (<span class="medMath"><code>\(\delta^T\)</code></span>) which should carried forward (I’ll demonstrate this shortly).</li>
 </ul>
 <img src="/decorative_line.png" class="decorative-line" />
-<p><span class="bigMath" style="color:#330033; ">✨</span> At this stage, we’ve defined the first portion of <span class="speech">“Who”</span> is related to the problem statement. An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined: <code>\(D_{\Omega}:=\Big\{\delta^T \cup \delta^I\Big\}_{i}\)</code></p>
-<span role="toggle" context="definition" toggleGroup="0" class="">
-Here's the symbol taxonomy for columns:  
-<hint toggleGroup="0">(show)</hint>
-</span>
-<p>
-<ul toggleGroup="0" context="definition">
-<li>
-<span class="def_sym">&delta;<sup>I</sup></span>
-: Information-carrying columns
-</li>
-<li>
-<span class="def_sym">&delta;<sup>G</sup></span>
-: Grouping columns (categorical, descriptive)
-</li>
-<li>
-<span class="def_sym">&delta;<sup>Y</sup></span>
-: Measurements (e.g., purchase price, height, product ratings)
-</li>
-<li>
-<span class="def_sym">&delta;<sup>T</sup></span>
-: Temporal columns to include dates and temporal hierarchies
-</li>
-<li>
-<span class="def_sym">&delta;<sup>E</sup></span>
-: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
-</li>
-</ul>
-</p>
+<p><span class="bigMath" style="color:#330033; ">✨</span> At this stage, we’ve defined the first portion of <span class="speech">“Who”</span> is related to the problem statement. An advantage of starting in this manner is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined.</p>
+<p>For the sake of demonstration, assume the existence of a member demographics table <code>\((M)\)</code>. Satisfying <span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> results in our first dataset: <code>\(M:=\sigma_{\omega_1}(M)\)</code>
+, where <code>\(\sigma\)</code> represents a <a href="https://en.wikipedia.org/wiki/Selection_(relational_algebra)" class="speech" target="_blank" title="Selection (Relational Algebra)"><em>selection</em></a> operation.</p>
 <h3 id="span-idomega-2events-vsreport-windowspan-span-classmedmath-omega_id2omega_2span"><span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>)</h3>
+<p>Now, we move on to defining (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>). Assume a claims dataset <code>\((L)\)</code> containing multiple service types <code>\((\delta^G: \text{Inpt}\in G)\)</code>. To satisfy this requirement, two conditionals need to be addressed:</p>
+<p><strong>Conditional #1</strong></p>
+<p><code>\(f:= f(x, y, \theta) \rightarrow{x} \bowtie_\theta{y} \Rightarrow \text{ join operator}\\R:= f(M, S, \delta^I) \Rightarrow \text{ join result on member Id } (\delta^I)\\c_1:= W_\text{start} \le{R}[\delta^T] \le{W}_\text{end}\)</code></p>
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
 <p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
