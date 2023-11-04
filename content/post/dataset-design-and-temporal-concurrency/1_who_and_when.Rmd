@@ -1,9 +1,10 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - Who & When'
-author: Chionesu George
-date: '2023-10-31'
+author: "Chionesu George"
+date: 2023-10-31
 slug: who-and-when
-series: 'Dataset Design and Temporal Concurrency'
+series: 
+  - Dataset Design and Temporal Concurrency
 categories:
   - Data Engineering
   - Theory
@@ -13,75 +14,31 @@ tags:
   - time
   - data
   - semantics
-toc: 
-  toc_depth: 2
+toc:
+  toc_depth: 3
   toc_float: true
 ---
 
-```{r}
+{{% blogdown/jquery %}}
+
+```{r SETUP, echo=FALSE}
 #| label: SETUP
 #| echo: false
-
 knitr::opts_chunk$set(echo = FALSE);
-htmltools::tags$span(
-  style='font-size:smaller; text-decoration:italic; color:#999999; '
-  , glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}")
-  );
-
-spsUtil::quiet({
-  library(rlang, include.only = "%||%")
-  library(book.of.workflow); 
-  load_unloaded(httr, magrittr, purrr, stringi, jsonlite, stringdist, htmltools, plotly, book.of.utilities, "data.table{+%between%}")
-});
-
-tags$script(src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js");
-
-dir(ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS')), pattern = "(javascript|footer).+R$", recursive = TRUE, full.names = TRUE) |> walk(source);
-
-window_example <- magick::image_read("./Window Example.png") |> 
-  magick::image_resize(geometry = magick::geometry_size_percent(20));
-
-waypoint.png <- magick::image_read("./waypoint.png") |> 
-  magick::image_resize(geometry = magick::geometry_size_percent(20));
-
-hint_js(
-  tags = c("ul","p")
-  , contexts = c("definition", "problemStatement", "default")
-  , out.file = "markdown.js"
-  , fade_speed = 10
-  , toggle.options = list(open = "(show)", close = "<hide>")
-  ); 
-
-tags$style(
-  "#problemStatement { color: #666666; font-family:Georgia; font-size:14pt; }"
-  , ".def_sym {font-weight:bold; color:#5555DD; } "
-  , ".speech {color: #444444; font-family:Georgia; font-style: italic;font-size:16pt;  }"
-  , "[id^='Math'] {font-size: 14pt; }"
-  , paste(
-      "body {background-image: url(multicolored_lights.jpg)"
-      , "background-size: 2048px 300px"
-      , "background-repeat: no-repeat"
-      , "}"
-      , sep = "; "
-      )
-  )
-
-htmltools::tags$script(readLines("markdown.js") |> paste(collapse = "\n"));
+options(article="dataset-design-and-temporal-concurrency");
+source(file = "setup.R", local = environment());
+tags$link(rel="stylesheet", href="/markdown.css");
+tags$script(src = "/markdown.js");
+last_mod
 ```
 
-{{% blogdown/style %}}
-{{% blogdown/markdown_js %}}
+Welcome back!
 
-Welcome back!  Before getting started, let's revisit out problem statement from the introduction:
+Before getting started, let's revisit out problem statement from the introduction:
 
 ```{r}
 #| label: PROBLEM_STATEMENT
-
-tags$span(
-  class = "speech"
-  , style = "font-size: 0.9em; "
-  , "\"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
-)
+problem_statement
 ```
 
 The conventions I'll use are also defined in the introduction [here](../introduction#definitions--conventions){target='_blank'}.
@@ -93,13 +50,14 @@ Identifying the global temporal window ( $W$ ) is important as defines the frame
 [ $\forall W, D^λ \Rightarrow D^\lambda_\Omega:= \Bigg\{\matrix{ W_\text{start} \le \delta^T \le W_\text{end},\enspace\enspace\#\delta^T= 1\\ \\ W_\text{start} \le \delta^T_\text{end} \wedge W_\text{end} \ge \delta^T_\text{start},\enspace\enspace\#\delta^T= 2 }\Bigg\}$ ]{.mathblock}
 
 , where $D^\lambda$ is the data source for context $\lambda$ (i.e., *demographics*, *claims*, *prescriptions*) and $W$ the lower and upper dates of the global window. The first form of $D^\lambda$ above reflects the case of a *single* time column in $D$ and the second form when there are two.
+
 ```{r}
 drop_hint("Regarding the second form:", context = "posthoc", toggleGroup = 0)
 ```
 
 - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of $\delta^I$ is duplicative along $\delta^T$ (more on this in a future article)
 - It allows for $\delta^T$ to extend outside of the bounds of $W$ while preserving the ability to detect temporal concurrency relative to $W$
-- ***Do not*** use the following logic to detect concurrency of the dual-date form with $W$ (or any other dual-date range):<br>[ $(W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})$ ]{.mathblock} This logical statement **will** fail to capture cases where $\delta^T$ extends outside of $W$:<br><br>`r window_example`
+- ***Do not*** use the following logic to detect concurrency of the dual-date form with $W$ (or any other dual-date range):<br>[ $(W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})$ ]{.mathblock} This logical statement **will** fail to capture cases where $\delta^T$ extends outside of $W$:<br><br>`r window_example.png`
 
 ## Who
 
@@ -120,12 +78,17 @@ drop_hint("It also presents a great case-in-point as to why carefully reading ov
 - [ $\omega_1$]{.medMath omega_id=1} must qualified relative to [ $W$]{.medMath} and not ["as of today"]{.speech}. Granted: this is not *explicitly* stated, but think about it: ["... for the period between January first of 2019 and the end of 2020"]{.speech} is your cue. Of course, when in doubt, check with the requester just to be sure.
 - [ $W$]{.medMath} covers *two* years which will result in *two* ages for each member not filtered out. **Question**: Which age should be returned at this point? My preference would be *neither* and instead return the dates of birth. *Age* is a derived measure and is only needed to qualify records at this point; *dates of birth* are the temporal attributes ([ $\delta^T$]{.medMath}) which should carried forward (I'll demonstrate this shortly).
 
-[ &#10024; ]{.bigMath style="color:#330033; "} At this stage, we've defined the first portion of ["Who"]{.speech} is related to the problem statement.  An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined:
+![](/decorative_line.png){.decorative-line}
 
-$$
-D_{\Omega}:=\big(\delta^T,\delta^I\big)_{i}\\
-\enspace\enspace \delta^T:=\text{"date of birth"}
-$$
+[ &#10024; ]{.bigMath style="color:#330033; "} At this stage, we've defined the first portion of ["Who"]{.speech} is related to the problem statement.  An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined: $D_{\Omega}:=\Big\{\delta^T \cup \delta^I\Big\}_{i}$ 
+
+
+```{r}
+drop_hint("Here's the symbol taxonomy for columns: ", context = "definition", toggleGroup = 0)
+taxonomy
+```
 
 ### [Events vs. Report Window]{#omega-2} ([ $\omega_2$]{.medMath omega_id=2})
 
+
+{{% blogdown/footer %}}

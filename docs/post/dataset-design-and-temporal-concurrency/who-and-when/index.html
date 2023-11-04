@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.111.3">
+
+
+<title>Dataset Design: Temporal Concurrency - Who &amp; When - Chionesu By Design</title>
+<meta property="og:title" content="Dataset Design: Temporal Concurrency - Who &amp; When - Chionesu By Design">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/post/">Articles</a></li>
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
+    
+    <li><a href="/data-projects/">Data Projects</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Dataset Design: Temporal Concurrency - Who &amp; When</h1>
+
+    
+    <span class="article-date">2023-10-31</span>
+    
+
+    <div class="article-content">
+      
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#when">When</a></li>
+    <li><a href="#who">Who</a>
+      <ul>
+        <li><a href="#span-idomega-1age-vsreport-windowspan-span-classmedmath-omega_id1omega_1span"><span id="omega-1">Age vs. Report Window</span> (<span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span>)</a></li>
+        <li><a href="#span-idomega-2events-vsreport-windowspan-span-classmedmath-omega_id2omega_2span"><span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<pre><code>## dataset-design-and-temporal-concurrency
+</code></pre>
+<link rel="stylesheet" href="/markdown.css"/>
+<script src="/markdown.js"></script>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:21:37</span>
+<p>Welcome back!</p>
+<p>Before getting started, let’s revisit out problem statement from the introduction:</p>
+<p><span class="speech" style="font-size: 0.9em; ">&ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.&quot;</span></p>
+<p>The conventions I’ll use are also defined in the introduction <a href="../introduction#definitions--conventions" target="_blank">here</a>.</p>
+<h2 id="when">When</h2>
+<p>Identifying the global temporal window ( <code>\(W\)</code> ) is important as defines the frame of reference within which temporal relations are queried and transformed. It is the absolute governor of detecting <em>when</em> things take place. In this case, the window is defined as all records having temporal columns or derived temporal measurements with at least <em>one</em> value falling within the period <em>2019-01-01</em> to <em>2020-12-31</em>:</p>
+<p><span class="mathblock"><code>\(\forall W, D^λ \Rightarrow D^\lambda_\Omega:= \Bigg\{\matrix{ W_\text{start} \le \delta^T \le W_\text{end},\enspace\enspace\#\delta^T= 1\\ \\ W_\text{start} \le \delta^T_\text{end} \wedge W_\text{end} \ge \delta^T_\text{start},\enspace\enspace\#\delta^T= 2 }\Bigg\}\)</code></span></p>
+<p>, where <code>\(D^\lambda\)</code> is the data source for context <code>\(\lambda\)</code> (i.e., <em>demographics</em>, <em>claims</em>, <em>prescriptions</em>) and <code>\(W\)</code> the lower and upper dates of the global window. The first form of <code>\(D^\lambda\)</code> above reflects the case of a <em>single</em> time column in <code>\(D\)</code> and the second form when there are two.</p>
+<span role="toggle" context="posthoc" toggleGroup="0" class="">
+Regarding the second form: 
+<hint toggleGroup="0">(show)</hint>
+</span>
+<ul>
+<li>It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of <code>\(\delta^I\)</code> is duplicative along <code>\(\delta^T\)</code> (more on this in a future article)</li>
+<li>It allows for <code>\(\delta^T\)</code> to extend outside of the bounds of <code>\(W\)</code> while preserving the ability to detect temporal concurrency relative to <code>\(W\)</code></li>
+<li><em><strong>Do not</strong></em> use the following logic to detect concurrency of the dual-date form with <code>\(W\)</code> (or any other dual-date range):<br><span class="mathblock"><code>\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \wedge (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)</code></span> This logical statement <strong>will</strong> fail to capture cases where <code>\(\delta^T\)</code> extends outside of <code>\(W\)</code>:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-2-1.png" width="442" /></li>
+</ul>
+<h2 id="who">Who</h2>
+<p>The “Who” aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction <em>“and”</em>) and a possible, third:</p>
+<ul>
+<li><span class="bigMath"><code>\(\omega_1\)</code></span>: <span id="omega-1-def" class="speech">“… members between 30 and 50 years old”</span></li>
+<li><span class="bigMath"><code>\(\omega_2\)</code></span>: <span id="omega-2-def" class="speech">“… have had at least two Inpatient visits within a six-week period”</span></li>
+<li><span class="bigMath"><code>\(\omega_3\)</code></span>: <code>\(f(\omega_1, \omega_2)\)</code> — <span id="omega-3-def" class="speech">hierarchical concurrency</span></li>
+</ul>
+<h3 id="span-idomega-1age-vsreport-windowspan-span-classmedmath-omega_id1omega_1span"><span id="omega-1">Age vs. Report Window</span> (<span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span>)</h3>
+<p><span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> is the first opportunity to greatly trim down your data pull.</p>
+<span role="toggle" context="posthoc" toggleGroup="1" class="">
+It also presents a great case-in-point as to why carefully reading over a request <i>before</i> thrashing away at the keyboard is important: 
+<hint toggleGroup="1">(show)</hint>
+</span>
+<ul>
+<li><span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> must qualified relative to <span class="medMath"><code>\(W\)</code></span> and not <span class="speech">“as of today”</span>. Granted: this is not <em>explicitly</em> stated, but think about it: <span class="speech">“… for the period between January first of 2019 and the end of 2020”</span> is your cue. Of course, when in doubt, check with the requester just to be sure.</li>
+<li><span class="medMath"><code>\(W\)</code></span> covers <em>two</em> years which will result in <em>two</em> ages for each member not filtered out. <strong>Question</strong>: Which age should be returned at this point? My preference would be <em>neither</em> and instead return the dates of birth. <em>Age</em> is a derived measure and is only needed to qualify records at this point; <em>dates of birth</em> are the temporal attributes (<span class="medMath"><code>\(\delta^T\)</code></span>) which should carried forward (I’ll demonstrate this shortly).</li>
+</ul>
+<img src="/decorative_line.png" class="decorative-line" />
+<p><span class="bigMath" style="color:#330033; ">✨</span> At this stage, we’ve defined the first portion of <span class="speech">“Who”</span> is related to the problem statement. An advantage of starting here is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined: <code>\(D_{\Omega}:=\Big\{\delta^T \cup \delta^I\Big\}_{i}\)</code></p>
+<span role="toggle" context="definition" toggleGroup="0" class="">
+Here's the symbol taxonomy for columns:  
+<hint toggleGroup="0">(show)</hint>
+</span>
+<p>
+<ul toggleGroup="0" context="definition">
+<li>
+<span class="def_sym">&delta;<sup>I</sup></span>
+: Information-carrying columns
+</li>
+<li>
+<span class="def_sym">&delta;<sup>G</sup></span>
+: Grouping columns (categorical, descriptive)
+</li>
+<li>
+<span class="def_sym">&delta;<sup>Y</sup></span>
+: Measurements (e.g., purchase price, height, product ratings)
+</li>
+<li>
+<span class="def_sym">&delta;<sup>T</sup></span>
+: Temporal columns to include dates and temporal hierarchies
+</li>
+<li>
+<span class="def_sym">&delta;<sup>E</sup></span>
+: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
+</li>
+</ul>
+</p>
+<h3 id="span-idomega-2events-vsreport-windowspan-span-classmedmath-omega_id2omega_2span"><span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>)</h3>
+<p>Until next time, I wish you much success in your journey as a data practitioner!</p>
+<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

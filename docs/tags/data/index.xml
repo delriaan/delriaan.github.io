@@ -6,58 +6,74 @@
     <description>Recent content in data on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sat, 21 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/data/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 31 Oct 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/data/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design: Temporal Concurrency - Who &amp; When</title>
+      <link>/post/dataset-design-and-temporal-concurrency/who-and-when/</link>
+      <pubDate>Tue, 31 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/who-and-when/</guid>
+      <description>## dataset-design-and-temporal-concurrencyUpdated 2023-11-03 20:21:37Welcome back!
+Before getting started, let’s revisit out problem statement from the introduction:
+&amp;ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period.</description>
+    </item>
+    
     <item>
       <title>Dataset Design: Temporal Concurrency - Prologue</title>
-      <link>/2023/10/21/dataset-design-and-temporal-concurrency-prologue/</link>
+      <link>/post/dataset-design-and-temporal-concurrency/introduction/</link>
       <pubDate>Sat, 21 Oct 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/10/21/dataset-design-and-temporal-concurrency-prologue/</guid>
-      <description>Updated 2023-10-24 21:25:04
-IntroductionNumerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
+      <guid>/post/dataset-design-and-temporal-concurrency/introduction/</guid>
+      <description>## dataset-design-and-temporal-concurrencyUpdated 2023-11-03 20:21:34Introduction Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence.</description>
     </item>
     
     <item>
       <title>Measurements of Scale, Part Two</title>
-      <link>/2023/08/06/measurements-of-scale-part-two/</link>
+      <link>/post/measurements-of-scale/measurements-of-scale-part-two/</link>
       <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/08/06/measurements-of-scale-part-two/</guid>
-      <description>Updated 2023-10-24 21:25:00
-References
-Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)
-Scales of Measurement (Byju’s Learning)
-Level of Measurement (Wikipedia)
-Levels of Measurement (Scribbr)
-And we’re back!
+      <guid>/post/measurements-of-scale/measurements-of-scale-part-two/</guid>
+      <description>## Updated 2023-11-03 20:21:46References (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)And we’re back!
 Be sure to check out Measurements of Scale part one, here. Now, we’ll tackle interval and ratio measurements.
 Warning: This entry is considerably longer than Part One. If you suffer from TL;DR, please use the “back” button to return to safety.</description>
     </item>
     
     <item>
       <title>Measurements of Scale, Part One</title>
-      <link>/2023/07/27/measurements-of-scale-part-one/</link>
+      <link>/post/measurements-of-scale/measurements-of-scale-part-one/</link>
       <pubDate>Thu, 27 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/07/27/measurements-of-scale-part-one/</guid>
-      <description>Updated 2023-10-24 21:24:58
-References
-Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)
-Scales of Measurement (Byju’s Learning)
-Level of Measurement (Wikipedia)
-A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences. References are provided above, so I leave the reader to … well, read.</description>
+      <guid>/post/measurements-of-scale/measurements-of-scale-part-one/</guid>
+      <description>## measurements-of-scaleUpdated 2023-11-03 20:21:43References (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences.</description>
     </item>
     
     <item>
       <title>Distributions and Some &#34;Mean&#34; Advice</title>
-      <link>/2023/07/15/distributions-and-some-mean-advice/</link>
+      <link>/post/measurements-of-scale/distributions-and-some-mean-advice/</link>
       <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
-      <guid>/2023/07/15/distributions-and-some-mean-advice/</guid>
-      <description>Updated 2023-10-24 21:24:56
-Focal Thoughts:1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study2. Choosing the wrong “mean” can mean trouble3. The values in a dataset should not be interpreted apart from the real-world elements they encode
-Average Value: Is it Informative?Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?</description>
+      <guid>/post/measurements-of-scale/distributions-and-some-mean-advice/</guid>
+      <description>## Updated 2023-11-03 20:21:41Focal Thoughts:
+Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong “mean” can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?</description>
+    </item>
+    
+    <item>
+      <title>Dataset Design: Temporal Concurrency</title>
+      <link>/post/dataset-design-and-temporal-concurrency/</link>
+      <pubDate>Tue, 31 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Measurements of Scale</title>
+      <link>/post/measurements-of-scale/</link>
+      <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/measurements-of-scale/</guid>
+      <description></description>
     </item>
     
   </channel>
