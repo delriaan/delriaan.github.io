@@ -64,7 +64,7 @@
 
   <article class="article">
     
-    <span class="article-duration">4 min read</span>
+    <span class="article-duration">5 min read</span>
     
 
     <h1 class="article-title">Dataset Design: Temporal Concurrency - Who &amp; When</h1>
@@ -82,6 +82,7 @@
       <ul>
         <li><a href="#span-idomega-1age-vsreport-windowspan-span-classmedmath-omega_id1omega_1span"><span id="omega-1">Age vs. Report Window</span> (<span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span>)</a></li>
         <li><a href="#span-idomega-2events-vsreport-windowspan-span-classmedmath-omega_id2omega_2span"><span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>)</a></li>
+        <li><a href="#span-idomega-3temporal-hierarchy-vsindependencespan-span-classmedmath-omega_id3omega_3span"><span id="omega-3">Temporal Hierarchy vs. Independence</span> (<span class="medMath" omega_id="3"><code>\(\omega_3\)</code></span>)</a></li>
       </ul>
     </li>
   </ul>
@@ -92,7 +93,7 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 14:12:08</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 22:31:28</span>
 <p>Welcome back!</p>
 <p>Before getting started, let’s revisit out problem statement from the introduction:</p>
 <p><span class="speech" style="font-size: 0.9em; ">&ldquo;I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.&quot;</span></p>
@@ -127,14 +128,50 @@ It also presents a great case-in-point as to why carefully reading over a reques
 <li><span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> must qualified relative to <span class="medMath"><code>\(W\)</code></span> and not <span class="speech">“as of today”</span>. Granted: this is not <em>explicitly</em> stated, but think about it: <span class="speech">“… for the period between January first of 2019 and the end of 2020”</span> is your cue. Of course, when in doubt, check with the requester just to be sure.</li>
 <li><span class="medMath"><code>\(W\)</code></span> covers <em>two</em> years which will result in <em>two</em> ages for each member not filtered out. <strong>Question</strong>: Which age should be returned at this point? My preference would be <em>neither</em> and instead return the dates of birth. <em>Age</em> is a derived measure and is only needed to qualify records at this point; <em>dates of birth</em> are the temporal attributes (<span class="medMath"><code>\(\delta^T\)</code></span>) which should carried forward (I’ll demonstrate this shortly).</li>
 </ul>
-<img src="/decorative_line.png" class="decorative-line" />
 <p><span class="bigMath" style="color:#330033; ">✨</span> At this stage, we’ve defined the first portion of <span class="speech">“Who”</span> is related to the problem statement. An advantage of starting in this manner is that a maximally large cohort has been defined and can be stored in a table to which subsequent data can more efficiently be joined.</p>
-<p>For the sake of demonstration, assume the existence of a member demographics table <code>\((M)\)</code>. Satisfying <span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> results in our first dataset: <code>\(M:=\sigma_{\omega_1}(M)\)</code>
-, where <code>\(\sigma\)</code> represents a <a href="https://en.wikipedia.org/wiki/Selection_(relational_algebra)" class="speech" target="_blank" title="Selection (Relational Algebra)"><em>selection</em></a> operation.</p>
+<p>For the sake of demonstration, assume the existence of a member demographics table <code>\((M)\)</code>. Satisfying <span class="medMath" omega_id="1"><code>\(\omega_1\)</code></span> results in our first dataset: <code>\(D^M:=\sigma_{\omega_1}(M)\)</code>
+, where <span class="medMath"><code>\(\sigma\)</code></span> represents a <a href="https://en.wikipedia.org/wiki/Selection_(relational_algebra)" class="speech" target="_blank" title="Selection (Relational Algebra)"><em>selection</em></a> operation.</p>
+<p>
+<hr style="border-bottom: solid 5px #555555; width:100%; "/>
+<span style="font-size:4em;" class="speech">
+<img src="/hourglass.png" caption="Take a Break!" style="height:3.5em; vertical-align:top; top:-5px; float:left"/>
+Take a Break!
+</span>
+<hr style="border-top: solid 5px #555555; width:100%; "/>
+</p>
 <h3 id="span-idomega-2events-vsreport-windowspan-span-classmedmath-omega_id2omega_2span"><span id="omega-2">Events vs. Report Window</span> (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>)</h3>
-<p>Now, we move on to defining (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>). Assume a claims dataset <code>\((L)\)</code> containing multiple service types <code>\((\delta^G: \text{Inpt}\in G)\)</code>. To satisfy this requirement, two conditionals need to be addressed:</p>
-<p><strong>Conditional #1</strong></p>
-<p><code>\(f:= f(x, y, \theta) \rightarrow{x} \bowtie_\theta{y} \Rightarrow \text{ join operator}\\R:= f(M, S, \delta^I) \Rightarrow \text{ join result on member Id } (\delta^I)\\c_1:= W_\text{start} \le{R}[\delta^T] \le{W}_\text{end}\)</code></p>
+<p>Now, we move on to defining (<span class="medMath" omega_id="2"><code>\(\omega_2\)</code></span>). Assume a claims dataset <code>\((L)\)</code> containing multiple service types <code>\((\delta^G: \text{Inpt}\in G)\)</code>. To satisfy this requirement, <em>three</em> conditionals need to be addressed:</p>
+<span role="toggle" context="posthoc" toggleGroup="1" class="">
+<b>c<sub>1</sub></b> &mdash; Has inpatient visits within <span style='font-family:Georgia;'>W</span>: 
+<hint toggleGroup="1">(show)</hint>
+</span>
+<p><span class="mathblock" toggleGroup="1" context="posthoc"><code>\(c_1:= W_\text{start} \le \dot{\delta^T} \le{W}_\text{end}; \enspace\dot{\delta^T}\equiv\text{service date}\)</code></span></p>
+<br>
+<span role="toggle" context="posthoc" toggleGroup="2" class="">
+<b>c<sub>2</sub></b> &mdash; Number of inpatient visits greater than one: 
+<hint toggleGroup="2">(show)</hint>
+</span>
+<p><span toggleGroup="2" context="posthoc" style="right:20px; ">If dataset <code>\(L\)</code> has well-defined indicators for admissions (and discharges), detecting distinct events is easy. For the sake of this scenario, I will assume this to be the case <span class="speech">[scenarios where the beginning and ending of a series are not well-defined will be covered in a separate article — eventually]</span>:
+<span class="mathblock"><code>\(c_2:=\#\big(\dot{\delta^T|}c_1\big) &gt; 1;\enspace\dot{\delta^T}\equiv\text{admission date}\)</code></span></span></p>
+<br>
+<span role="toggle" context="posthoc" toggleGroup="3" class="">
+<b>c<sub>3</sub></b> &mdash; Time between inpatient admissions less than or equal to six weeks: 
+<hint toggleGroup="3">(show)</hint>
+</span>
+<p><span toggleGroup="3" context="posthoc"><span class="mathblock"><code>\(c_3:=\big({\Delta\\^n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\)</code></span>
+<span class="mathblock"><code>\({\Delta\\^n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}\)</code></span></span></p>
+<p>
+</p>
+<span role="toggle" context="posthoc" toggleGroup="4" class="">
+Before moving on, I want to point out that for performance considerations, the order in which the conditionals are resolved can become very important.  Normally, I would first try the following: 
+<hint toggleGroup="4">(show)</hint>
+</span>
+<p><span toggleGroup="4" context="posthoc" style="display:block">   <strong>1<sup>st</sup> <code>\(c_1\)</code>:</strong> This is the most restrictive and is easily accomplished with a join operation over datasets <code>\(M\)</code> and <code>\(S\)</code>: <code>\(M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}\)</code><br>
+   <strong>2<sup>nd</sup> <code>\(c_3\)</code>:</strong> Resolving <code>\(c_3\)</code> gives you <code>\(c_2\)</code> for free (I’ll leave that as <em>“thought homework”</em> for you to ponder)<br>
+   <strong>3<sup>rd</sup> <code>\(c_2\)</code>:</strong> This is easily resolved by counting over <code>\(c_3\)</code> and qualifying based on the prescribed threshold<br>
+<span class="speech">The second and third steps can easily be flipped depending on the number of <code>TRUE</code> cases at each step. Use your domain knowledge (or someone else’s) in these cases or, if all else fails, use multple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.</span></span></p>
+<img src="/decorative_line.png" class="decorative-line" />
+<h3 id="span-idomega-3temporal-hierarchy-vsindependencespan-span-classmedmath-omega_id3omega_3span"><span id="omega-3">Temporal Hierarchy vs. Independence</span> (<span class="medMath" omega_id="3"><code>\(\omega_3\)</code></span>)</h3>
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
 <p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>

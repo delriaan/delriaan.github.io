@@ -30,6 +30,9 @@ source(file = "setup.R", local = environment());
 tags$link(rel="stylesheet", href="/markdown.css");
 tags$script(src = "/markdown.js");
 last_mod
+
+hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
+
 break_time <- tags$p(
   tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
   , tags$span(
@@ -38,12 +41,12 @@ break_time <- tags$p(
       , tags$img(
           src = "/hourglass.png"
           , caption="Take a Break!"
-          , style="height:3.5em; vertical-align:top; top:-5px; float:left"
+          , style="height:3em; vertical-align:middle; top:-5px; float:left"
           )
       , "Take a Break!"
       )
   , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
-  )
+  ) 
 ```
 
 Welcome back!
@@ -97,7 +100,7 @@ drop_hint("It also presents a great case-in-point as to why carefully reading ov
 For the sake of demonstration, assume the existence of a member demographics table $(M)$. Satisfying [ $\omega_1$]{.medMath omega_id=1} results in our first dataset: $D^M:=\sigma_{\omega_1}(M)$
 , where [ $\sigma$]{.medMath} represents a [*selection*](https://en.wikipedia.org/wiki/Selection_(relational_algebra) "Selection (Relational Algebra)"){.speech target="_blank"} operation.
 
-```{r}
+```{r BREAK_TIME}
 break_time
 ```
 
@@ -106,20 +109,22 @@ break_time
 Now, we move on to defining ([ $\omega_2$]{.medMath omega_id=2}).  Assume a claims dataset $(L)$ containing multiple service types $(\delta^G: \text{Inpt}\in G)$. To satisfy this requirement, *three* conditionals need to be addressed:
 
 ```{r COND_I}
-drop_hint("<b>c<sub>1</sub></b> &mdash; Has inpatient visits within <span style='font-family:Georgia;'>W</span>:"
-          , context = "posthoc"
-          , toggleGroup = 1
-          )
+drop_hint(
+  "<b>c<sub>1</sub></b> &mdash; Has inpatient visits within <span style='font-family:Georgia;'>W</span>:"
+  , context = "posthoc"
+  , toggleGroup = 1
+  )
 ```
 
 [ $c_1:= W_\text{start} \le \dot{\delta^T} \le{W}_\text{end}; \enspace\dot{\delta^T}\equiv\text{service date}$]{.mathblock toggleGroup=1 context="posthoc"}
 
 <br>
 ```{r COND_II}
-drop_hint("<b>c<sub>2</sub></b> &mdash; Number of inpatient visits greater than one:"
-          , context = "posthoc"
-          , toggleGroup = 2
-          )
+drop_hint(
+  "<b>c<sub>2</sub></b> &mdash; Number of inpatient visits greater than one:"
+  , context = "posthoc"
+  , toggleGroup = 2
+  )
 ```
 
 [If dataset $L$ has well-defined indicators for admissions (and discharges), detecting distinct events is easy. For the sake of this scenario, I will assume this to be the case [[scenarios where the beginning and ending of a series are not well-defined will be covered in a separate article &mdash; eventually]]{.speech}:
@@ -128,10 +133,11 @@ drop_hint("<b>c<sub>2</sub></b> &mdash; Number of inpatient visits greater than 
 
 <br>
 ```{r COND_III}
-drop_hint("<b>c<sub>3</sub></b> &mdash; Time between inpatient admissions less than or equal to six weeks:"
-          , context = "posthoc"
-          , toggleGroup = 3
-          )
+drop_hint(
+  "<b>c<sub>3</sub></b> &mdash; Time between inpatient admissions less than or equal to six weeks:"
+  , context = "posthoc"
+  , toggleGroup = 3
+  )
 ```
 
 [
@@ -163,7 +169,5 @@ drop_hint("Before moving on, I want to point out that for performance considerat
 drop_hint("Here's the symbol taxonomy for columns: ", context = "definition", toggleGroup = 0)
 taxonomy
 ```
-
-
 
 {{% blogdown/footer %}}

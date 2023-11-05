@@ -25,7 +25,7 @@ toc:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 18:06:15</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 22:33:22</span>
 
 Welcome back!
 
@@ -80,7 +80,7 @@ For the sake of demonstration, assume the existence of a member demographics tab
 <p>
 <hr style="border-bottom: solid 5px #555555; width:100%; "/>
 <span style="font-size:4em;" class="speech">
-<img src="/hourglass.png" caption="Take a Break!" style="height:3.5em; vertical-align:top; top:-5px; float:left"/>
+<img src="/hourglass.png" caption="Take a Break!" style="height:3em; vertical-align:middle; top:-5px; float:left"/>
 Take a Break!
 </span>
 <hr style="border-top: solid 5px #555555; width:100%; "/>
