@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
   $("ul[context='definition']").hide();
   $("p[context='problemStatement']").hide();
@@ -15,16 +14,17 @@ $(document).ready(function(){
     }); 
   $("ul[context='definition']").first().click();
   $("p[context='problemStatement']").first().click();
-
-  $(".medMath").each(function(){
-	id = $("#omega-" + $(this).attr("omega_id") + "-def");
-	$(this).attr("title", id.text());
+  
+  // Turn the following in to a generalized method called 'echo()'
+  $("[msg_id]").each(function(){
+  	$(this).attr("title", $("#msg_" + $(this).attr("msg_id")).text());
   });
+  
   $("[role^=\"toggle\"]").each(function(){
-	toggle = $(this);
-	if (toggle.attr("context") == "posthoc"){
-	obj = toggle.next();
-	obj.hide().attr({"context" : toggle.attr("context"), "toggleGroup" : toggle.attr("toggleGroup")});
-	}
+  	toggle = $(this);
+  	if (toggle.attr("context") == "posthoc"){
+  	obj = toggle.next();
+  	obj.hide().attr({"context" : toggle.attr("context"), "toggleGroup" : toggle.attr("toggleGroup")});
+  	}
   });
 });

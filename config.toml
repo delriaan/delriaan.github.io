@@ -34,6 +34,8 @@ enableGitInfo = true
   highlightjsVersion = "9.12.0"
   highlightjsLang = ["r", "yaml"]
   highlightjsTheme = "github"
+  dateForm = "Jan 2020"
+  tocMinWordCount = 1000
   
   # path to the favicon, under "static"
   favicon = "favicon.ico"
@@ -50,10 +52,10 @@ enableGitInfo = true
     unsafe = true  # Enable user to embed HTML snippets in Markdown content.
   [markup.highlight]
     codeFences = false
-  [markup.tableOfContents]
-    endLevel = 3
-    ordered = false
-    startLevel = 2
+#  [markup.tableOfContents]
+#    endLevel = 3
+#    ordered = false
+#    startLevel = 2
   
 [taxonomies]
   category = 'categories'

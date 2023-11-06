@@ -29,7 +29,7 @@ tags:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:21:46</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:22</span>
 <span role="toggle" context="posthoc" toggleGroup="0" class="">
 References 
 <hint toggleGroup="0">(show)</hint>
@@ -223,11 +223,11 @@ In addition, interval scales have an infinite domain and no **true** zero point:
 
 By way of example:
 
-- `\(X:\)` *a vector of data* <br> <span>[96, 20, 100, 78, 48, 62, 84, 35, 67, 39]</span>
+- `\(X:\)` *a vector of data* <br> <span>[73, 59, 27, 29, 28, 53, 74, 16, 4, 81]</span>
 
 - **Ordinal:** positions of each value in `\(X\)`<br> <span>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
 
-- **Interval:** distances from the mean `\((X - \bar{X})\)`<br> <span>[33.1, -42.9, 37.1, 15.1, -14.9, -0.9, 21.1, -27.9, 4.1, -23.9]</span><br>
+- **Interval:** distances from the mean `\((X - \bar{X})\)`<br> <span>[28.6, 14.6, -17.4, -15.4, -16.4, 8.6, 29.6, -28.4, -40.4, 36.6]</span><br>
 
 Division and multiplication are not allowed on an interval scale: fortunately, we have our final measurement scale — the *ratio* scale.
 
@@ -284,49 +284,49 @@ Having an absolute zero point allows us to objectively state that nobody entered
 <td style="text-align:center">A</td>
 <td style="text-align:center">220</td>
 <td style="text-align:center">-1.5</td>
-<td style="text-align:center">51.27</td>
+<td style="text-align:center">105</td>
 </tr>
 <tr>
 <td style="text-align:center">A#</td>
 <td style="text-align:center">233.08</td>
 <td style="text-align:center">-1</td>
-<td style="text-align:center">-114.18</td>
+<td style="text-align:center">167.23</td>
 </tr>
 <tr>
 <td style="text-align:center">B</td>
 <td style="text-align:center">246.94</td>
 <td style="text-align:center">-0.5</td>
-<td style="text-align:center">48.41</td>
+<td style="text-align:center">95.06</td>
 </tr>
 <tr>
 <td style="text-align:center">C (middle)</td>
 <td style="text-align:center">261.63</td>
 <td style="text-align:center">0</td>
-<td style="text-align:center">16.27</td>
+<td style="text-align:center">87.3</td>
 </tr>
 <tr>
 <td style="text-align:center">C#</td>
 <td style="text-align:center">277.18</td>
 <td style="text-align:center">0.5</td>
-<td style="text-align:center">-38.57</td>
+<td style="text-align:center">47.56</td>
 </tr>
 <tr>
 <td style="text-align:center">D</td>
 <td style="text-align:center">293.66</td>
 <td style="text-align:center">1</td>
-<td style="text-align:center">-97.81</td>
+<td style="text-align:center">-5.26</td>
 </tr>
 <tr>
 <td style="text-align:center">D#</td>
 <td style="text-align:center">311.13</td>
 <td style="text-align:center">1.5</td>
-<td style="text-align:center">16.83</td>
+<td style="text-align:center">89.32</td>
 </tr>
 <tr>
 <td style="text-align:center">E</td>
 <td style="text-align:center">329.63</td>
 <td style="text-align:center">2</td>
-<td style="text-align:center">28.34</td>
+<td style="text-align:center">14.27</td>
 </tr>
 </table>
 
@@ -337,7 +337,7 @@ Having an absolute zero point allows us to objectively state that nobody entered
 - A final … note (*sorry*): column “dB” is on a ratio scale, but it isn’t obvious. There doesn’t appear to be an absolute zero given the negative values, so what gives? Decibels (dB) are [logarithmic.](https://www.mathsisfun.com/algebra/logarithms.html) Negative logarithms result in smaller values. To illustrate, consider taking a piece of paper, cutting it in half, and then repeating this process many times: `\(\frac{1}{2^0}, \frac{1}{2^1}, \frac{1}{2^2}, \cdots, \frac{1}{2^x}\equiv 2^{-x}: x\in [0, \infty)\)`. With each iteration, the halves become smaller and smaller. At some point, there would be *virtually* nothing left to cut:
 
 <div id="htmlwidget-1" style="width:720px;height:550px;" class="plotly html-widget "></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"visdat":{"a91031e05774":["function () ","plotlyVisDat"]},"cur_data":"a91031e05774","attrs":{"a91031e05774":{"x":{},"y":{},"hoverinfo":"text+info","hovertext":{},"mode":"markers","name":"The half of it","color":{},"stroke":["#000000"],"size":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":720,"height":550,"margin":{"b":-11,"l":60,"t":-11,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"$x\\text{ (# of halves)}$","gridcolor":"#CCCCCC"},"yaxis":{"domain":[0,1],"automargin":true,"title":"$f(x)$","gridcolor":"#CCCCCC"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Cutting Into Halves<br><span style='font-size:smaller; font-family: Georgia; ' >(How 1,000 papercuts happen)<\/span>","plot_bgcolor":"#EFEFEF"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"y":[0.5,0.25,0.125,0.0625,0.03125,0.015625,0.0078125,0.00390625,0.001953125,0.0009765625,0.00048828125,0.000244140625,0.0001220703125,6.103515625e-05,3.0517578125e-05,1.52587890625e-05,7.62939453125e-06,3.814697265625e-06,1.9073486328125e-06,9.5367431640625e-07],"hoverinfo":["text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info"],"hovertext":["Piece size: 0.5","Piece size: 0.25","Piece size: 0.125","Piece size: Smaller","Piece size: Smaller","Piece size: Smaller","Piece size: Really small","Piece size: Really small","Piece size: Really small","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!"],"mode":"markers","name":"The half of it","type":"scatter","marker":{"colorbar":{"title":"y","ticklen":2},"cmin":9.5367431640625e-07,"cmax":0.5,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0.5,0.25,0.125,0.0625,0.03125,0.015625,0.0078125,0.00390625,0.001953125,0.0009765625,0.00048828125,0.000244140625,0.0001220703125,6.103515625e-05,3.0517578125e-05,1.52587890625e-05,7.62939453125e-06,3.814697265625e-06,1.9073486328125e-06,9.5367431640625e-07],"size":[100,54.9999141691478,32.4998712537217,21.2498497960087,15.6248390671522,12.8123337027239,11.4060810205098,10.7029546794027,10.3513915088492,10.1756099235724,10.087719130934,10.0437737346148,10.0218010364552,10.0108146873754,10.0053215128355,10.0025749255656,10.0012016319306,10.0005149851131,10.0001716617044,10],"sizemode":"area","line":{"color":"rgba(0,0,0,1)","width":1}},"textfont":{"size":[100,54.9999141691478,32.4998712537217,21.2498497960087,15.6248390671522,12.8123337027239,11.4060810205098,10.7029546794027,10.3513915088492,10.1756099235724,10.087719130934,10.0437737346148,10.0218010364552,10.0108146873754,10.0053215128355,10.0025749255656,10.0012016319306,10.0005149851131,10.0001716617044,10]},"error_y":{"thickness":1,"width":[]},"error_x":{"thickness":1,"width":[]},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,20],"y":[9.5367431640625e-07,0.5],"type":"scatter","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":{"text":"<span style='font-family: Georgia'>f(x) = 2<sup>-x<\/sup><\/span>"},"ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"cmin":9.5367431640625e-07,"cmax":0.5,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[9.5367431640625e-07,0.5],"line":{"color":"rgba(255,127,14,1)"}},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"visdat":{"90c65734a0b":["function () ","plotlyVisDat"]},"cur_data":"90c65734a0b","attrs":{"90c65734a0b":{"x":{},"y":{},"hoverinfo":"text+info","hovertext":{},"mode":"markers","name":"The half of it","color":{},"stroke":["#000000"],"size":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"width":720,"height":550,"margin":{"b":-11,"l":60,"t":-11,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"$x\\text{ (# of halves)}$","gridcolor":"#CCCCCC"},"yaxis":{"domain":[0,1],"automargin":true,"title":"$f(x)$","gridcolor":"#CCCCCC"},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5},"title":"Cutting Into Halves<br><span style='font-size:smaller; font-family: Georgia; ' >(How 1,000 papercuts happen)<\/span>","plot_bgcolor":"#EFEFEF"},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"y":[0.5,0.25,0.125,0.0625,0.03125,0.015625,0.0078125,0.00390625,0.001953125,0.0009765625,0.00048828125,0.000244140625,0.0001220703125,6.103515625e-05,3.0517578125e-05,1.52587890625e-05,7.62939453125e-06,3.814697265625e-06,1.9073486328125e-06,9.5367431640625e-07],"hoverinfo":["text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info","text+info"],"hovertext":["Piece size: 0.5","Piece size: 0.25","Piece size: 0.125","Piece size: Smaller","Piece size: Smaller","Piece size: Smaller","Piece size: Really small","Piece size: Really small","Piece size: Really small","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Get a microscope!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!","Piece size: Approaching zero!!!"],"mode":"markers","name":"The half of it","type":"scatter","marker":{"colorbar":{"title":"y","ticklen":2},"cmin":9.5367431640625e-07,"cmax":0.5,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0.5,0.25,0.125,0.0625,0.03125,0.015625,0.0078125,0.00390625,0.001953125,0.0009765625,0.00048828125,0.000244140625,0.0001220703125,6.103515625e-05,3.0517578125e-05,1.52587890625e-05,7.62939453125e-06,3.814697265625e-06,1.9073486328125e-06,9.5367431640625e-07],"size":[100,54.9999141691478,32.4998712537217,21.2498497960087,15.6248390671522,12.8123337027239,11.4060810205098,10.7029546794027,10.3513915088492,10.1756099235724,10.087719130934,10.0437737346148,10.0218010364552,10.0108146873754,10.0053215128355,10.0025749255656,10.0012016319306,10.0005149851131,10.0001716617044,10],"sizemode":"area","line":{"color":"rgba(0,0,0,1)","width":1}},"textfont":{"size":[100,54.9999141691478,32.4998712537217,21.2498497960087,15.6248390671522,12.8123337027239,11.4060810205098,10.7029546794027,10.3513915088492,10.1756099235724,10.087719130934,10.0437737346148,10.0218010364552,10.0108146873754,10.0053215128355,10.0025749255656,10.0012016319306,10.0005149851131,10.0001716617044,10]},"error_y":{"thickness":1,"width":[]},"error_x":{"thickness":1,"width":[]},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,20],"y":[9.5367431640625e-07,0.5],"type":"scatter","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":{"text":"<span style='font-family: Georgia'>f(x) = 2<sup>-x<\/sup><\/span>"},"ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"cmin":9.5367431640625e-07,"cmax":0.5,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[9.5367431640625e-07,0.5],"line":{"color":"rgba(255,127,14,1)"}},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 
 <img src="/decorative_line.png" class="decorative-line" />
 

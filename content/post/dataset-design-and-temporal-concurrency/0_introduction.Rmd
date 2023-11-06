@@ -2,6 +2,8 @@
 title: 'Dataset Design: Temporal Concurrency - Prologue'
 author: Chionesu George
 date: 2023-10-21
+params:
+  - dateForm = Jan 2020
 slug: introduction
 series: 
   - Dataset Design and Temporal Concurrency
@@ -75,12 +77,7 @@ Consider a business request submitted `r Sys.Date()` and stated as follows [*dem
 #| label: PROBLEM_STATEMENT
 #| echo: false
 
-tags$blockquote(
-  id = "problemStatement"
-  , class = "speech"
-  , "\"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
-);
-
+problem_statement
 ```
   
 ### Problem *Re*-statement

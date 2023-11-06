@@ -3,46 +3,49 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/tags/analytics/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/data/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/categories/data-engineering/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/series/dataset-design-and-temporal-concurrency/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/post/dataset-design-and-temporal-concurrency/who-and-when/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/engineering/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/post/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/semantics/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/series/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/categories/theory/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/time/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/post/dataset-design-and-temporal-concurrency/introduction/</loc>
-    <lastmod>2023-11-04T18:09:37-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
+  </url><url>
+    <loc>/post/dataset-design-and-temporal-concurrency/</loc>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/tags/central-tendency/</loc>
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
@@ -51,7 +54,7 @@
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
   </url><url>
     <loc>/series/measurements-of-scale/</loc>
-    <lastmod>2023-11-03T20:26:12-04:00</lastmod>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
   </url><url>
     <loc>/post/measurements-of-scale/measurements-of-scale-part-two/</loc>
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
@@ -65,6 +68,9 @@
     <loc>/post/measurements-of-scale/distributions-and-some-mean-advice/</loc>
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
   </url><url>
+    <loc>/post/measurements-of-scale/</loc>
+    <lastmod>2023-11-04T22:46:49-04:00</lastmod>
+  </url><url>
     <loc>/data-projects/</loc>
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
   </url><url>
@@ -72,12 +78,6 @@
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2023-11-03T20:26:12-04:00</lastmod>
-  </url><url>
-    <loc>/post/dataset-design-and-temporal-concurrency/</loc>
-    <lastmod>2023-11-03T20:26:12-04:00</lastmod>
-  </url><url>
-    <loc>/post/measurements-of-scale/</loc>
     <lastmod>2023-11-03T20:26:12-04:00</lastmod>
   </url>
 </urlset>

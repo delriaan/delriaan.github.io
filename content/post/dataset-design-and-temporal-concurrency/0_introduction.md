@@ -2,6 +2,8 @@
 title: 'Dataset Design: Temporal Concurrency - Prologue'
 author: Chionesu George
 date: 2023-10-21
+params:
+  - dateForm = Jan 2020
 slug: introduction
 series: 
   - Dataset Design and Temporal Concurrency
@@ -25,7 +27,7 @@ toc:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-04 22:31:25</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:11</span>
 
 ## Introduction
 
@@ -56,23 +58,23 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 </p>
 <p>
 <ul toggleGroup="0" context="definition">
-<li>
+<li id="msg_tax_I">
 <span class="def_sym">&delta;<sup>I</sup></span>
 : Information-carrying columns
 </li>
-<li>
+<li id="msg_tax_G">
 <span class="def_sym">&delta;<sup>G</sup></span>
 : Grouping columns (categorical, descriptive)
 </li>
-<li>
+<li id="msg_tax_Y">
 <span class="def_sym">&delta;<sup>Y</sup></span>
 : Measurements (e.g., purchase price, height, product ratings)
 </li>
-<li>
+<li id="msg_tax_T">
 <span class="def_sym">&delta;<sup>T</sup></span>
 : Temporal columns to include dates and temporal hierarchies
 </li>
-<li>
+<li id="msg_tax_E">
 <span class="def_sym">&delta;<sup>E</sup></span>
 : Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
 </li>
@@ -83,9 +85,9 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-11-04 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-11-05 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
-<blockquote id="problemStatement" class="speech">"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
+<blockquote class="speech" style="font-size: 0.9em; " id="msg_problem">"I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 
 ### Problem *Re*-statement
 

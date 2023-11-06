@@ -17,7 +17,7 @@ tags:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-03 20:24:12</span>
+<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:17</span>
 
 **Focal Thoughts:**
 1. Simply reporting a measure of central tendency presents an incomplete picture of the data under study

@@ -29,10 +29,11 @@ if (grepl("dataset.+temporal", c(getOption("article"), "")[1])){
       }
     });
   
-  problem_statement <- { tags$span(
+  problem_statement <- { tags$blockquote(
     class = "speech"
     , style = "font-size: 0.9em; "
-    , "\"I want to know trends related to total cost of care; Inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two Inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
+    , id = "msg_problem"
+    , "\"I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics.\""
     )}
   
   taxonomy <- { tags$p(
@@ -40,23 +41,28 @@ if (grepl("dataset.+temporal", c(getOption("article"), "")[1])){
       toggleGroup = "0"
       , context = "definition"
       , tags$li(
-          tags$span(class='def_sym', HTML("&delta;<sup>I</sup>"))
+          id = 'msg_tax_I'
+          , tags$span(class='def_sym', HTML("&delta;<sup>I</sup>"))
           , ": Information-carrying columns"
           )
       , tags$li(
-          tags$span(class='def_sym', HTML("&delta;<sup>G</sup>"))
+          id = 'msg_tax_G'
+          , tags$span(class='def_sym', HTML("&delta;<sup>G</sup>"))
           , ": Grouping columns (categorical, descriptive)"
           )
       , tags$li(
-          tags$span(class='def_sym', HTML("&delta;<sup>Y</sup>"))
+          id = 'msg_tax_Y'
+          , tags$span(class='def_sym', HTML("&delta;<sup>Y</sup>"))
           , ": Measurements (e.g., purchase price, height, product ratings)"
           )
       , tags$li(
-          tags$span(class='def_sym', HTML("&delta;<sup>T</sup>"))
+          id = 'msg_tax_T'
+          , tags$span(class='def_sym', HTML("&delta;<sup>T</sup>"))
           , ": Temporal columns to include dates and temporal hierarchies"
           )
       , tags$li(
-          tags$span(class='def_sym', HTML("&delta;<sup>E</sup>"))
+          id = 'msg_tax_E'
+          , tags$span(class='def_sym', HTML("&delta;<sup>E</sup>"))
           , ": Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)"
           )
       )
@@ -71,5 +77,6 @@ last_mod <- tags$span(
     , glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}")
   );
 
+# Send <hint> tag definition to output
 invisible(hint_js(tags = "", toggle.options = list(open = "(show)", close = "[hide]")))
 
