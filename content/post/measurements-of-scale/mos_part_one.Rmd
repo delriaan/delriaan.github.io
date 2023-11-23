@@ -2,6 +2,7 @@
 title: Measurements of Scale, Part One
 author: Chionesu George
 date: 2023-07-27
+date-modified: last-modified
 slug: measurements-of-scale-part-one
 series: Measurements of Scale
 categories: 
@@ -26,7 +27,7 @@ source(file = "setup-II.R", local = environment());
 
 tags$link(rel="stylesheet", href="/markdown.css");
 tags$script(src = "/markdown.js");
-last_mod
+# last_mod
 
 drop_hint("References", toggleGroup = 0, context = "posthoc");
 references

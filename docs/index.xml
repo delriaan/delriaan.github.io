@@ -58,15 +58,6 @@ Simply reporting a measure of central tendency presents an incomplete picture of
     </item>
     
     <item>
-      <title>Data Projects</title>
-      <link>/data-projects/</link>
-      <pubDate>Wed, 31 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/data-projects/</guid>
-      <description> Exploring the MDRP database </description>
-    </item>
-    
-    <item>
       <title>R Packages</title>
       <link>/r-pkgs/</link>
       <pubDate>Sun, 14 May 2023 00:00:00 +0000</pubDate>

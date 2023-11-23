@@ -214,3 +214,8 @@ blockquote, .mathblock {
 .ref {
   color: green;
 }
+
+.in_progress:after {
+  color: red;
+  content: " (in progress)";
+}

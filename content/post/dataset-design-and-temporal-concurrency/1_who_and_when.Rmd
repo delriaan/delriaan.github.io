@@ -2,6 +2,7 @@
 title: 'Dataset Design: Temporal Concurrency - Who & When'
 author: "Chionesu George"
 date: 2023-10-31
+date-modified: last-modified
 slug: who-and-when
 series: 
   - Dataset Design and Temporal Concurrency
@@ -34,7 +35,7 @@ tags$link(rel="stylesheet", href="/markdown.css");
 
 tags$script(src = "/markdown.js");
 
-last_mod
+# last_mod
 
 tags$span(style = "display: hidden;", taxonomy);
 

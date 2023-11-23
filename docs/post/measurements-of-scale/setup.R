@@ -72,10 +72,10 @@ if (grepl("dataset.+temporal", c(getOption("article"), "")[1])){
     magick::image_resize(geometry = magick::geometry_size_percent(90));
 }
 
-last_mod <- tags$span(
-    style='font-size:smaller; text-decoration:italic; color:#999999; '
-    , glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}")
-  );
+# last_mod <- tags$span(
+#     style='font-size:smaller; text-decoration:italic; color:#999999; '
+#     , glue::glue("Updated {format(Sys.time(), \"%Y-%m-%d %H:%M:%S\")}")
+#   );
 
 # Send <hint> tag definition to output
 invisible(hint_js(tags = "", toggle.options = list(open = "(show)", close = "[hide]")))

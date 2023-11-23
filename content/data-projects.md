@@ -1,8 +1,0 @@
----
-title: Data Projects
-date: 2023-05-31
-slug: data-projects
----
-
-1. [Exploring the MDRP database](https://delriaan.github.io/port_MDRP_database/)
-

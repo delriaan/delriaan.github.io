@@ -2,6 +2,7 @@
 title: 'Dataset Design: Temporal Concurrency - Prologue'
 author: Chionesu George
 date: 2023-10-21
+date-modified: last-modified
 params:
   - dateForm = Jan 2020
 slug: introduction
@@ -32,7 +33,7 @@ options(article="dataset-design-and-temporal-concurrency");
 source(file = "setup.R", local = environment());
 tags$link(rel="stylesheet", href="/markdown.css");
 tags$script(src = "/markdown.js");
-last_mod
+# last_mod
 ```
 
 ## Introduction

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Chionesu George">
+<meta name="dcterms.date" content="2023-11-18">
+
+<title>COVID-19 Nursing Home Analysis - ETL and Data Engineering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.30/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="site_libs/jszip-1.13.4/jszip.min.js"></script>
+<script src="site_libs/pdfmake-1.13.4/pdfmake.js"></script>
+<script src="site_libs/pdfmake-1.13.4/vfs_fonts.js"></script>
+<link href="site_libs/dt-ext-buttons-1.13.4/css/buttons.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-buttons-1.13.4/js/dataTables.buttons.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.4/js/buttons.html5.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.4/js/buttons.colVis.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.4/js/buttons.print.min.js"></script>
+<link href="site_libs/dt-ext-scroller-1.13.4/css/scroller.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-scroller-1.13.4/js/dataTables.scroller.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">COVID-19 Nursing Home Analysis</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./CMS_C19_NH_ETL.html" rel="" target="" aria-current="page">
+ <span class="menu-text">ETL</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">ETL and Data Engineering</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Chionesu George </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 18, 2023</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 22, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">1. Initialize</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">2. Load Existing Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">3. Get External Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Appendix</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>This section executes global tasks that set up the workspace are executed:</p>
+<p><span style="font-weight:bold">Load Libraries</span></p>
+<p>This code block sets global parameters for the session and loads an initial set of libraries. Custom libraries are hosted on Github at <a href="https://github.com/delriaan?tab=repositories">github.com/delriaan</a> and include the following:</p>
+<ul>
+<li>book.of.utilities</li>
+<li>book.of.features</li>
+<li>book.of.workflow</li>
+<li>smart.data</li>
+<li>DBOE</li>
+<li>event.vectors</li>
+<li>architect</li>
+</ul>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>No required values set: exiting ..;</code></pre>
+</div>
+</div>
+<p><span style="font-weight:bold">Execute globalized initialization routines</span></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p><strong>Objects Created</strong></p>
+<ul>
+<li><code>.dsn_table</code> : ODBC DSN entries read from Windows registry</li>
+<li><code>db_conns</code> : A list of DBI-compliant connections</li>
+<li><code>.calendar_keys</code> : Makes it easier to subset the calendar object</li>
+<li><code>.new_data_date</code> : Temporal marker for “new” records (meaningful for prediction runs which include incremental ETL handling)</li>
+<li><code>.calendar_filter</code> : Date boundaries of <code>.calendar_keys</code> for use in T-SQL queries</li>
+</ul>
+<div class="cell" data-hash="CMS_C19_NH_ETL_cache/html/LOAD_EXISTING_DATA_9b2c7767b74ba5de812605be26812347">
+<details>
+<summary>Load existing data and make local database connections</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># :: Database Connections ====</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">hasName</span>(<span class="fu">globalenv</span>(), <span class="st">"db_conns"</span>)){</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="st">"db_conns"</span>, <span class="fu">list</span>());</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  db_conns<span class="sc">$</span>LOCAL <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">drv =</span> odbc<span class="sc">::</span><span class="fu">odbc</span>()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    , <span class="at">dsn =</span> <span class="fu">getOption</span>(<span class="st">"params"</span>)<span class="sc">$</span>dsn</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    , <span class="at">UID =</span> workflow<span class="sc">$</span>ez_pass<span class="sc">$</span>sql<span class="sc">@</span>username</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    , <span class="at">PWD =</span> workflow<span class="sc">$</span>ez_pass<span class="sc">$</span>sql<span class="sc">@</span><span class="fu">key</span>()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  duck_drv <span class="ot">&lt;-</span> <span class="fu">duckdb</span>();</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  db_conns<span class="sc">$</span>DUCK <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(<span class="at">drv =</span> duck_drv)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># :: Database Metadata ====</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">"$get.metadata()"</span>);</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>dbms.monitor <span class="ot">&lt;-</span> DBOE<span class="sc">$</span><span class="fu">new</span>()<span class="sc">$</span><span class="fu">get.metadata</span>(<span class="sc">!!!</span>db_conns[<span class="dv">1</span>], <span class="at">chatty =</span> <span class="sc">!</span><span class="cn">TRUE</span>);</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>(<span class="at">log =</span> <span class="cn">TRUE</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>$get.metadata(): 0.35 sec elapsed</code></pre>
+</div>
+<details>
+<summary>Load existing data and make local database connections</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tic</span>(<span class="st">"Load Saved Data"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Load cached data"</span>);</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cache_load</span>(<span class="at">cache =</span> caches, <span class="at">pattern =</span> <span class="st">"^(global|base|arch|temp|meta)"</span>);</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span>(<span class="at">log =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Load Saved Data: 0.06 sec elapsed</code></pre>
+</div>
+<details>
+<summary>Load existing data and make local database connections</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check.env</span>(.GlobalEnv);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>The CMS data was downloaded as separate files for a total <em>compressed</em> size of over 10GB. Each file contained one or more CSV documents with a compression ratio 9:1 (90%). The following code iterates over the compressed files, unzips them, and converts the CSV files to parquet format resulting in a total <em>uncompressed</em> size of just over 9GB. The parquet files are loaded into to <code>year/month</code> folder structure on disk.</p>
+<div class="cell" data-hash="CMS_C19_NH_ETL_cache/html/LOAD_EXTN_DATA_74edd8685d130d9d91ad0c1882434872">
+<details>
+<summary>Unzip and convert CSV files to parquet (long run time)</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `obs_data_files` is a list of files in `data_dir` that match the pattern "zip"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># `unzip.iter` is a function that iterates over `obs_data_files` and unzips each file to its parent directory</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `queue` is a list of source files grouped by destination paths in `data_dir` </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>queue <span class="ot">&lt;-</span> { <span class="fu">define</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.table</span>()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Retrieve the paths of the source files</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  , <span class="at">from =</span> <span class="fu">dir</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">path =</span> <span class="fu">getOption</span>(<span class="st">"params"</span>)<span class="sc">$</span>ext_data_dir <span class="sc">|&gt;</span> <span class="fu">paste0</span>(<span class="st">"/data files"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      , <span class="at">pattern =</span> <span class="st">"zip"</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      , <span class="at">recursive =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      , <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract the date from the file path</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  , <span class="at">date_str =</span> <span class="fu">stri_extract_last_regex</span>(from, <span class="st">"([0-9]{2}[[:punct:][[:space:]]]){2}[0-9]{2,4}"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stri_replace_all_regex</span>(<span class="st">"[[:punct:][[:space:]]]"</span>, <span class="st">"/"</span>, <span class="at">vectorize_all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Determine the date format</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  , <span class="at">fmts =</span> <span class="fu">map</span>(date_str, \(i) lubridate<span class="sc">::</span><span class="fu">guess_formats</span>(i, <span class="at">orders =</span> <span class="fu">c</span>(<span class="st">"mdy"</span>, <span class="st">"dmy"</span>, <span class="st">"ymd"</span>)) <span class="sc">|&gt;</span> <span class="fu">first</span>())</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the destination paths</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  , <span class="at">to =</span> <span class="fu">pmap_chr</span>(<span class="fu">list</span>(from, date_str, fmts), \(path, date_str, fmt){ </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sprintf</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">fmt =</span> <span class="st">"%s/parquet/%.0f/%s"</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        , <span class="fu">dirname</span>(path) <span class="sc">|&gt;</span> <span class="fu">dirname</span>()</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        , lubridate<span class="sc">::</span><span class="fu">parse_date_time</span>(date_str, <span class="at">orders =</span> fmt) <span class="sc">|&gt;</span> lubridate<span class="sc">::</span><span class="fu">year</span>()</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        , lubridate<span class="sc">::</span><span class="fu">parse_date_time</span>(date_str, <span class="at">orders =</span> fmt) <span class="sc">|&gt;</span> lubridate<span class="sc">::</span><span class="fu">month</span>() <span class="sc">|&gt;</span> <span class="fu">stri_pad_left</span>(<span class="at">width =</span> <span class="dv">2</span>, <span class="at">pad =</span> <span class="st">"0"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  , <span class="at">clean =</span> <span class="sc">!</span><span class="fu">duplicated</span>(to)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove unneeded columns</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  , <span class="sc">~</span>from <span class="sc">+</span> to <span class="sc">+</span> clean</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  , .SD[<span class="fu">order</span>(to, <span class="sc">!</span>clean, from)]</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  )[] <span class="sc">|&gt;</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">array_branch</span>(<span class="at">margin =</span> <span class="dv">1</span>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>unzip.iter <span class="ot">&lt;-</span> \(from, to, <span class="at">clean =</span> <span class="cn">FALSE</span>){</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(magrittr)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># browser()</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Capture the parent directory of `from` ----</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  zip_dir <span class="ot">&lt;-</span> <span class="fu">dirname</span>(from);</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the name of the CSV file ----</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  csv_file <span class="ot">&lt;-</span> (utils<span class="sc">::</span><span class="fu">unzip</span>(<span class="at">zipfile =</span> from, <span class="at">list =</span> <span class="cn">TRUE</span>))[, <span class="dv">1</span>] <span class="sc">|&gt;</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        purrr<span class="sc">::</span><span class="fu">keep</span>(\(i) stringi<span class="sc">::</span><span class="fu">stri_detect_fixed</span>(<span class="at">str =</span> i, <span class="at">pattern =</span> <span class="st">"COVID"</span>));</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (rlang<span class="sc">::</span><span class="fu">is_empty</span>(csv_file)){ </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>) </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> { </span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    csv_file <span class="ot">&lt;-</span> <span class="fu">paste</span>(zip_dir, csv_file, <span class="at">sep =</span> <span class="st">"/"</span>);</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># browser()</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create the name of the parquet file ----</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(to)){ <span class="fu">dir.create</span>(to, <span class="at">recursive =</span> <span class="cn">TRUE</span>) }</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (clean){ rlang<span class="sc">::</span><span class="fu">inject</span>(<span class="fu">file.remove</span>(<span class="sc">!!!</span><span class="fu">dir</span>(to, <span class="at">pattern =</span> <span class="st">"parquet"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))) }</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  parquet_file <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    to</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    , stringi<span class="sc">::</span><span class="fu">stri_replace_last_fixed</span>(</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">str =</span> csv_file</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>        , <span class="at">pattern =</span> <span class="st">".csv"</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>        , <span class="at">replacement =</span> <span class="st">".parquet"</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>        , <span class="at">vectorize_all =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>        ) <span class="sc">|&gt;</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>      stringi<span class="sc">::</span><span class="fu">stri_split_fixed</span>(<span class="st">"/"</span>, <span class="at">simplify =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>      .[, <span class="fu">ncol</span>(.)] <span class="sc">|&gt;</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>      stringi<span class="sc">::</span><span class="fu">stri_trans_tolower</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>      stringi<span class="sc">::</span><span class="fu">stri_replace_all_regex</span>(<span class="st">"[_[:space:]]"</span>, <span class="st">"-"</span>, <span class="at">vectorize_all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>    , <span class="at">sep =</span> <span class="st">"/"</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check if the parquet file already exists ----</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">file.exists</span>(parquet_file)){</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If so, do nothing</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"{parquet_file} already exists: skipping ..."</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>);</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Otherwise, unzip `from` to `exdir` ----</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    utils<span class="sc">::</span><span class="fu">unzip</span>(<span class="at">zipfile =</span> from, <span class="at">exdir =</span> zip_dir, <span class="at">overwrite =</span> <span class="sc">!</span><span class="cn">TRUE</span>); </span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Send the user a message that `from` is being unzipped to `zip_dir` ----</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Unzipping {from} to {zip_dir}"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (rlang<span class="sc">::</span><span class="fu">is_empty</span>(csv_file)){ </span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>() </span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Choose the largest CSV file ----</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>      csv_file <span class="ot">&lt;-</span> csv_file[(\(m) m<span class="sc">$</span>size <span class="sc">==</span> <span class="fu">max</span>(m<span class="sc">$</span>size))(<span class="fu">file.info</span>(csv_file))];</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Converting {csv_file} to {parquet_file}"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Convert the largest CSV file to parquet ----</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>      arrow<span class="sc">::</span><span class="fu">read_csv_arrow</span>(csv_file) <span class="sc">|&gt;</span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>        arrow<span class="sc">::</span><span class="fu">write_parquet</span>(parquet_file);</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Check if the parquet file was successfully written ----</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">file.exists</span>(parquet_file)){ </span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Delete the unzipped CSV file</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Successfully wrote {parquet_file}"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>        <span class="fu">unlink</span>(csv_file);</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Deleted {csv_file}"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="cn">TRUE</span>);</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Failed to write parquet file</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>        <span class="fu">cat</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Failed to write {parquet_file}"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span>(<span class="cn">FALSE</span>);</span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a><span class="co"># If there are no parquet files in '`data_dir`/parquet', </span></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="co"># unzip the files in `obs_data_files` and create container directories. </span></span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Files are in CSV format and will be converted to parquet format in parallel.</span></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span>rlang<span class="sc">::</span><span class="fu">is_empty</span>(queue) <span class="sc">&amp;&amp;</span> {</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(queue, rbind)[, <span class="dv">2</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unique</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_lgl</span>(\(i) <span class="fu">dir</span>(i, <span class="at">pattern =</span> <span class="st">"parquet"</span>) <span class="sc">|&gt;</span> rlang<span class="sc">::</span><span class="fu">is_empty</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">any</span>()</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>  }){</span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Split the list of files in `data_dir` into n chunks for parallel processing</span></span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>  cl <span class="ot">&lt;-</span> parallelly<span class="sc">::</span><span class="fu">makeClusterPSOCK</span>(<span class="dv">4</span>, <span class="at">autoStop =</span> <span class="cn">TRUE</span>);</span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Export object `unzip.iter` to each cluster node</span></span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>  parallel<span class="sc">::</span><span class="fu">clusterExport</span>(<span class="at">cl =</span> cl, <span class="at">varlist =</span> <span class="fu">c</span>(<span class="st">"unzip.iter"</span>));</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>  tictoc<span class="sc">::</span><span class="fu">tic</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"[{Sys.time()}] Process Compressed Files"</span>));</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>  process_log <span class="ot">&lt;-</span> { </span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>    parallel<span class="sc">::</span><span class="fu">parLapplyLB</span>(<span class="at">cl =</span> cl, <span class="at">X =</span> queue, \(x){</span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>      out <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>        <span class="fu">unzip.iter</span>(</span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>          <span class="at">from =</span> x[<span class="dv">1</span>]</span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>           , <span class="at">to =</span> x[<span class="dv">2</span>]</span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>           , <span class="at">clean =</span> x[<span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">trimws</span>() <span class="sc">|&gt;</span> <span class="fu">as.logical</span>()</span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>           )</span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>        , <span class="at">error =</span> \(e){ </span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>            <span class="fu">message</span>(glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"Error: {e} &lt;{x[1]}&gt;"</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>);</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>            <span class="fu">return</span>(<span class="cn">FALSE</span>);</span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>        );</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>      <span class="fu">gc</span>();</span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>      out</span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>  tictoc<span class="sc">::</span><span class="fu">toc</span>(<span class="at">log =</span> <span class="cn">TRUE</span>);</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gc</span>();</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>  parallel<span class="sc">::</span><span class="fu">stopCluster</span>(<span class="at">cl =</span> cl)</span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Review potential errors ----</span></span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>    queue[<span class="fu">map_lgl</span>(process_log, \(p) rlang<span class="sc">::</span><span class="st">`</span><span class="at">%||%</span><span class="st">`</span>(p, <span class="cn">FALSE</span>) <span class="sc">==</span> <span class="cn">FALSE</span> )] <span class="sc">|&gt;</span> </span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>    <span class="fu">reduce</span>(rbind) <span class="sc">|&gt;</span> </span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>    <span class="fu">View</span>()</span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span>(queue, unzip.iter, cl);</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve data from the Arrow dataset</span></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>obs_data <span class="ot">&lt;-</span> <span class="fu">open_dataset</span>(</span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>  <span class="at">sources =</span> <span class="fu">getOption</span>(<span class="st">"params"</span>)<span class="sc">$</span>ext_data_dir <span class="sc">|&gt;</span> <span class="fu">paste0</span>(<span class="st">"/data files/parquet"</span>)</span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>  , <span class="at">hive_style =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>  , <span class="at">partitioning =</span> <span class="fu">c</span>(<span class="st">"Year"</span>, <span class="st">"Month"</span>)</span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>After conversion of CMS zipped files to parquet format, and reading into the Arrow dataset, the data is ready for analysis. The number of rows and columns in the dataset are 302,720,873 x 287.</p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Data Dictionary</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>A data dictionary is provided in PDF format. Using the PDF Tables service, the PDF was converted into CSV for easier processing:</p>
+<div class="cell" data-code_summary="Read in and transform the data dictionary">
+<div class="cell-output-display">
+
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-aa06963a7d1f7e1e7d8c" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-aa06963a7d1f7e1e7d8c">{"x":{"filter":"none","vertical":false,"extensions":["Buttons","Scroller"],"fillContainer":false,"data":[["Week Ending","Federal Provider Number","Provider Name","Provider Address","Provider City","Provider State","Provider Zip Code","Provider Phone Number","County","Submitted Data","Passed Quality Assurance Check","Residents Weekly Admissions COVID-19","Residents Total Admissions COVID-19","Residents Weekly Confirmed COVID-19","Residents Total Confirmed COVID-19","Residents Weekly Suspected COVID-19","Residents Total Suspected COVID-19","Residents Weekly All Deaths","Residents Total All Deaths","Residents Weekly COVID-19 Deaths","Residents Total COVID-19 Deaths","Number of All Beds","Total Number of Occupied Beds","Resident Access to Testing in Facility","Laboratory Type Is State Health Dept","Laboratory Type Is Private Lab","Laboratory Type Is Other","Able to Test or Obtain Resources to Test All Current Residents Within Next 7 Days","Reason for Not Testing Residents - Lack of PPE for Personnel","Reason for Not Testing Residents - Lack of Supplies","Reason for Not Testing Residents - Lack of Access to Laboratory","Reason for Not Testing Residents - Lack of Access to Trained Personnel","Reason for Not Testing Residents - Uncertainty About Reimbursement","Reason for Not Testing Residents - Other","During Past Two Weeks Average Time to Receive Resident Test Results","Has Facility Performed Resident Tests Since Last Report","Tested Residents with New Signs or Symptoms","Tested Asymptomatic Residents in a Unit or Section After a New Case","Tested Asymptomatic Residents Facility-Wide After a New Case","Tested Asymptomatic Residents Without Known Exposure as Surveillance","Tested Another Subgroup of Residents","Able to Test or Obtain Resources to Test All Staff and/or Personnel Within Next 7 Days","Reason for Not Testing Staff and/or Personnel - Lack of PPE for Personnel","Reason for Not Testing Staff and/or Personnel - Lack of Supplies","Reason for Not Testing Staff and/or Personnel - Lack of Access to Laboratory","Reason for Not Testing Staff and/or Personnel - Lack of Access to Trained Personnel","Reason for Not Testing Staff and/or Personnel - Uncertainty About Reimbursement","Reason for Not Testing Staff and/or Personnel - Other","During Past Two Weeks Average Time to Receive Staff and/or Personnel Test Results","Has Facility Performed Staff and/or Personnel Tests Since Last Report","Tested Staff and/or Personnel with New Signs or Symptoms","Tested Asymptomatic Staff and/or Personnel in a Unit or Section After a New Case","Tested Asymptomatic Staff and/or Personnel Facility-Wide After a New Case","Tested Asymptomatic Staff and/or Personnel Without Known Exposure as Surveillance","Tested Another Subgroup of Staff and/or Personnel","In-House Point-of-Care Test Machine","COVID-19 Point-of-Care Tests Performed on\nResidents Since Last Report","COVID-19 Point-of-Care Tests Performed on\nStaff and/or Personnel Since Last Report","Enough Supplies to Test All Staff and/or Personnel Using Point-of-Care Test Machine","Staff Weekly Confirmed COVID-19","Staff Total Confirmed COVID-19","Staff Weekly Suspected COVID-19","Staff Total Suspected COVID-19","Staff Weekly COVID-19 Deaths","Staff Total COVID-19 Deaths","Shortage of Nursing Staff","Shortage of Clinical Staff","Shortage of Aides","Shortage of Other Staff","Any Current Supply of N95 Masks","One-Week Supply of N95 Masks","Any Current Supply of Surgical Masks","One-Week Supply of Surgical Masks","Any Current Supply of Eye Protection","One-Week Supply of Eye Protection","Any Current Supply of Gowns","One-Week Supply of Gowns","Any Current Supply of Gloves","One-Week Supply of Gloves","Any Current Supply of Hand Sanitizer","One-Week Supply of Hand Sanitizer","Ventilator Dependent Unit","Number of Ventilators in Facility","Number of Ventilators in Use for COVID-19","Any Current Supply of Ventilator Supplies","One-Week Supply of Ventilator Supplies","Weekly Resident Confirmed COVID-19 Cases Per\n1,000 Residents","Weekly Resident COVID-19 Deaths Per 1,000\nResidents","Total Resident Confirmed COVID-19 Cases Per\n1,000 Residents","Total Resident COVID-19 Deaths Per 1,000\nResidents","Total Residents COVID-19 Deaths as a Percentage of Confirmed COVID-19 Cases","Three or More Confirmed COVID-19 Cases This\nWeek","Initial Confirmed COVID-19 Case This Week","Reporting Interval","Has Facility Performed Tests Since Last Report","COVID-19 Non-Point-of-Care Tests Performed\non Residents Since Last Report","COVID-19 Non-Point-of-Care Tests Performed\non Staff and/or Personnel Since Last Report","Number of Residents with a New Positive\nCOVID-19 Test Result","Number of Residents with a New Positive\nCOVID-19 Test Result with Positive Antigen Test\nOnly","Number of Residents with a New Positive\nCOVID-19 Test Result with Positive NAAT (PCR)\nTest Only","Number of Residents with a New Positive\nCOVID-19 Test Result with Positive Antigen Test\nAND Negative NAAT (PCR) Test","Number of Residents with a New Positive\nCOVID-19 Test Result with Any Other\nCombination of Antigen Test and/or NAAT (PCR)\nTest with At Least One Positive Test","Number of Residents with a New Positive\nCOVID-19 Test Result who are Reinfected","Number of Residents with a New Positive\nCOVID-19 Test Result who are Reinfected and\nSymptomatic","Number of Residents with a New Positive\nCOVID-19 Test Result who are Reinfected and\nAsymptomatic","Number of Residents with New Influenza","Number of Residents with Acute Respiratory Illness Symptoms Excluding COVID-19 and/or Influenza","Number of Residents with Confirmed\nCoinfection with Influenza and COVID-19","During Past Two Weeks Average Time to Receive COVID-19 Test Results from Non-Point- of-Care Tests","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result with Positive\nAntigen Test Only","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result with Positive\nNAAT (PCR) Test Only","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result with Positive\nAntigen Test AND Negative NAAT (PCR) Test","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result with Any Other\nCombination of Antigen Test and/or NAAT (PCR)\nTest with At Least One Positive Test","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result who are\nReinfected","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result who are\nReinfected and Symptomatic","Number of Staff and/or Personnel with a New\nPositive COVID-19 Test Result who are\nReinfected and Asymptomatic","Number of Staff and/or Personnel with New\nInfluenza","Number of Staff and/or Personnel with Acute\nRespiratory Illness Symptoms Excluding COVID-\n19 and/or Influenza","Number of Staff and/or Personnel with\nConfirmed Coinfection with Influenza and\nCOVID-19","Alcohol-Based Hand Rub (ABHR) Available","Alcohol-Based Hand Rub (ABHR) No Longer\nAvailable in 7 Days","N95 Respirator Strategy for Optimization","N95 Respirator No Longer Available in 7 Days","Face Masks Strategy for Optimization","Face Masks No Longer Available in 7 Days","Eye Protection Strategy for Optimization","Eye Protection No Longer Available in 7 Days","Gowns Strategy for Optimization","Gowns No Longer Available in 7 Days","Gloves Strategy for Optimization","Gloves No Longer Available in 7 Days","Facility Would Like Assistance Outreach for\nStaffing Shortages","Facility Would Like Assistance Outreach for\nPersonal Protective Equipment (PPE)","Facility Would Like Assistance Outreach for\nTesting Supply Shortages","Facility Would Like Assistance Outreach for\nInfection Control/Outbreak Management","Facility Would Like Assistance Outreach for Staff\nTraining","Facility Would Like Assistance Outreach for\nVaccine Access (Residents or Staff)","Positive Antigen Tests Only: Number of Residents Not Vaccinated with COVID-19 Vaccine Before Positive Test","Positive Antigen Tests Only: Number of\nResidents who Received Pfizer-BioNTech\nCOVID-19 Vaccine Dose 1 Only Before Positive\nTest","Positive Antigen Tests Only: Number of\nResidents who Received Pfizer-BioNTech\nCOVID-19 Vaccine Doses 1 and 2 Before Positive\nTest","Positive Antigen Tests Only: Number of\nResidents who Received Moderna COVID-19\nVaccine Dose 1 Only Before Positive Test","Positive Antigen Tests Only: Number of\nResidents who Received Moderna COVID-19\nVaccine Doses 1 and 2 Before Positive Test","Positive Antigen Tests Only: Number of\nResidents who Received Janssen COVID-19\nVaccine Dose 1 Before Positive Test","Positive Antigen Tests Only: Number of\nResidents who Received Complete Unspecified\nCOVID-19 Vaccine Before Positive Test","Positive Antigen Tests Only: Number of\nResidents who Received Partial Unspecified\nCOVID-19 Vaccine Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents Not Vaccinated with COVID-19\nVaccine Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Pfizer-BioNTech\nCOVID-19 Vaccine Dose 1 Only Before Positive\nTest","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Pfizer-BioNTech\nCOVID-19 Vaccine Doses 1 and 2 Before Positive\nTest","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Moderna COVID-19\nVaccine Dose 1 Only Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Moderna COVID-19\nVaccine Doses 1 and 2 Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Janssen COVID-19\nVaccine, Dose 1 Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Complete Unspecified\nCOVID-19 Vaccine Before Positive Test","Positive NAAT (PCR) Tests Only: Number of\nResidents who Received Partial Unspecified\nCOVID-19 Vaccine Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents Not Vaccinated with COVID-19 Vaccine Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Pfizer- BioNTech COVID-19 Vaccine Dose 1 Only Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Pfizer- BioNTech COVID-19 Vaccine Doses 1 and 2 Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Moderna COVID-19 Vaccine Dose 1 Only Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Moderna COVID-19 Vaccine Doses 1 and 2 Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Janssen COVID-19 Vaccine Dose 1 Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Complete Unspecified COVID-19 Vaccine Before Positive Test","Any Other Combination of Antigen Test and/or NAAT (PCR) Test with At Least One Positive Test: Number of Residents who Received Partial Unspecified COVID-19 Vaccine Before Positive Test","Therapeutic Bamlanivimab: Number of\nResidents Treated from Stock Stored at This\nFacility","Therapeutic Bamlanivimab: Number of\nResidents Treated from Stock Stored at Another\nFacility","Therapeutic Casirivimab plus Imdevimab:\nNumber of Residents Treated from Stock Stored\nat This Facility","Therapeutic Casirivimab plus Imdevimab:\nNumber of Residents Treated from Stock Stored\nat Another Facility","Therapeutic Bamlanivimab plus Etesevimab: Number of Residents Treated from Stock Stored at This Facility","Therapeutic Bamlanivimab plus Etesevimab:\nNumber of Residents Treated from Stock Stored\nat Another Facility","Therapeutic Sotrovimab: Number of Residents\nTreated from Stock Stored at This Facility","Therapeutic Sotrovimab: Number of Residents\nTreated from Stock Stored at Another Facility","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received a\nCompleted COVID-19 Vaccination at Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received a Partial\nCOVID-19 Vaccination at Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week with a Medical\nContraindication to a COVID-19 Vaccine at Any\nTime","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who were Offered but\nDeclined a COVID-19 Vaccine at Any Time","Number of Residents Staying in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of Residents Staying in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Recent Percentage of Current Residents who Received a Completed COVID-19 Vaccination at Any Time","Percentage of Current Residents who Received a Completed COVID-19 Vaccination at Any Time","Percentage of Current Residents who Received a Partial COVID-19 Vaccination at Any Time","Percentage of Current Residents who Received a Completed or Partial COVID-19 Vaccination at Any Time","Percentage of Current Residents with No Medical Contraindications who Received a Completed COVID-19 Vaccination at Any Time","Percentage of Current Residents with No Medical Contraindications who Received a Partial COVID-19 Vaccination at Any Time","Percentage of Current Residents with No\nMedical Contraindications who Received a\nCompleted or Partial COVID-19 Vaccination at\nAny Time","Percentage of Current Residents with No Medical Contraindications who Received a Completed COVID-19 Vaccination, Excluding Declinations from Eligible Residents at Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received the\nPfizer-BioNTech COVID-19 Vaccine, Dose 1 Only,\nat Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received the\nPfizer-BioNTech COVID-19 Vaccine, Doses 1 and\n2, at Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received the\nModerna COVID-19 Vaccine, Dose 1 Only, at\nAny Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received the\nModerna COVID-19 Vaccine, Doses 1 and 2, at\nAny Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received the\nJanssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Residents Staying in this Facility for\nAt Least 1 Day This Week who Received a\nComplete Unspecified COVID-19 Vaccine at Any\nTime","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Partial COVID-19 Vaccination at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID- 19 Vaccine at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID- 19 Vaccine at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID-19 Vaccine at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID-19 Vaccine at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID-19 Vaccine at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID-19 Vaccine at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID- 19 Vaccine at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek with an Unknown COVID-19 Vaccination\nStatus at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID- 19 Vaccination Status at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with an Unknown COVID-19 Vaccination Status at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek with a History of Laboratory-Confirmed\nCOVID-19 Infection at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a History of Laboratory-Confirmed COVID-19 Infection at Any Time","Recent Percentage of Current Healthcare\nPersonnel who Received a Completed COVID-19\nVaccination at Any Time","Percentage of Current Healthcare Personnel who Received a Completed COVID-19 Vaccination at Any Time","Percentage of Current Healthcare Personnel who Received a Partial COVID-19 Vaccination at Any Time","Percentage of Current Healthcare Personnel\nwho Received a Completed or Partial COVID-19\nVaccination at Any Time","Percentage of Current Healthcare Personnel with No Medical Contraindications who Received a Completed COVID-19 Vaccination at Any Time","Percentage of Current Healthcare Personnel with No Medical Contraindications who Received a Partial COVID-19 Vaccination at Any Time","Percentage of Current Healthcare Personnel\nwith No Medical Contraindications who\nReceived a Completed or Partial COVID-19\nVaccination at Any Time","Percentage of Current Healthcare Personnel with No Medical Contraindications who Received a Completed COVID-19 Vaccination, Excluding Declinations from Eligible Personnel at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek who Received the Pfizer-BioNTech\nCOVID-19 Vaccine, Dose 1 Only, at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek who Received the Pfizer-BioNTech\nCOVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek who Received the Moderna COVID-19\nVaccine, Dose 1 Only, at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek who Received the Moderna COVID-19\nVaccine, Doses 1 and 2, at Any Time","Number of All Healthcare Personnel Eligible to\nWork in this Facility for At Least 1 Day This\nWeek who Received the Janssen COVID-19\nVaccine, Dose 1, at Any Time","Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID- 19 Vaccine, Dose 1 Only, at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID- 19 Vaccine, Doses 1 and 2, at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Ancillary Services Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Nurse Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer- BioNTech COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer- BioNTech COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Aide, Assistant, and Technician Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Therapist Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Physician and Licensed Independent Practitioner Employees to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Physician and Licensed Independent Practitioner Employees Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID- 19 Vaccine, Dose 1 Only, at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received the Pfizer-BioNTech COVID- 19 Vaccine, Doses 1 and 2, at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Dose 1 Only, at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received the Moderna COVID-19 Vaccine, Doses 1 and 2, at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received the Janssen COVID-19 Vaccine, Dose 1, at Any Time","Number of Other Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Complete Unspecified COVID-19 Vaccine at Any Time"],["Date","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Number","Number","Text","Number","Number","Number","Number","Number","Number","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Number","Number","Text","Text","Number","Number","Number","Number","Number","Text","Text","Text","Text","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Text","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Text","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number","Number"],["Last day (MM/DD/YY) of reporting week (a reporting week is from Monday through Sunday).","The CMS Certification Number (CCN) for the provider.","The provider's name.","The provider's address.","The provider's city.","The provider's state.","The provider's zip code.","The provider's phone number.","The provider's county.","Indicates (Y/N) if any data was submitted for the\nreporting week.","Indicates (Y/N) if the data passed the quality assurance\ncheck.","Number of residents admitted or readmitted who were previously hospitalized and treated for COVID-19 (ADMISSIONS) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Number of residents admitted or readmitted who were\npreviously hospitalized and treated for COVID-19\n(ADMISSIONS) since 01/01/2020 as reported by the\nprovider.","Number of residents with new laboratory positive COVID-19 (CONFIRMED) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Number of residents with laboratory positive COVID-19 (CONFIRMED) since 01/01/2020 as reported by the provider.","Discontinued. Number of residents with new suspected COVID-19 (SUSPECTED) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Discontinued. Number of residents with suspected COVID-19 (SUSPECTED) since 01/01/2020 as reported by the provider.","Number of residents who have died in the facility or another location (TOTAL DEATHS) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Number of residents who have died in the facility or another location (TOTAL DEATHS) since 01/01/2020 as reported by the provider.","Number of residents with new suspected or laboratory positive COVID-19 who died in the facility or another location (COVID-19 DEATHS) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Number of residents with suspected or laboratory positive COVID-19 who died in the facility or another location (COVID-19 DEATHS) since 1/1/20 as reported by the provider.","Total number of resident beds in the facility as reported by the provider.","Total number of resident beds that are currently occupied as reported by the provider.","Discontinued. Indicates (Y/N) if facility has access to COVID-19 testing while the resident is in the facility as reported by the provider.","Discontinued. Indicates (Y/N) if laboratory type is state health department lab as reported by the provider.","Discontinued. Indicates (Y/N) if laboratory type is private lab (hospital, corporation, academic institution) as reported by the provider.","Discontinued. Indicates (Y/N) if laboratory type is other as reported by the provider.","Indicates (Y/N) if the facility has the ability to perform or to obtain resources for performing COVID-19 viral testing (nucleic acid or antigen) on all current residents within the next 7 days, if needed, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of recommended personal protective equipment (PPE) for personnel to wear during specimen collection, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of supplies for specimen collection, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of access to a laboratory for submitting specimens, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of access to trained personnel to perform testing (including internal and external resources), as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Uncertainty about testing reimbursement, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Other, as reported by the provider.","Discontinued. During the past two weeks, on average, how long it took for the facility to receive COVID-19 viral (nucleic acid or antigen) test results of residents, as reported by the provider. Possible answers: <1 DAY, 1-2 DAYS, 3-7 DAYS, >7 DAYS, or N/A.","Discontinued. Indicates (Y/N) if since the last report, has the facility performed COVID-19 viral testing on residents, as reported by the provider.","Discontinued. Indicates (Y/N) reason residents were tested: Testing residents with new signs/symptoms consistent with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason residents were tested: Testing asymptomatic residents on a unit/section of the facility in response to a new case with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason residents were tested: Testing asymptomatic residents, facility-wide in response to a new case with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason residents were tested: Testing asymptomatic residents without a known exposure to COVID-19 as part of surveillance, as reported by the provider.","Discontinued. Indicates (Y/N) reason residents were tested: None of the other reasons, testing of another subgroup of residents occurred, as reported by the provider.","Indicates (Y/N) if the facility has the ability to perform or to obtain resources for performing COVID-19 viral testing (nucleic acid or antigen) on all facility staff and/or facility personnel within the next 7 days, if needed.","Discontinued. Indicates (Y/N) reason for not testing - Lack of recommended personal protective equipment (PPE) for personnel to wear during specimen collection, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of supplies for specimen collection, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of access to a laboratory for submitting specimens, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Lack of access to trained personnel to perform testing (including internal and external resources), as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Uncertainty about testing reimbursement, as reported by the provider.","Discontinued. Indicates (Y/N) reason for not testing - Other, as reported by the provider.","Discontinued. During the past two weeks, on average, how long it took for the facility to receive COVID-19 viral (nucleic acid or antigen) test results of staff and/or facility personnel, as reported by the provider. Possible answers: <1 DAY, 1-2 DAYS, 3-7 DAYS, >7 DAYS, or N/A.","Discontinued. Indicates (Y/N) if since the last report, has the facility performed COVID-19 viral testing on staff and/or facility personnel, as reported by the provider.","Discontinued. Indicates (Y/N) reason staff and/or facility personnel were tested: Testing staff and/or facility personnel with new signs/symptoms consistent with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason staff and/or facility personnel were tested: Testing asymptomatic staff and/or facility personnel on a unit/section of the facility in response to a new case with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason staff and/or facility personnel were tested: Testing asymptomatic staff and/or facility personnel, facility-wide in response to a new case with COVID-19, as reported by the provider.","Discontinued. Indicates (Y/N) reason staff and/or facility personnel were tested: Testing asymptomatic staff and/or facility personnel without a known exposure to COVID-19 as part of surveillance, as reported by the provider.","Discontinued. Indicates (Y/N) reason staff and/or facility personnel were tested: None of the other reasons, testing of another subgroup of staff and/or facility personnel occurred, as reported by the provider.","Discontinued. Indicates (Y/N) if the facility has an in- house point-of-care test machine (capability to perform COVID-19 testing within the facility), as reported by the provider.","If the facility has an in-house point-of-care test machine,\nsince the last report, the number of COVID-19 point-of-\ncare tests the facility performed on residents, as\nreported by the provider.","If the facility has an in-house point-of-care test machine,\nsince the last report, the number of COVID-19 point-of-\ncare tests the facility performed on staff and/or facility\npersonnel, as reported by the provider.","Discontinued. If the facility has an in-house point-of-care test machine, based on this week’s inventory, indicates (Y/N) if there are enough supplies to test all staff and/or facility personnel for COVID-19 using the point-of-care test machine, as reported by the provider.","Number of staff and facility personnel with new\nlaboratory positive COVID-19 (CONFIRMED) as reported\nby the provider for this collection date. Note: Numbers\nfor Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Number of staff and facility personnel with laboratory positive COVID-19 (CONFIRMED) since 01/01/2020 as reported by the provider.","Discontinued. Staff and facility personnel with new suspected COVID-19 who are being managed as though they have it (SUSPECTED) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Discontinued. Staff and facility personnel with suspected COVID-19 who are being managed as though they have it (SUSPECTED) since 01/01/2020 as reported by the provider.","Staff and facility personnel with new suspected or laboratory positive COVID-19 who died (COVID_19 DEATHS) as reported by the provider for this collection date. Note: Numbers for Week Ending 05/24/2020 may include reporting for any time between 01/01/2020 through 05/24/2020. Reporting for subsequent weeks is on a weekly basis.","Staff and facility personnel with suspected or laboratory positive COVID-19 who died (COVID_19 DEATHS) since 01/01/2020 as reported by the provider.","Indicates (Y/N) if staffing shortage of Nursing Staff: registered nurse, licensed practical nurse, vocational nurse as reported by the provider.","Indicates (Y/N) if staffing shortage of Clinical Staff: physician, physician assistant, advanced practice nurse as reported by the provider.","Indicates (Y/N) if staffing shortage of Aides: certified nursing assistant, nurse aide, medication aide, and medication technician as reported by the provider.","Indicates (Y/N) if staffing shortage of Other staff or facility personnel, regardless of clinical responsibility or resident contact not included in the categories above (for example, environmental services) as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of N95 masks as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of N95 masks for one week as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of surgical masks as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of surgical masks for one week as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of eye protection, including face shields and goggles as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of eye protection, including face shields and goggles, for one week as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of gowns as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of gowns for one week as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of gloves as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of gloves for one week as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of alcohol-based hand sanitizer as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of alcohol-based hand sanitizer for one week as reported by the provider.","Discontinued. Indicates (Y/N) if there is a ventilator dependent unit in the facility as reported by the provider.","Discontinued. Total number of mechanical ventilators in the facility as reported by the provider.","Discontinued. Total number of mechanical ventilators in use for residents who have suspected or lab-confirmed COVID-19 as reported by the provider.","Discontinued. Indicates (Y/N) if facility currently has any supply of ventilator supplies (including tubing) as reported by the provider.","Discontinued. Indicates (Y/N) if facility has enough supply of ventilator supplies (including tubing) for one week as reported by the provider.","Number of residents with laboratory positive COVID-19\n(CONFIRMED) for this collection date per 1,000 residents\n(Total Number of Occupied Beds) as reported by the\nprovider.","Number of residents with suspected or laboratory\npositive COVID-19 who died in the facility or another\nlocation (COVID-19 DEATHS) for this collection date per\n1,000 residents as reported by the provider.","Number of residents with laboratory positive COVID-19\n(CONFIRMED) since 01/01/2020 per 1,000 residents\n(Total Number of Occupied Beds) as reported by the\nprovider.","Number of residents with suspected or laboratory\npositive COVID-19 who died in the facility or another\nlocation (COVID-19 DEATHS) since 1/1/20 per 1,000\nresidents as reported by the provider.","Total residents with suspected or laboratory positive COVID-19 who died in the facility or another location (COVID-19 DEATHS) as a percentage of residents with laboratory positive COVID-19 (CONFIRMED) since 01/01/2020 as reported by the provider.","Indicates (Y/N) if a facility has residents with new\nlaboratory positive COVID-19 (CONFIRMED) cases that is\ngreater than or equal to 3 this week, as reported by the\nprovider.","Indicates (Y/N) if a facility has residents with new laboratory positive COVID-19 (CONFIRMED) that is greater than or equal to 1 this week after having zero residents with laboratory positive COVID-19 (CONFIRMED) since 01/01/2020, as reported by the provider.","Week number and Week Ending date.","Indicates (Y/N) if the facility performed COVID-19 viral\ntesting since the last report.","Since the last report, the number of COVID-19 NON-\npoint-of-care tests has the facility performed on\nresidents","Since the last report, the number of COVID-19 NON-\npoint-of-care tests has the facility performed on staff\nand/or facility personnel.","Number of residents with a new positive COVID-19 viral\ntest result.","Of the number of residents with a new positive COVID-\n19 viral test result, how many had positive antigen test\nonly (no other testing performed).","Of the number of residents with a new positive COVID-\n19 viral test result, how many had positive NAAT (PCR)\nonly (no other testing performed).","Of the number of residents with a new positive COVID-\n19 viral test result, how many had positive antigen test\nand negative NAAT (PCR) for COVID-19.","Of the number of residents with a new positive COVID-\n19 viral test result, how many had any other\ncombination of NAAT (PCR) and/or antigen test(s) with\nat least one positive test.","Of the number of residents with a new positive COVID-\n19 viral test result, how many were considered as\nreinfected.","Of the number of reported residents with reinfections,\nhow many had signs and/or symptoms consistent with\nCOVID-19.","Of the number of reported residents with reinfections,\nhow many did not have signs and/or symptoms\nconsistent with COVID-19.","Number of residents with a new positive influenza (flu)\ntest result.","Number of residents with acute respiratory illness symptoms, excluding confirmed COVID-19 and/or influenza (flu).","Number of residents with a confirmed co-infection with\ninfluenza (flu) and COVID-19.","During the past two weeks, on average, how long it took the facility to receive COVID-19 viral test results of residents or staff and/or facility personnel. Possible Answers: <1 DAY, 1-2 DAYS, 3-7 DAYS, >7 DAYS, NOTEST - No testing performed in the past two weeks on residents or staff and/or facility personnel.","Number of staff and facility personnel with a new\npositive COVID-19 viral test result.","Of the number of staff and facility personnel with a new\npositive COVID-19 viral test result, how many had\npositive antigen test only (no other testing performed).","Of the number of staff and facility personnel with a new\npositive COVID-19 viral test result, how many had\npositive NAAT (PCR) only (no other testing performed).","Of the number of staff and facility personnel with a new\npositive COVID-19 viral test result, how many had\npositive antigen test and negative NAAT (PCR) for\nCOVID-19.","Of the number of staff and facility personnel with a new\npositive COVID-19 viral test result, how many had any\nother combination of NAAT (PCR) and/or antigen test(s)\nwith at least one positive test.","Of the number of staff and facility personnel with a new\npositive COVID-19 viral test result, how many were\nconsidered as reinfected.","Of the number of reported staff and facility personnel\nwith reinfections, how many had signs and/or symptoms\nconsistent with COVID-19.","Of the number of reported staff and facility personnel\nwith reinfections, how many did not have signs and/or\nsymptoms consistent with COVID-19.","Number of staff and facility personnel with a new\npositive influenza (flu) test result.","Number of staff and facility personnel with acute\nrespiratory illness symptoms, excluding confirmed\nCOVID-19 and/or influenza (flu).","Number of staff and facility personnel with a confirmed\nco-infection with influenza (flu) and COVID-19.","Indicates if alcohol-based hand rub (ABHR) is available\nfor use.","Indicates if facility will no longer have the ABHR in 7\ndays.","Facility strategy for optimizing N95 Respirator supply;\nCONVENTIONAL - Recommended strategies as part of\ninfection prevention and control, CONTINGENCY -\nStrategies used during periods of anticipated PPE shortages, or CRISIS - Strategies used when supplies cannot meet facility’s current PPE needs.","Indicates if facility will no longer have N95 Respirators in\n7 days.","Facility strategy for optimizing Face Masks supply; CONVENTIONAL - Recommended strategies as part of infection prevention and control, CONTINGENCY - Strategies used during periods of anticipated PPE shortages, or CRISIS - Strategies used when supplies cannot meet facility’s current PPE needs.","Indicates if facility will no longer have Face Masks in 7\ndays.","Facility strategy for optimizing Eye Protection, including goggles or face shields, supply; CONVENTIONAL - Recommended strategies as part of infection prevention and control, CONTINGENCY - Strategies used during periods of anticipated PPE shortages, or CRISIS - Strategies used when supplies cannot meet facility’s current PPE needs.","Indicates if facility will no longer have Eye Protection in 7\ndays.","Facility strategy for optimizing Gown supply; CONVENTIONAL - Recommended strategies as part of infection prevention and control, CONTINGENCY - Strategies used during periods of anticipated PPE shortages, or CRISIS - Strategies used when supplies cannot meet facility’s current PPE needs.","Indicates if facility will no longer have Gowns in 7 days.","Facility strategy for optimizing Gloves supply; CONVENTIONAL - Recommended strategies as part of infection prevention and control, CONTINGENCY - Strategies used during periods of anticipated PPE shortages, or CRISIS - Strategies used when supplies cannot meet facility’s current PPE needs.","Indicate if facility will no longer have Gloves in 7 days.","Indicates if facility would like outreach by local and/or\nstate government for assistance with Staffing Shortages.","Indicates if facility would like outreach by local and/or\nstate government for assistance with Personal\nProtective Equipment Shortages.","Indicates if facility would like outreach by local and/or\nstate government for assistance with COVID-19 Testing\nSupply Shortages.","Indicates if facility would like outreach by local and/or\nstate government for assistance with Infection\nControl/Outbreak Management.","Indicates if facility would like outreach by local and/or\nstate government for assistance with Staff Training.","Indicates if facility would like outreach by local and/or\nstate government for assistance with COVID-19\nVaccination (Residents and/or Staff).","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","The value of \"Percentage of Current Residents who Received a Completed COVID-19 Vaccination at Any Time\" for the current week, or if blank, for the prior week.","Calculated as follows: (Number of Residents Staying in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / Number of Residents Staying in this Facility for At Least 1 Day This Week) * 100","Calculated as follows: (Number of Residents Staying in this Facility for At Least 1 Day This Week who Received a Partial COVID-19 Vaccination at Any Time / Number of Residents Staying in this Facility for At Least 1 Day This Week) * 100","Same as column heading.","Calculated as follows: (Number of Residents Staying in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / (Number of Residents Staying in this Facility for At Least 1 Day This Week - Number of Residents Staying in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time)) * 100","Calculated as follows: (Number of Residents Staying in this Facility for At Least 1 Day This Week who Received a Partial COVID-19 Vaccination at Any Time / (Number of Residents Staying in this Facility for At Least 1 Day This Week - Number of Residents Staying in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time)) * 100","Same as column heading.","Calculated as follows: (Number of Residents Staying in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / (Number of Residents Staying in this Facility for At Least 1 Day This Week - (Number of Residents Staying in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time + Number of Residents Staying in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID-19 Vaccine at Any Time))) * 100","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","The value of \"Percentage of Current Healthcare\nPersonnel who Received a Completed COVID-19\nVaccination at Any Time\" for the current week, or if\nblank, for the prior week.","Calculated as follows: (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week) * 100","Calculated as follows: (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Partial COVID-19 Vaccination at Any Time / Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week) * 100","Same as column heading.","Calculated as follows: (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week - Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time)) * 100","Calculated as follows: (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Partial COVID-19 Vaccination at Any Time / (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week - Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time)) * 100","Same as column heading.","Calculated as follows: (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who Received a Completed COVID-19 Vaccination at Any Time / (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week - (Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week with a Medical Contraindication to a COVID-19 Vaccine at Any Time + Number of All Healthcare Personnel Eligible to Work in this Facility for At Least 1 Day This Week who were Offered but Declined a COVID- 19 Vaccine at Any Time))) * 100","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading.","Discontinued. Same as column heading."],["<span title='We_En'>We_En<\/span>","<span title='Fe_Pr_Nu'>Fe_Pr_Nu<\/span>","<span title='Pr_Na'>Pr_Na<\/span>","<span title='Pr_Ad'>Pr_Ad<\/span>","<span title='Pr_Ci'>Pr_Ci<\/span>","<span title='Pr_St'>Pr_St<\/span>","<span title='Pr_Zi_Co'>Pr_Zi_Co<\/span>","<span title='Pr_Ph_Nu'>Pr_Ph_Nu<\/span>","<span title='Co'>Co<\/span>","<span title='Su_Da'>Su_Da<\/span>","<span title='Pa_Qu_As_Ch'>Pa_Qu_As_Ch<\/span>","<span title='Re_We_Ad'>Re_We_Ad<\/span>","<span title='Re_To_Ad'>Re_To_Ad<\/span>","<span title='Re_We_Co'>Re_We_Co<\/span>","<span title='Re_To_Co'>Re_To_Co<\/span>","<span title='Re_We_Su'>Re_We_Su<\/span>","<span title='Re_To_Su'>Re_To_Su<\/span>","<span title='Re_We_Al_De'>Re_We_Al_De<\/span>","<span title='Re_To_Al_De'>Re_To_Al_De<\/span>","<span title='Re_We_De'>Re_We_De<\/span>","<span title='Re_To_De'>Re_To_De<\/span>","<span title='Nu_Al_Be'>Nu_Al_Be<\/span>","<span title='To_Nu_Oc_Be'>To_Nu_Oc_Be<\/span>","<span title='Re_Ac_Te_Fa'>Re_Ac_Te_Fa<\/span>","<span title='La_Ty_Is_St_He_De'>La_Ty_Is_St_He_De<\/span>","<span title='La_Ty_Is_Pr_La'>La_Ty_Is_Pr_La<\/span>","<span title='La_Ty_Is_Ot'>La_Ty_Is_Ot<\/span>","<span title='Ab_Te_Ob_Re_Te_Al_Cu_Re_Wi_Ne_Da'>Ab_Te_Ob_Re_Te_Al_Cu ...<\/span>","<span title='Re_No_Te_Re_La_Pe'>Re_No_Te_Re_La_Pe<\/span>","<span title='Re_No_Te_Re_La_Su'>Re_No_Te_Re_La_Su<\/span>","<span title='Re_No_Te_Re_La_Ac_La'>Re_No_Te_Re_La_Ac_La<\/span>","<span title='Re_No_Te_Re_La_Ac_Tr_Pe'>Re_No_Te_Re_La_Ac_Tr ...<\/span>","<span title='Re_No_Te_Re_Un_Ab_Re'>Re_No_Te_Re_Un_Ab_Re<\/span>","<span title='Re_No_Te_Re_Ot'>Re_No_Te_Re_Ot<\/span>","<span title='Du_Pa_Tw_We_Av_Ti_Re_Re_Te_Re'>Du_Pa_Tw_We_Av_Ti_Re ...<\/span>","<span title='Ha_Fa_Pe_Re_Te_Si_La_Re'>Ha_Fa_Pe_Re_Te_Si_La ...<\/span>","<span title='Te_Re_Ne_Si_Sy'>Te_Re_Ne_Si_Sy<\/span>","<span title='Te_As_Re_Un_Se_Af_Ne_Ca'>Te_As_Re_Un_Se_Af_Ne ...<\/span>","<span title='Te_As_Re_Fa_Wi_Af_Ne_Ca'>Te_As_Re_Fa_Wi_Af_Ne ...<\/span>","<span title='Te_As_Re_Wi_Kn_Ex_Su'>Te_As_Re_Wi_Kn_Ex_Su<\/span>","<span title='Te_An_Su_Re'>Te_An_Su_Re<\/span>","<span title='Ab_Te_Ob_Re_Te_Al_St_Pe_Wi_Ne_Da'>Ab_Te_Ob_Re_Te_Al_St ...<\/span>","<span title='Re_No_Te_St_Pe_La_Pe'>Re_No_Te_St_Pe_La_Pe<\/span>","<span title='Re_No_Te_St_Pe_La_Su'>Re_No_Te_St_Pe_La_Su<\/span>","<span title='Re_No_Te_St_Pe_La_Ac_La'>Re_No_Te_St_Pe_La_Ac ...<\/span>","<span title='Re_No_Te_St_Pe_La_Ac_Tr_Pe'>Re_No_Te_St_Pe_La_Ac ...<\/span>","<span title='Re_No_Te_St_Pe_Un_Ab_Re'>Re_No_Te_St_Pe_Un_Ab ...<\/span>","<span title='Re_No_Te_St_Pe_Ot'>Re_No_Te_St_Pe_Ot<\/span>","<span title='Du_Pa_Tw_We_Av_Ti_Re_St_Pe_Te_Re'>Du_Pa_Tw_We_Av_Ti_Re ...<\/span>","<span title='Ha_Fa_Pe_St_Pe_Te_Si_La_Re'>Ha_Fa_Pe_St_Pe_Te_Si ...<\/span>","<span title='Te_St_Pe_Ne_Si_Sy'>Te_St_Pe_Ne_Si_Sy<\/span>","<span title='Te_As_St_Pe_Un_Se_Af_Ne_Ca'>Te_As_St_Pe_Un_Se_Af ...<\/span>","<span title='Te_As_St_Pe_Fa_Wi_Af_Ne_Ca'>Te_As_St_Pe_Fa_Wi_Af ...<\/span>","<span title='Te_As_St_Pe_Wi_Kn_Ex_Su'>Te_As_St_Pe_Wi_Kn_Ex ...<\/span>","<span title='Te_An_Su_St_Pe'>Te_An_Su_St_Pe<\/span>","<span title='In_Ho_Po_Ca_Te_Ma'>In_Ho_Po_Ca_Te_Ma<\/span>","<span title='Po_Ca_Te_Pe_Re_Si_La_Re'>Po_Ca_Te_Pe_Re_Si_La ...<\/span>","<span title='Po_Ca_Te_Pe_St_Pe_Si_La_Re'>Po_Ca_Te_Pe_St_Pe_Si ...<\/span>","<span title='En_Su_Te_Al_St_Pe_Us_Po_Ca_Te_Ma'>En_Su_Te_Al_St_Pe_Us ...<\/span>","<span title='St_We_Co'>St_We_Co<\/span>","<span title='St_To_Co'>St_To_Co<\/span>","<span title='St_We_Su'>St_We_Su<\/span>","<span title='St_To_Su'>St_To_Su<\/span>","<span title='St_We_De'>St_We_De<\/span>","<span title='St_To_De'>St_To_De<\/span>","<span title='Sh_Nu_St'>Sh_Nu_St<\/span>","<span title='Sh_Cl_St'>Sh_Cl_St<\/span>","<span title='Sh_Ai'>Sh_Ai<\/span>","<span title='Sh_Ot_St'>Sh_Ot_St<\/span>","<span title='An_Cu_Su_Ma'>An_Cu_Su_Ma<\/span>","<span title='On_We_Su_Ma'>On_We_Su_Ma<\/span>","<span title='An_Cu_Su_Su_Ma'>An_Cu_Su_Su_Ma<\/span>","<span title='On_We_Su_Su_Ma'>On_We_Su_Su_Ma<\/span>","<span title='An_Cu_Su_Ey_Pr'>An_Cu_Su_Ey_Pr<\/span>","<span title='On_We_Su_Ey_Pr'>On_We_Su_Ey_Pr<\/span>","<span title='An_Cu_Su_Go'>An_Cu_Su_Go<\/span>","<span title='On_We_Su_Go'>On_We_Su_Go<\/span>","<span title='An_Cu_Su_Gl'>An_Cu_Su_Gl<\/span>","<span title='On_We_Su_Gl'>On_We_Su_Gl<\/span>","<span title='An_Cu_Su_Ha_Sa'>An_Cu_Su_Ha_Sa<\/span>","<span title='On_We_Su_Ha_Sa'>On_We_Su_Ha_Sa<\/span>","<span title='Ve_De_Un'>Ve_De_Un<\/span>","<span title='Nu_Ve_Fa'>Nu_Ve_Fa<\/span>","<span title='Nu_Ve_Us'>Nu_Ve_Us<\/span>","<span title='An_Cu_Su_Ve_Su'>An_Cu_Su_Ve_Su<\/span>","<span title='On_We_Su_Ve_Su'>On_We_Su_Ve_Su<\/span>","<span title='We_Re_Co_Ca_Pe_Re'>We_Re_Co_Ca_Pe_Re<\/span>","<span title='We_Re_De_Pe_Re'>We_Re_De_Pe_Re<\/span>","<span title='To_Re_Co_Ca_Pe_Re'>To_Re_Co_Ca_Pe_Re<\/span>","<span title='To_Re_De_Pe_Re'>To_Re_De_Pe_Re<\/span>","<span title='To_Re_De_Pe_Co_Ca'>To_Re_De_Pe_Co_Ca<\/span>","<span title='Th_Mo_Co_Ca_Th_We'>Th_Mo_Co_Ca_Th_We<\/span>","<span title='In_Co_Ca_Th_We'>In_Co_Ca_Th_We<\/span>","<span title='Re_In'>Re_In<\/span>","<span title='Ha_Fa_Pe_Te_Si_La_Re'>Ha_Fa_Pe_Te_Si_La_Re<\/span>","<span title='No_Po_Ca_Te_Pe_Re_Si_La_Re'>No_Po_Ca_Te_Pe_Re_Si ...<\/span>","<span title='No_Po_Ca_Te_Pe_St_Pe_Si_La_Re'>No_Po_Ca_Te_Pe_St_Pe ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re'>Nu_Re_Ne_Po_Te_Re<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Po_An_Te_On'>Nu_Re_Ne_Po_Te_Re_Po ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Po_Te_On'>Nu_Re_Ne_Po_Te_Re_Po ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Po_An_Te_Ne_Te'>Nu_Re_Ne_Po_Te_Re_Po ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_An_Ot_Co_An_Te_Te_At_Le_On_Po_Te'>Nu_Re_Ne_Po_Te_Re_An ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Re'>Nu_Re_Ne_Po_Te_Re_Re<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Re_Sy'>Nu_Re_Ne_Po_Te_Re_Re ...<\/span>","<span title='Nu_Re_Ne_Po_Te_Re_Re_As'>Nu_Re_Ne_Po_Te_Re_Re ...<\/span>","<span title='Nu_Re_Ne_In'>Nu_Re_Ne_In<\/span>","<span title='Nu_Re_Ac_Re_Il_Sy_Ex_In'>Nu_Re_Ac_Re_Il_Sy_Ex ...<\/span>","<span title='Nu_Re_Co_Co_In'>Nu_Re_Co_Co_In<\/span>","<span title='Du_Pa_Tw_We_Av_Ti_Re_Te_Re_No_Po_Ca_Te'>Du_Pa_Tw_We_Av_Ti_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re'>Nu_St_Pe_Ne_Po_Te_Re<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Po_An_Te_On'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Po_Te_On'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Po_An_Te_Ne_Te'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_An_Ot_Co_An_Te_Te_At_Le_On_Po_Te'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Re'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Re_Sy'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_Po_Te_Re_Re_As'>Nu_St_Pe_Ne_Po_Te_Re ...<\/span>","<span title='Nu_St_Pe_Ne_In'>Nu_St_Pe_Ne_In<\/span>","<span title='Nu_St_Pe_Ac_Re_Il_Sy_Ex_In'>Nu_St_Pe_Ac_Re_Il_Sy ...<\/span>","<span title='Nu_St_Pe_Co_Co_In'>Nu_St_Pe_Co_Co_In<\/span>","<span title='Al_Ba_Ha_Ru_Av'>Al_Ba_Ha_Ru_Av<\/span>","<span title='Al_Ba_Ha_Ru_No_Lo_Av_Da'>Al_Ba_Ha_Ru_No_Lo_Av ...<\/span>","<span title='Re_St_Op'>Re_St_Op<\/span>","<span title='Re_No_Lo_Av_Da'>Re_No_Lo_Av_Da<\/span>","<span title='Fa_Ma_St_Op'>Fa_Ma_St_Op<\/span>","<span title='Fa_Ma_No_Lo_Av_Da'>Fa_Ma_No_Lo_Av_Da<\/span>","<span title='Ey_Pr_St_Op'>Ey_Pr_St_Op<\/span>","<span title='Ey_Pr_No_Lo_Av_Da'>Ey_Pr_No_Lo_Av_Da<\/span>","<span title='Go_St_Op'>Go_St_Op<\/span>","<span title='Go_No_Lo_Av_Da'>Go_No_Lo_Av_Da<\/span>","<span title='Gl_St_Op'>Gl_St_Op<\/span>","<span title='Gl_No_Lo_Av_Da'>Gl_No_Lo_Av_Da<\/span>","<span title='Fa_Wo_Li_As_Ou_St_Sh'>Fa_Wo_Li_As_Ou_St_Sh<\/span>","<span title='Fa_Wo_Li_As_Ou_Pe_Pr_Eq'>Fa_Wo_Li_As_Ou_Pe_Pr ...<\/span>","<span title='Fa_Wo_Li_As_Ou_Te_Su_Sh'>Fa_Wo_Li_As_Ou_Te_Su ...<\/span>","<span title='Fa_Wo_Li_As_Ou_In_Co_Ou_Ma'>Fa_Wo_Li_As_Ou_In_Co ...<\/span>","<span title='Fa_Wo_Li_As_Ou_St_Tr'>Fa_Wo_Li_As_Ou_St_Tr<\/span>","<span title='Fa_Wo_Li_As_Ou_Va_Ac_Re_St'>Fa_Wo_Li_As_Ou_Va_Ac ...<\/span>","<span title='Po_An_Te_On_Nu_Re_No_Va_Va_Be_Po_Te'>Po_An_Te_On_Nu_Re_No ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Pf_Bi_NTe_Va_Do_On_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Pf_Bi_NTe_Va_Do_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Mo_Va_Do_On_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Mo_Va_Do_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Ja_Va_Do_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Co_Un_Va_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_An_Te_On_Nu_Re_Re_Pa_Un_Va_Be_Po_Te'>Po_An_Te_On_Nu_Re_Re ...<\/span>","<span title='Po_Te_On_Nu_Re_No_Va_Va_Be_Po_Te'>Po_Te_On_Nu_Re_No_Va ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Pf_Bi_NTe_Va_Do_On_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Pf ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Pf_Bi_NTe_Va_Do_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Pf ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Mo_Va_Do_On_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Mo ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Mo_Va_Do_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Mo ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Ja_Va_Do_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Ja ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Co_Un_Va_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Co ...<\/span>","<span title='Po_Te_On_Nu_Re_Re_Pa_Un_Va_Be_Po_Te'>Po_Te_On_Nu_Re_Re_Pa ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_No_Va_Va_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Pf_Bi_NTe_Va_Do_On_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Pf_Bi_NTe_Va_Do_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Mo_Va_Do_On_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Mo_Va_Do_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Ja_Va_Do_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Co_Un_Va_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='An_Ot_Co_An_Te_Te_At_Le_On_Po_Te_Nu_Re_Re_Pa_Un_Va_Be_Po_Te'>An_Ot_Co_An_Te_Te_At ...<\/span>","<span title='Th_Ba_Nu_Re_Tr_St_St_Th_Fa'>Th_Ba_Nu_Re_Tr_St_St ...<\/span>","<span title='Th_Ba_Nu_Re_Tr_St_St_An_Fa'>Th_Ba_Nu_Re_Tr_St_St ...<\/span>","<span title='Th_Ca_Im_Nu_Re_Tr_St_St_Th_Fa'>Th_Ca_Im_Nu_Re_Tr_St ...<\/span>","<span title='Th_Ca_Im_Nu_Re_Tr_St_St_An_Fa'>Th_Ca_Im_Nu_Re_Tr_St ...<\/span>","<span title='Th_Ba_Et_Nu_Re_Tr_St_St_Th_Fa'>Th_Ba_Et_Nu_Re_Tr_St ...<\/span>","<span title='Th_Ba_Et_Nu_Re_Tr_St_St_An_Fa'>Th_Ba_Et_Nu_Re_Tr_St ...<\/span>","<span title='Th_So_Nu_Re_Tr_St_St_Th_Fa'>Th_So_Nu_Re_Tr_St_St ...<\/span>","<span title='Th_So_Nu_Re_Tr_St_St_An_Fa'>Th_So_Nu_Re_Tr_St_St ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Pa_Va_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Re_Pe_Cu_Re_Re_Co_Va_An_Ti'>Re_Pe_Cu_Re_Re_Co_Va ...<\/span>","<span title='Pe_Cu_Re_Re_Co_Va_An_Ti'>Pe_Cu_Re_Re_Co_Va_An ...<\/span>","<span title='Pe_Cu_Re_Re_Pa_Va_An_Ti'>Pe_Cu_Re_Re_Pa_Va_An ...<\/span>","<span title='Pe_Cu_Re_Re_Co_Pa_Va_An_Ti'>Pe_Cu_Re_Re_Co_Pa_Va ...<\/span>","<span title='Pe_Cu_Re_No_Me_Co_Re_Co_Va_An_Ti'>Pe_Cu_Re_No_Me_Co_Re ...<\/span>","<span title='Pe_Cu_Re_No_Me_Co_Re_Pa_Va_An_Ti'>Pe_Cu_Re_No_Me_Co_Re ...<\/span>","<span title='Pe_Cu_Re_No_Me_Co_Re_Co_Pa_Va_An_Ti'>Pe_Cu_Re_No_Me_Co_Re ...<\/span>","<span title='Pe_Cu_Re_No_Me_Co_Re_Co_Va_Ex_De_El_Re_An_Ti'>Pe_Cu_Re_No_Me_Co_Re ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Re_St_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Re_St_Fa_At_Le_Da ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Pa_Va_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Va_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Me_Co_Va_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Of_De_Va_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Un_Va_St_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Hi_La_Co_In_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Re_Pe_Cu_He_Pe_Re_Co_Va_An_Ti'>Re_Pe_Cu_He_Pe_Re_Co ...<\/span>","<span title='Pe_Cu_He_Pe_Re_Co_Va_An_Ti'>Pe_Cu_He_Pe_Re_Co_Va ...<\/span>","<span title='Pe_Cu_He_Pe_Re_Pa_Va_An_Ti'>Pe_Cu_He_Pe_Re_Pa_Va ...<\/span>","<span title='Pe_Cu_He_Pe_Re_Co_Pa_Va_An_Ti'>Pe_Cu_He_Pe_Re_Co_Pa ...<\/span>","<span title='Pe_Cu_He_Pe_No_Me_Co_Re_Co_Va_An_Ti'>Pe_Cu_He_Pe_No_Me_Co ...<\/span>","<span title='Pe_Cu_He_Pe_No_Me_Co_Re_Pa_Va_An_Ti'>Pe_Cu_He_Pe_No_Me_Co ...<\/span>","<span title='Pe_Cu_He_Pe_No_Me_Co_Re_Co_Pa_Va_An_Ti'>Pe_Cu_He_Pe_No_Me_Co ...<\/span>","<span title='Pe_Cu_He_Pe_No_Me_Co_Re_Co_Va_Ex_De_El_Pe_An_Ti'>Pe_Cu_He_Pe_No_Me_Co ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Al_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Al_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_An_Se_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_An_Se_Em_El_Wo_Fa ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Nu_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Nu_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Ai_As_Te_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Ai_As_Te_Em_El_Wo ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Th_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Th_Em_El_Wo_Fa_At ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Ph_Li_In_Pr_Em_Wo ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ph_Li_In_Pr_Em_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Ph_Li_In_Pr_Em_El ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_On_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Pf_Bi_NTe_Va_Do_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_On_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Mo_Va_Do_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Ja_Va_Do_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>","<span title='Nu_Ot_He_Pe_El_Wo_Fa_At_Le_Da_Th_We_Re_Co_Un_Va_An_Ti'>Nu_Ot_He_Pe_El_Wo_Fa ...<\/span>"]],"container":"<table class=\"compact wrap\">\n  <thead>\n    <tr>\n      <th>Term<\/th>\n      <th>Type<\/th>\n      <th>Description<\/th>\n      <th>Short Term<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"B<tip>","buttons":["csv","excel","pdf","print"],"scroller":true,"scrollY":400,"search":{"regex":true},"autoWidth":false,"columnDefs":[{"targets":"_all","width":"25%"}],"order":[],"orderClasses":false,"rowCallback":"function(row, data, displayNum, displayIndex, dataIndex) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'width':'25%','white-space':'normal','font-size':'.9em'});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'width':'25%','white-space':'normal','font-size':'.9em'});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'width':'25%','white-space':'normal','font-size':'.8em'});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'width':'25%','white-space':'normal','font-size':'.8em'});\n}"}},"evals":["options.rowCallback"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

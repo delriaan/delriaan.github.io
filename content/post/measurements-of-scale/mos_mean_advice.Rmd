@@ -2,6 +2,7 @@
 title: Distributions and Some "Mean" Advice
 author: Chionesu George
 date: 2023-07-15
+date-modified: last-modified
 slug: distributions-and-some-mean-advice
 series: Measurements of Scale
 categories: 
@@ -21,7 +22,7 @@ source(file = "setup.R", local = environment());
 
 tags$link(rel="stylesheet", href="/markdown.css");
 tags$script(src = "/markdown.js");
-last_mod
+# last_mod
 ```
 
 **Focal Thoughts:**

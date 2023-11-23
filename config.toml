@@ -23,7 +23,7 @@ enableGitInfo = true
     weight = 20
 [[menu.main]]
     name = "Data Projects"
-    url = "/data-projects/"
+    url = "/data_projects/"
     weight = 30
 
 [params]
@@ -61,4 +61,3 @@ enableGitInfo = true
   category = 'categories'
   series = 'series'
   tag = 'tags'
-
