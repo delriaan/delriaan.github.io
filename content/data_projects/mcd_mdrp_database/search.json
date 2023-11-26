@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Exploring the MDRP Database",
     "section": "",
-    "text": "This project explores the Medicaid Drug Rebate Program (MDRP) database. Data is retrieved via the MDRP API (description here) as well as general URL file retrieval routines:\n\n\n\n\nData Dictionary\n (Medicaid.gov)\n\n\nMDRP Data\n\n\n\nopenFDA Drug Data\n (used to augment MDRP data)\n\n\nRoute of Administration\nFDA.gov\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCRAN\nGitHub\n\n\n purrr\n  jsonlite\n  httr\n  summarytools\n  munsell\n  cachem\n\n SmartEDA\n  htmltools\n  slider\n  stringi\n  magrittr\n  plotly\n\n DT\n  data.table\n  pdftools\n  lubridate\n  future\n  furrr\n\n book.of.utilities\n  book.of.features\n  book.of.workflow\n  architect\n  smart.data\n  event.vectors"
+    "text": "This project explores the Medicaid Drug Rebate Program (MDRP) database. Data is retrieved via the MDRP API (description here) as well as general URL file retrieval routines:\n\n\n\n\nData Dictionary\n (Medicaid.gov)\n\n\nMDRP Data\n\n\n\nopenFDA Drug Data\n (used to augment MDRP data)\n\n\nRoute of Administration\nFDA.gov\n\n\n\n\nAdditional information about the MDRP is available here.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCRAN\nGitHub\n\n\n purrr\n  jsonlite\n  httr\n  summarytools\n  munsell\n  cachem\n\n SmartEDA\n  htmltools\n  slider\n  stringi\n  magrittr\n  plotly\n\n DT\n  data.table\n  pdftools\n  lubridate\n  future\n  furrr\n\n book.of.utilities\n  book.of.features\n  book.of.workflow\n  architect\n  smart.data\n  event.vectors"
   },
   {
     "objectID": "index.html#required-libraries",
@@ -46,6 +46,6 @@
     "href": "question1.html",
     "title": "Question I: Correlation",
     "section": "",
-    "text": "I decided to start asking some questions of the data given the metrics defined earlier. I decided to look into the correlation between pairs of metrics relative to a third:\n“How does the correlation between days_to_market and on_market_age|days_market_absent change by route of administration?”:\n\n\n\n\n\n\nMarket age relative to days to market shows more variability in correlation distribution. This is not to make an claim of statistically significant differentiation; however, it may be worth exploring whether or not there are clusters of administration routes based on event correlation. A future update may address this, but this is as deep of exploration I’ll go for now."
+    "text": "At this stage, as this is an exploratory exercise, I sought to answer the question, “How does the correlation between days_to_market and on_market_age|days_market_absent change by route of administration?”:\n\n\n\n\n\n\nMarket age relative to days to market shows more variability in correlation distribution. This is not to make an claim of statistically significant differentiation; however, it may be worth exploring whether or not there are clusters of administration routes based on event correlation. A future update may address this, but this is as deep of exploration I’ll go for now."
   }
 ]
