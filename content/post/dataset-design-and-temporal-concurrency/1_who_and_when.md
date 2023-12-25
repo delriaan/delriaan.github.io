@@ -2,6 +2,7 @@
 title: 'Dataset Design: Temporal Concurrency - Who & When'
 author: "Chionesu George"
 date: 2023-10-31
+date-modified: last-modified
 slug: who-and-when
 series: 
   - Dataset Design and Temporal Concurrency
@@ -25,7 +26,6 @@ toc:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:13</span>
 <span style="display: hidden;">
 <p>
 <ul toggleGroup="0" context="definition">
@@ -76,7 +76,7 @@ Regarding the second form:
 
 - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of `\(\delta^I\)` is duplicative along <span class="medMath" msg_id="tax_T">`\(\delta^T\)`</span> (more on this in a future article)
 - It allows for `\(\delta^T\)` to extend outside of the bounds of `\(W\)` while preserving the ability to detect temporal concurrency relative to `\(W\)`
-- ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-1-1.png" width="442" />
+- ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-6-1.png" width="442" />
 
 ## Who
 
@@ -138,7 +138,7 @@ Now, we move on to defining (<span class="medMath" msg_id="2">`\(\omega_2\)`</sp
 <hint toggleGroup="3">(show)</hint>
 </span>
 
-<span toggleGroup="3" context="posthoc"><span class="mathblock">`\(c_3:=\big({\Delta\\^n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\\{\Delta\\^n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}\)`</span></span>
+<span toggleGroup="3" context="posthoc"><span class="mathblock">`\(c_3:=\big({\Delta_n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\\{\Delta_n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}\)`</span></span>
 
 <p></p>
 <span role="toggle" context="posthoc" toggleGroup="4" class="">
@@ -157,7 +157,7 @@ Before moving on, I want to point out that for performance considerations, the o
 
 In this final portion of the article, I want to offer a consideration related to the <span msg_id="problem" style="border-bottom: dashed 2px green;">problem statement</span> that I recommend verifying at the beginning of the data retrieval and wrangling process: *temporal dependence vs. independence.* Conceptually similar to (in)dependence of variables, this is in a *semantic* context often encountered when there is ambiguity regarding the relationships among temporal criteria that cannot simply be inferred.
 
-For example, consider two scenarios in which <span class="medMath" msg_id="1">`\(\omega_1\)`</span> and <span class="medMath" msg_id="2">`\(\omega_2\)`</span> can be understood:
+For example, consider two scenarios in which <span class="medMath" msg_id="1">`\(\omega_{1}\)`</span> and <span class="medMath" msg_id="2">`\(\omega_{2}\)`</span> can be understood:
 
 - **Scenario 1: Independence** ( `\(\forall W:\omega_1 \wedge\omega_2\)`)
 
@@ -165,7 +165,7 @@ For example, consider two scenarios in which <span class="medMath" msg_id="1">`\
 
 - **Scenario 2: Dependence** ( `\(\forall W: \big(\omega_1|\omega_2\big)\)`)
 
-  > In this scenario, a determination (made by the requester) must be made as to which qualifying event in <span class="medMath" msg_id="2">`\(\omega_2\)`</span> — first or second — serves as the point of reference to evaluate <span class="medMath" msg_id="1">`\(\omega_1\)`</span>. Scenarios like this are why I recommended only carrying forward *essential* information (in this case, the member dates of birth) instead of *contingent* information (e.g., member age relative to `\(W\)`).
+  > In this scenario, a determination (made by the requester) must be made as to which qualifying event in <span class="medMath" msg_id="2">`\(\omega_{2}\)`</span> — first or second — serves as the point of reference to evaluate <span class="medMath" msg_id="1">`\(\omega_{1}\)`</span>. Scenarios like this are why I recommended only carrying forward *essential* information (in this case, the member dates of birth) instead of *contingent* information (e.g., member age relative to `\(W\)`).
 
 Problem statements related to workflows with multiple decision points frequently cause the second scenario to arise in analytic initiatives, so it is good to look into the real-world context of a request in addition to the available data.
 

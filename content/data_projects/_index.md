@@ -6,6 +6,5 @@ date-modified: last-modified
 
 {{% blogdown/jquery %}}
 
-1. <a href="mcd_mdrp_database/" target="_blank">Exploring the MDRP database</a>
-2. <a href="cms_c19_nh/" target="_blank">COVID-19 Nursing Home Analysis</a>
+- <a href="cms_c19_nh/" target="_blank">COVID-19 Nursing Home Analysis</a>
 

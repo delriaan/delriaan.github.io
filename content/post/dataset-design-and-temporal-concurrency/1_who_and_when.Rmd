@@ -150,7 +150,7 @@ drop_hint(
 ```
 
 [
-[ $c_3:=\big({\Delta\\^n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\\{\Delta\\^n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}$]{.mathblock}
+[ $c_3:=\big({\Delta_n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\\{\Delta_n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}$]{.mathblock}
 ]{toggleGroup=3 context="posthoc"}
 
 ```{r COND_ORDER}
@@ -173,7 +173,7 @@ drop_hint("Before moving on, I want to point out that for performance considerat
 
 In this final portion of the article, I want to offer a consideration related to the [problem statement]{msg_id="problem" style="border-bottom: dashed 2px green;"} that I recommend verifying at the beginning of the data retrieval and wrangling process: *temporal dependence vs. independence.* Conceptually similar to (in)dependence of variables, this is in a *semantic* context often encountered when there is ambiguity regarding the relationships among temporal criteria that cannot simply be inferred.
 
-For example, consider two scenarios in which [ $\omega_1$]{.medMath msg_id=1} and [ $\omega_2$]{.medMath msg_id=2} can be understood:
+For example, consider two scenarios in which [ $\omega_{1}$]{.medMath msg_id=1} and [ $\omega_{2}$]{.medMath msg_id=2} can be understood:
 
 - **Scenario 1: Independence** ( $\forall W:\omega_1 \wedge\omega_2$)
 
@@ -181,7 +181,7 @@ For example, consider two scenarios in which [ $\omega_1$]{.medMath msg_id=1} an
 
 - **Scenario 2: Dependence** ( $\forall W: \big(\omega_1|\omega_2\big)$)
 
-   > In this scenario, a determination (made by the requester) must be made as to which qualifying event in [ $\omega_2$]{.medMath msg_id=2} &mdash; first or second &mdash; serves as the point of reference to evaluate [ $\omega_1$]{.medMath msg_id=1}. Scenarios like this are why I recommended only carrying forward *essential* information (in this case, the member dates of birth) instead of *contingent* information (e.g., member age relative to $W$).
+   > In this scenario, a determination (made by the requester) must be made as to which qualifying event in [ $\omega_{2}$]{.medMath msg_id=2} &mdash; first or second &mdash; serves as the point of reference to evaluate [ $\omega_{1}$]{.medMath msg_id=1}. Scenarios like this are why I recommended only carrying forward *essential* information (in this case, the member dates of birth) instead of *contingent* information (e.g., member age relative to $W$).
 
 Problem statements related to workflows with multiple decision points frequently cause the second scenario to arise in analytic initiatives, so it is good to look into the real-world context of a request in addition to the available data.
 

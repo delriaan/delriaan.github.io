@@ -2,10 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/CMS_C19_NH_ETL.html</loc>
-    <lastmod>2023-11-24T17:42:56.050Z</lastmod>
+    <lastmod>2023-12-01T21:59:11.168Z</lastmod>
   </url>
   <url>
     <loc>/index.html</loc>
-    <lastmod>2023-11-24T17:42:58.372Z</lastmod>
+    <lastmod>2023-12-01T21:59:03.601Z</lastmod>
+  </url>
+  <url>
+    <loc>/CMS_C19_NH_Exploration.html</loc>
+    <lastmod>2023-12-01T23:35:38.839Z</lastmod>
   </url>
 </urlset>

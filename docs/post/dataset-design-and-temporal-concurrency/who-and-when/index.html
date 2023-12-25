@@ -94,7 +94,6 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:13</span>
 <span style="display: hidden;">
 <p>
 <ul toggleGroup="0" context="definition">
@@ -136,7 +135,7 @@ Regarding the second form:
 <ul>
 <li>It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of <code>\(\delta^I\)</code> is duplicative along <span class="medMath" msg_id="tax_T"><code>\(\delta^T\)</code></span> (more on this in a future article)</li>
 <li>It allows for <code>\(\delta^T\)</code> to extend outside of the bounds of <code>\(W\)</code> while preserving the ability to detect temporal concurrency relative to <code>\(W\)</code></li>
-<li><em><strong>Do not</strong></em> use the following logic to detect concurrency of the dual-date form with <code>\(W\)</code> (or any other dual-date range):<br><span class="mathblock"><code>\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)</code></span> This logical statement <strong>will</strong> fail to capture cases where <code>\(\delta^T\)</code> extends outside of <code>\(W\)</code>:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-1-1.png" width="442" /></li>
+<li><em><strong>Do not</strong></em> use the following logic to detect concurrency of the dual-date form with <code>\(W\)</code> (or any other dual-date range):<br><span class="mathblock"><code>\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)</code></span> This logical statement <strong>will</strong> fail to capture cases where <code>\(\delta^T\)</code> extends outside of <code>\(W\)</code>:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-6-1.png" width="442" /></li>
 </ul>
 <h2 id="who">Who</h2>
 <p>The “Who” aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction <em>“and”</em>) and a possible, third:</p>
@@ -185,7 +184,7 @@ Take a Break!
 <b>c<sub>3</sub></b> &mdash; Time between inpatient admissions less than or equal to six weeks: 
 <hint toggleGroup="3">(show)</hint>
 </span>
-<p><span toggleGroup="3" context="posthoc"><span class="mathblock"><code>\(c_3:=\big({\Delta\\^n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\\{\Delta\\^n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}_i\Big|_{i=1}^{n-1},\enspace\text{ the time between successive admissions}\)</code></span></span></p>
+<p><span toggleGroup="3" context="posthoc"><span class="mathblock">$c_3:=\big({\Delta_n}\dot{\delta^T}|{c_2}\big)\ge\text{42 days}\{\Delta_n}\dot{\delta^T}:={\dot{\delta^T}}_{i+1}-{\dot{\delta^T}}<em>i\Big|</em>{i=1}^{n-1},\enspace\text{ the time between successive admissions}$$</span></span></p>
 <p></p>
 <span role="toggle" context="posthoc" toggleGroup="4" class="">
 Before moving on, I want to point out that for performance considerations, the order in which the conditionals are resolved can become very important.  Normally, I would first try the following: 
@@ -198,7 +197,7 @@ Before moving on, I want to point out that for performance considerations, the o
 <img src="/decorative_line.png" class="decorative-line" />
 <h3 id="span-idomega-3temporal-dependence-vsindependencespan-span-classmedmath-msg_id3omega_3span"><span id="omega-3">Temporal Dependence vs. Independence</span> (<span class="medMath" msg_id="3"><code>\(\omega_3\)</code></span>)</h3>
 <p>In this final portion of the article, I want to offer a consideration related to the <span msg_id="problem" style="border-bottom: dashed 2px green;">problem statement</span> that I recommend verifying at the beginning of the data retrieval and wrangling process: <em>temporal dependence vs. independence.</em> Conceptually similar to (in)dependence of variables, this is in a <em>semantic</em> context often encountered when there is ambiguity regarding the relationships among temporal criteria that cannot simply be inferred.</p>
-<p>For example, consider two scenarios in which <span class="medMath" msg_id="1"><code>\(\omega_1\)</code></span> and <span class="medMath" msg_id="2"><code>\(\omega_2\)</code></span> can be understood:</p>
+<p>For example, consider two scenarios in which <span class="medMath" msg_id="1"><code>\(\omega_{1}\)</code></span> and <span class="medMath" msg_id="2"><code>\(\omega_{2}\)</code></span> can be understood:</p>
 <ul>
 <li>
 <p><strong>Scenario 1: Independence</strong> ( <code>\(\forall W:\omega_1 \wedge\omega_2\)</code>)</p>
@@ -209,7 +208,7 @@ Before moving on, I want to point out that for performance considerations, the o
 <li>
 <p><strong>Scenario 2: Dependence</strong> ( <code>\(\forall W: \big(\omega_1|\omega_2\big)\)</code>)</p>
 <blockquote>
-<p>In this scenario, a determination (made by the requester) must be made as to which qualifying event in <span class="medMath" msg_id="2"><code>\(\omega_2\)</code></span> — first or second — serves as the point of reference to evaluate <span class="medMath" msg_id="1"><code>\(\omega_1\)</code></span>. Scenarios like this are why I recommended only carrying forward <em>essential</em> information (in this case, the member dates of birth) instead of <em>contingent</em> information (e.g., member age relative to <code>\(W\)</code>).</p>
+<p>In this scenario, a determination (made by the requester) must be made as to which qualifying event in <span class="medMath" msg_id="2"><code>\(\omega_{2}\)</code></span> — first or second — serves as the point of reference to evaluate <span class="medMath" msg_id="1"><code>\(\omega_{1}\)</code></span>. Scenarios like this are why I recommended only carrying forward <em>essential</em> information (in this case, the member dates of birth) instead of <em>contingent</em> information (e.g., member age relative to <code>\(W\)</code>).</p>
 </blockquote>
 </li>
 </ul>
