@@ -69,7 +69,7 @@ problem_statement
 
 The conventions I'll use are also defined in the introduction [here](../introduction#definitions--conventions){target='_blank'}.
 
-## When
+## When 
 
 Identifying the global temporal window ( $W$ ) is important as defines the frame of reference within which temporal relations are queried and transformed. It is the absolute governor of detecting *when* things take place.  In this case, the window is defined as all records having temporal columns or derived temporal measurements with at least *one* value falling within the period *2019-01-01* to *2020-12-31*:
 
@@ -82,15 +82,19 @@ drop_hint("Regarding the second form:", context = "posthoc", toggleGroup = 0)
 ```
 
 - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of $\delta^I$ is duplicative along [ $\delta^T$]{.medMath msg_id="tax_T"} (more on this in a future article)
+
 - It allows for $\delta^T$ to extend outside of the bounds of $W$ while preserving the ability to detect temporal concurrency relative to $W$
+
 - ***Do not*** use the following logic to detect concurrency of the dual-date form with $W$ (or any other dual-date range):<br>[ $(W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})$ ]{.mathblock} This logical statement **will** fail to capture cases where $\delta^T$ extends outside of $W$:<br><br>`r window_example.png`
 
-## Who
+## Who 
 
 The "Who" aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction *"and"*) and a possible, third:
 
 - [ $\omega_1$]{.bigMath}: ["... members between 30 and 50 years old"]{.speech #msg_1}
+
 - [ $\omega_2$]{.bigMath}: ["... have had at least two inpatient visits within a six-week period"]{.speech #msg_2}
+
 - [ $\omega_3$]{.bigMath}: $f(\omega_1, \omega_2)$ &mdash; [dependence vs. independence]{.speech #msg_3}
 
 ### [Age vs. Report Window]{#omega-1} ([ $\omega_1$]{.medMath msg_id=1}) 
@@ -194,10 +198,13 @@ Problem statements related to workflows with multiple decision points frequently
 You've made it to the end! I'll summarize our journey so far:
 
 - We saw how a plain-language statement can be decomposed into smaller, logical chunks to be stepped through and interrogated.
+
 - We looked at the ["When"]{.speech} and ["Who"]{.speech} of our problem statement and explored temporally-based considerations such as global windows of time, relative time between events, and relative event sequencing.
+
 - We considered how the order in which criteria are addressed relates to query and processing performance.
+
 - I hope you see that as we work through the full statement, what emerges is a ["design map"]{.speech} of sorts (which also helps with data product documentation).
 
-That's all for now &mdash; I look forward to seeing you in Part 2!
+That's all for now &mdash; I look forward to seeing you in [Part 2](../what) where we explore the ["What"]{.speech} of our problem statement.
 
 {{% blogdown/footer %}}

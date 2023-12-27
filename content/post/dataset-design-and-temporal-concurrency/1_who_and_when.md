@@ -75,7 +75,9 @@ Regarding the second form:
 </span>
 
 - It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of `\(\delta^I\)` is duplicative along <span class="medMath" msg_id="tax_T">`\(\delta^T\)`</span> (more on this in a future article)
+
 - It allows for `\(\delta^T\)` to extend outside of the bounds of `\(W\)` while preserving the ability to detect temporal concurrency relative to `\(W\)`
+
 - ***Do not*** use the following logic to detect concurrency of the dual-date form with `\(W\)` (or any other dual-date range):<br><span class="mathblock">`\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)`</span> This logical statement **will** fail to capture cases where `\(\delta^T\)` extends outside of `\(W\)`:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-6-1.png" width="442" />
 
 ## Who
@@ -83,7 +85,9 @@ Regarding the second form:
 The “Who” aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction *“and”*) and a possible, third:
 
 - <span class="bigMath">`\(\omega_1\)`</span>: <span id="msg_1" class="speech">“… members between 30 and 50 years old”</span>
+
 - <span class="bigMath">`\(\omega_2\)`</span>: <span id="msg_2" class="speech">“… have had at least two inpatient visits within a six-week period”</span>
+
 - <span class="bigMath">`\(\omega_3\)`</span>: `\(f(\omega_1, \omega_2)\)` — <span id="msg_3" class="speech">dependence vs. independence</span>
 
 ### <span id="omega-1">Age vs. Report Window</span> (<span class="medMath" msg_id="1">`\(\omega_1\)`</span>)
@@ -178,10 +182,13 @@ Problem statements related to workflows with multiple decision points frequently
 You’ve made it to the end! I’ll summarize our journey so far:
 
 - We saw how a plain-language statement can be decomposed into smaller, logical chunks to be stepped through and interrogated.
+
 - We looked at the <span class="speech">“When”</span> and <span class="speech">“Who”</span> of our problem statement and explored temporally-based considerations such as global windows of time, relative time between events, and relative event sequencing.
+
 - We considered how the order in which criteria are addressed relates to query and processing performance.
+
 - I hope you see that as we work through the full statement, what emerges is a <span class="speech">“design map”</span> of sorts (which also helps with data product documentation).
 
-That’s all for now — I look forward to seeing you in Part 2!
+That’s all for now — I look forward to seeing you in [Part 2](../what) where we explore the <span class="speech">“What”</span> of our problem statement.
 
 {{% blogdown/footer %}}

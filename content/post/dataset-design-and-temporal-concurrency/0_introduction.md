@@ -2,6 +2,7 @@
 title: 'Dataset Design: Temporal Concurrency - Prologue'
 author: Chionesu George
 date: 2023-10-21
+date-modified: last-modified
 params:
   - dateForm = Jan 2020
 slug: introduction
@@ -27,7 +28,6 @@ toc:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:11</span>
 
 ## Introduction
 
@@ -85,7 +85,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-11-05 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-12-26 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote class="speech" style="font-size: 0.9em; " id="msg_problem">"I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 
@@ -135,4 +135,4 @@ These will be addressed subsequent posts:
 
 I look forward to seeing you in [Part 1](../who-and-when)!
 
-{{% blogdown/footer %}}
+{{% blogdown/footer %}} {{% navigate url=./1_who_and_when.html dir=Next %}}

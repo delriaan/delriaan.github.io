@@ -1,0 +1,74 @@
+---
+title: 'Dataset Design: Temporal Concurrency - What'
+author: "Chionesu George"
+date: 2023-12-26
+date-modified: last-modified
+slug: what
+series: 
+  - Dataset Design and Temporal Concurrency
+categories:
+  - Data Engineering
+  - Theory
+tags:
+  - analytics
+  - engineering
+  - time
+  - data
+  - semantics
+toc:
+  - depth: 2
+  - float: true
+---
+
+{{% blogdown/jquery %}}
+
+```{r SETUP, echo=FALSE}
+#| label: SETUP
+#| echo: false
+
+knitr::opts_chunk$set(echo = FALSE);
+
+options(article="dataset-design-and-temporal-concurrency");
+
+source(file = "setup.R", local = environment());
+
+tags$link(rel="stylesheet", href="/markdown.css");
+
+tags$script(src = "/markdown.js");
+
+# last_mod
+
+tags$span(style = "display: hidden;", taxonomy);
+
+hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
+
+break_time <- tags$p(
+  tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
+  , tags$span(
+      style = "font-size:4em;"
+      , class = "speech"
+      , tags$img(
+          src = "/hourglass.png"
+          , caption="Take a Break!"
+          , style="height:3em; vertical-align:text-top; margin-top:-50px; float:left"
+          )
+      , "Take a Break!"
+      )
+  , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
+  )
+
+```
+
+[Welcome back!]{.decorativeText} In [Part 1](../who-and-when), we discussed the importance of giving proper treatment to understanding the *who* and *when* of a problem statement which provide the context within which a solution will be crafted. In this article, we'll discuss the core of the problem statement itself.
+
+## Metrics & Dimensions
+
+First, let's define the key measures and related metrics listed in the problem statement:
+
+- [ $\gamma_1 \Rightarrow \gamma(x)=\bar{x} \\ x := \big(t_{i+1}-t_{i}\big)\\$]{.bigMath}: [Length of stay]{#msg_1}
+- [ $\gamma_2 \Rightarrow f(x, m)=\sum_{i=1}^{m}{x_m}\\x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}; \enspace m:= \text{month index}$]{.bigMath}: [Monthly counts of lapses in medication adherence]{#msg_2}
+- [ $\gamma_3 \Rightarrow f(\gamma_2, m)=\sum_{i=1}^{m}{\gamma_2|i\le{m}}$]{.bigMath}: [Cumulative count of lapses in medication adherence]{#msg_3}
+- [ $\gamma_4 \Rightarrow f(x)=\#x \\ x:=\text{unduplicated member identifiers}$]{.bigMath}: [Counts of unduplicated members]{#msg_3}
+- [ $\gamma_5 \Rightarrow f(x)=\sum{x}\\x:=\text{cost}$]{.bigMath}: [Total expenditures]{#msg_5}
+
+{{% blogdown/footer %}}

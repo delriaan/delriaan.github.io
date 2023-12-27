@@ -25,7 +25,10 @@ if (grepl("dataset.+temporal", c(getOption("article"), "")[1])){
     ) |> 
     iwalk(\(i, j){ 
       if (file.exists(i)){ 
-        assign(j, magick::image_resize(magick::image_read(i), geometry = magick::geometry_size_percent(20)), envir = .GlobalEnv);
+        assign(j
+               , magick::image_resize(magick::image_read(i), geometry = magick::geometry_size_percent(20))
+               , envir = .GlobalEnv
+               );
       }
     });
   
@@ -66,7 +69,8 @@ if (grepl("dataset.+temporal", c(getOption("article"), "")[1])){
           , ": Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)"
           )
       )
-    )}
+    )
+  }
 } else if (grepl("measurement.+scale", c(getOption("article"), "")[1])){
   three_cats.jpg <- magick::image_read("./3 cats.jpg") |>
     magick::image_resize(geometry = magick::geometry_size_percent(90));

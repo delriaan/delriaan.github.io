@@ -156,4 +156,4 @@ These will be addressed subsequent posts:
 
 I look forward to seeing you in [Part 1](../who-and-when)!
 
-{{% blogdown/footer %}}
+{{% blogdown/footer %}} {{% navigate url=./1_who_and_when.html dir=Next %}}
