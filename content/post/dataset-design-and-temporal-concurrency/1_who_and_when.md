@@ -189,6 +189,6 @@ You’ve made it to the end! I’ll summarize our journey so far:
 
 - I hope you see that as we work through the full statement, what emerges is a <span class="speech">“design map”</span> of sorts (which also helps with data product documentation).
 
-That’s all for now — I look forward to seeing you in [Part 2](../what) where we explore the <span class="speech">“What”</span> of our problem statement.
+That’s all for now — I look forward to seeing you in <a href="../what" target="_blank">Part 2</a> where we explore the <span class="speech">“What”</span> of our problem statement.
 
 {{% blogdown/footer %}}

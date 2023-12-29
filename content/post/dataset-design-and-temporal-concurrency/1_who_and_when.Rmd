@@ -205,6 +205,6 @@ You've made it to the end! I'll summarize our journey so far:
 
 - I hope you see that as we work through the full statement, what emerges is a ["design map"]{.speech} of sorts (which also helps with data product documentation).
 
-That's all for now &mdash; I look forward to seeing you in [Part 2](../what) where we explore the ["What"]{.speech} of our problem statement.
+That's all for now &mdash; I look forward to seeing you in [Part 2](../what){target="_blank"} where we explore the ["What"]{.speech} of our problem statement.
 
 {{% blogdown/footer %}}

@@ -85,7 +85,7 @@ Moving forward, the base unit of time will be days, mainly due to not having had
 
 ## A Motivating Example
 
-Consider a business request submitted 2023-12-26 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
+Consider a business request submitted 2023-12-28 and stated as follows \[*demonstration purposes only, so cut me some slack* 😏\]:
 
 <blockquote class="speech" style="font-size: 0.9em; " id="msg_problem">"I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 
@@ -125,8 +125,8 @@ With that in mind, the business request can be restated in terms of the followin
 
 These will be addressed subsequent posts:
 
-- *Part 1* will cover <span class="speech">Who?</span> and <span class="speech">When?</span>
-- *Part 2* will address <span class="speech">What?</span>
+- *<a href="../who-and-when" target="_blank">Part 1</a>* will cover <span class="speech">Who?</span> and <span class="speech">When?</span>
+- *<a href="../what" target="_blank">Part 2</a>* will address <span class="speech">What?</span>
 - *Part 3* will cover <span class="speech">How?</span> as well as provide some concluding thoughts
 
 <img src="/decorative_line.png" class="decorative-line" />

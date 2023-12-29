@@ -3,46 +3,49 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/tags/analytics/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/tags/data/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/categories/data-engineering/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/series/dataset-design-and-temporal-concurrency/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
-    <loc>/post/dataset-design-and-temporal-concurrency/who-and-when/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <loc>/post/dataset-design-and-temporal-concurrency/what/</loc>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/tags/engineering/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/post/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/tags/semantics/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/series/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/tags/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/categories/theory/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/tags/time/</loc>
-    <lastmod>2023-12-25T11:33:42-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
+  </url><url>
+    <loc>/post/dataset-design-and-temporal-concurrency/who-and-when/</loc>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/post/dataset-design-and-temporal-concurrency/introduction/</loc>
-    <lastmod>2023-11-05T19:53:50-05:00</lastmod>
+    <lastmod>2023-12-26T21:07:24-05:00</lastmod>
   </url><url>
     <loc>/post/dataset-design-and-temporal-concurrency/</loc>
     <lastmod>2023-11-04T22:46:49-04:00</lastmod>

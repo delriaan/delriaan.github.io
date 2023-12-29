@@ -15,9 +15,8 @@ tags:
   - time
   - data
   - semantics
-toc:
-  - depth: 2
-  - float: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 {{% blogdown/jquery %}}
@@ -53,16 +52,35 @@ toc:
 </p>
 </span>
 
-<span class="decorativeText">Welcome back!</span> In [Part 1](../who-and-when), we discussed the importance of giving proper treatment to understanding the *who* and *when* of a problem statement which provide the context within which a solution will be crafted. In this article, we’ll discuss the core of the problem statement itself.
+<span class="decorativeText">Welcome back!</span>
+
+In <a href="../who-and-when" target="blank">Part 1</a>, we discussed the importance of giving proper treatment to understanding the *who* and *when* of a problem statement which provide the context within which a solution will be crafted. In this article, we’ll discuss the quantitative building blocks of the problem statement itself.
 
 ## Metrics & Dimensions
 
-First, let’s define the key measures and related metrics listed in the problem statement:
+<span role="toggle" context="posthoc" toggleGroup="1" class="">
+First, let's define the key measures and related metrics listed in the problem statement: 
+<hint toggleGroup="1">(show)</hint>
+</span>
 
-- <span class="bigMath">`\(\gamma_1 \Rightarrow \gamma(x)=\bar{x} \\ x := \big(t_{i+1}-t_{i}\big)\\\)`</span>: <span id="msg_1">Length of stay</span>
-- <span class="bigMath">`\(\gamma_2 \Rightarrow f(x, m)=\sum_{i=1}^{m}{x_m}\\x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}; \enspace m:= \text{month index}\)`</span>: <span id="msg_2">Monthly counts of lapses in medication adherence</span>
-- <span class="bigMath">`\(\gamma_3 \Rightarrow f(\gamma_2, m)=\sum_{i=1}^{m}{\gamma_2|i\le{m}}\)`</span>: <span id="msg_3">Cumulative count of lapses in medication adherence</span>
-- <span class="bigMath">`\(\gamma_4 \Rightarrow f(x)=\#x \\ x:=\text{unduplicated member identifiers}\)`</span>: <span id="msg_3">Counts of unduplicated members</span>
-- <span class="bigMath">`\(\gamma_5 \Rightarrow f(x)=\sum{x}\\x:=\text{cost}\)`</span>: <span id="msg_5">Total expenditures</span>
+- <span class="bigMath">`\(\gamma_1\)`</span>: <span id="msg_1">Average length of stay</span> `\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)`
+
+- <span class="bigMath">`\(\gamma_2\)`</span>: <span id="msg_2">Counts of lapses in medication adherence</span> `\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)` (there’s more to this operation which will be covered in Part 3)
+
+- <span class="bigMath">`\(\gamma_3\)`</span>: <span id="msg_3">Cumulative count of lapses in medication adherence</span> `\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)` (yes, I have not defined `\(j\)`: that will be covered in Part 3)
+
+- <span class="bigMath">`\(\gamma_{4}\)`</span>: <span id="msg_4">Number of unique members</span> `\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)`
+
+- <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_5">Total expenditures</span> `\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)`
+
+### Metrics vs. Measures
+
+Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
+
+> For example, <span msg_id="1">`\(\gamma_1\)`</span>’s measure is *days between dates* and the metric is *mean of {measure}*.
+
+### Dimensions
+
+The dimensions of the problem statement are the *who* and *when* of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>.
 
 {{% blogdown/footer %}}

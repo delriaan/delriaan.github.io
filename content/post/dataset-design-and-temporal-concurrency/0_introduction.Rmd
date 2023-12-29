@@ -146,8 +146,8 @@ c("Who?", "When?", "What?", "How?") |> make_checkbox(color = "999999")
 
 These will be addressed subsequent posts:
 
-- _Part 1_ will cover [Who?]{.speech} and [When?]{.speech}
-- _Part 2_ will address [What?]{.speech}
+- _[Part 1](../who-and-when){target="_blank"}_ will cover [Who?]{.speech} and [When?]{.speech}
+- _[Part 2](../what){target="_blank"}_ will address [What?]{.speech}
 - _Part 3_ will cover [How?]{.speech} as well as provide some concluding thoughts
 
 ![](/decorative_line.png){.decorative-line}

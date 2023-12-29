@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.111.3">
+
+
+<title>Dataset Design: Temporal Concurrency - What - Chionesu By Design</title>
+<meta property="og:title" content="Dataset Design: Temporal Concurrency - What - Chionesu By Design">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/post/">Articles</a></li>
+    
+    <li><a href="/r-pkgs/">R Packages</a></li>
+    
+    <li><a href="/data_projects/">Data Projects</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/chionesu-george-1067b122/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">1 min read</span>
+    
+
+    <h1 class="article-title">Dataset Design: Temporal Concurrency - What</h1>
+
+    
+    <span class="article-date">2023-12-26</span>
+    
+
+    <div class="article-content">
+      
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#metrics--dimensions">Metrics &amp; Dimensions</a></li>
+  </ul>
+</nav>
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<pre><code>## dataset-design-and-temporal-concurrency
+</code></pre>
+<link rel="stylesheet" href="/markdown.css"/>
+<script src="/markdown.js"></script>
+<span style="display: hidden;">
+<p>
+<ul toggleGroup="0" context="definition">
+<li id="msg_tax_I">
+<span class="def_sym">&delta;<sup>I</sup></span>
+: Information-carrying columns
+</li>
+<li id="msg_tax_G">
+<span class="def_sym">&delta;<sup>G</sup></span>
+: Grouping columns (categorical, descriptive)
+</li>
+<li id="msg_tax_Y">
+<span class="def_sym">&delta;<sup>Y</sup></span>
+: Measurements (e.g., purchase price, height, product ratings)
+</li>
+<li id="msg_tax_T">
+<span class="def_sym">&delta;<sup>T</sup></span>
+: Temporal columns to include dates and temporal hierarchies
+</li>
+<li id="msg_tax_E">
+<span class="def_sym">&delta;<sup>E</sup></span>
+: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)
+</li>
+</ul>
+</p>
+</span>
+<p><span class="decorativeText">Welcome back!</span> In <a href="../who-and-when">Part 1</a>, we discussed the importance of giving proper treatment to understanding the <em>who</em> and <em>when</em> of a problem statement which provide the context within which a solution will be crafted. In this article, we’ll discuss the core of the problem statement itself.</p>
+<h2 id="metrics--dimensions">Metrics &amp; Dimensions</h2>
+<p>First, let’s define the key measures and related metrics listed in the problem statement:</p>
+<ul>
+<li>
+<p><code>\(\gamma_1\)</code>: <span id="msg_1"><span role="toggle" context="problem" toggleGroup="1" class=""> Average length of stay  <hint toggleGroup="1">(show)</hint> </span></span></p>
+<p><span toggleGroup="1" context="problem"><code>\(\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)</code></span></p>
+</li>
+<li>
+<p><code>\(\gamma_2\)</code>: <span id="msg_2">Monthly counts of lapses in medication adherence</span></p>
+</li>
+</ul>
+<blockquote>
+<p><code>\(f(x, m)=\sum_{i=1}^{m}{x_m};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}; \enspace m:= \text{month index}\)</code></p>
+</blockquote>
+<ul>
+<li><code>\(\gamma_3\)</code>: <span id="msg_3">Cumulative count of lapses in medication adherence</span></li>
+</ul>
+<blockquote>
+<p><code>\(f(\gamma_2, m)=\sum_{i=1}^{m}{\gamma_2|i\le{m}}\)</code></p>
+</blockquote>
+<ul>
+<li><code>\(\gamma_4\)</code>: <span id="msg_4">Number of unique members</span></li>
+</ul>
+<blockquote>
+<p><code>\(f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)</code></p>
+</blockquote>
+<ul>
+<li><code>\(\gamma_5\)</code>: <span id="msg_5">Total expenditures</span></li>
+</ul>
+<blockquote>
+<p><code>\(f(x)=\sum{x};\enspace x:=\text{cost}\)</code></p>
+</blockquote>
+<p>Until next time, I wish you much success in your journey as a data practitioner!</p>
+<div style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
+<span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

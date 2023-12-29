@@ -92,7 +92,6 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="font-size:smaller; text-decoration:italic; color:#999999; ">Updated 2023-11-05 19:43:11</span>
 <h2 id="introduction">Introduction</h2>
 <p>Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.</p>
 <p>This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence. Two overarching goals that guide my design thinking in general, but <em>especially</em> when dealing with resolving temporal concurrency are as follows:</p>
@@ -148,7 +147,7 @@
 </p>
 <img src="/decorative_line.png" class="decorative-line" />
 <h2 id="a-motivating-example">A Motivating Example</h2>
-<p>Consider a business request submitted 2023-11-05 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
+<p>Consider a business request submitted 2023-12-26 and stated as follows [<em>demonstration purposes only, so cut me some slack</em> 😏]:</p>
 <blockquote class="speech" style="font-size: 0.9em; " id="msg_problem">"I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020. Med lapses should show monthly totals and cumulative monthly totals. Pull members between 30 and 50 years old and have had at least two inpatient visits within a six-week period. I need to see results by month; all services received and corresponding facilities; and member demographics."</blockquote>
 <h3 id="problem-re-statement">Problem <em>Re</em>-statement</h3>
 <p>I mentioned consideration of <span class="speech">“the <em>semantic relationships</em> between data source and the problem statement”</span> in my introductory remarks. Two principles I always be kept in mind when working with data are as follows:</p>
@@ -189,9 +188,10 @@ The language of data follows the language of people
 <p><span class="speech" style="display:block; padding: 1.1em; font-size:1em; background-color:#CCCCCC55;">Before closing things out, I want to make sure to note that the articles in this mini-series <em>will</em> be lengthy. Who I have in mind are the less-experienced data practitioners who haven’t had much exposure in navigating the challenges of data retrieval with temporal concurrency. <em><strong>Take your time</strong></em>: there’s no need to rush through the content — you can always bookmark and come back later =) To reiterate an earlier point, the idea is to spend time working through the logic of a request <strong>before</strong> coding begins. Errors in logic are easier to detect using such an approach and can help avoid writing <em>“spaghetti”</em> code.</span></p>
 <p>I look forward to seeing you in <a href="../who-and-when">Part 1</a>!</p>
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
-<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
+<div style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
-</p>
+</div>
+ <span><a href='./1_who_and_when.html'></a></span>
 
     </div>
   </article>
