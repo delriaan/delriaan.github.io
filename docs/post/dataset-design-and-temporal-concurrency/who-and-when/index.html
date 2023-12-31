@@ -133,16 +133,28 @@ Regarding the second form:
 <hint toggleGroup="0">(show)</hint>
 </span>
 <ul>
-<li>It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of <code>\(\delta^I\)</code> is duplicative along <span class="medMath" msg_id="tax_T"><code>\(\delta^T\)</code></span> (more on this in a future article)</li>
-<li>It allows for <code>\(\delta^T\)</code> to extend outside of the bounds of <code>\(W\)</code> while preserving the ability to detect temporal concurrency relative to <code>\(W\)</code></li>
-<li><em><strong>Do not</strong></em> use the following logic to detect concurrency of the dual-date form with <code>\(W\)</code> (or any other dual-date range):<br><span class="mathblock"><code>\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)</code></span> This logical statement <strong>will</strong> fail to capture cases where <code>\(\delta^T\)</code> extends outside of <code>\(W\)</code>:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-6-1.png" width="442" /></li>
+<li>
+<p>It allows for a much more compact dataset. I recommend giving serious consideration to transforming the single-date form into the dual-date form, especially when most of <code>\(\delta^I\)</code> is duplicative along <span class="medMath" msg_id="tax_T"><code>\(\delta^T\)</code></span> (more on this in a future article)</p>
+</li>
+<li>
+<p>It allows for <code>\(\delta^T\)</code> to extend outside of the bounds of <code>\(W\)</code> while preserving the ability to detect temporal concurrency relative to <code>\(W\)</code></p>
+</li>
+<li>
+<p><em><strong>Do not</strong></em> use the following logic to detect concurrency of the dual-date form with <code>\(W\)</code> (or any other dual-date range):<br><span class="mathblock"><code>\((W_\text{start} \le \delta_\text{start} \le W_\text{end} ) \vee (W_\text{start} \le \delta_\text{end} \le W_\text{end})\)</code></span> This logical statement <strong>will</strong> fail to capture cases where <code>\(\delta^T\)</code> extends outside of <code>\(W\)</code>:<br><br><img src="/post/dataset-design-and-temporal-concurrency/1_who_and_when_files/figure-html/unnamed-chunk-6-1.png" width="442" /></p>
+</li>
 </ul>
 <h2 id="who">Who</h2>
 <p>The “Who” aspect of the problem statement consists of two detectable conditions (as indicated by the conjunction <em>“and”</em>) and a possible, third:</p>
 <ul>
-<li><span class="bigMath"><code>\(\omega_1\)</code></span>: <span id="msg_1" class="speech">“… members between 30 and 50 years old”</span></li>
-<li><span class="bigMath"><code>\(\omega_2\)</code></span>: <span id="msg_2" class="speech">“… have had at least two inpatient visits within a six-week period”</span></li>
-<li><span class="bigMath"><code>\(\omega_3\)</code></span>: <code>\(f(\omega_1, \omega_2)\)</code> — <span id="msg_3" class="speech">dependence vs. independence</span></li>
+<li>
+<p><span class="bigMath"><code>\(\omega_1\)</code></span>: <span id="msg_1" class="speech">“… members between 30 and 50 years old”</span></p>
+</li>
+<li>
+<p><span class="bigMath"><code>\(\omega_2\)</code></span>: <span id="msg_2" class="speech">“… have had at least two inpatient visits within a six-week period”</span></p>
+</li>
+<li>
+<p><span class="bigMath"><code>\(\omega_3\)</code></span>: <code>\(f(\omega_1, \omega_2)\)</code> — <span id="msg_3" class="speech">dependence vs. independence</span></p>
+</li>
 </ul>
 <h3 id="span-idomega-1age-vsreport-windowspan-span-classmedmath-msg_id1omega_1span"><span id="omega-1">Age vs. Report Window</span> (<span class="medMath" msg_id="1"><code>\(\omega_1\)</code></span>)</h3>
 <p><span class="medMath" msg_id="1"><code>\(\omega_1\)</code></span> is the first opportunity to greatly trim down your data pull.</p>
@@ -218,16 +230,24 @@ Before moving on, I want to point out that for performance considerations, the o
 <p><span class="sidebar">As an aside, if you are a data practioner and are not familiar with <em>predicate logic</em> or <em>relational algebra</em>, I <em>strongly</em> recommend getting a basic understanding — <em>especially</em> if combining heterogeneous data is part of your workflow.</span></p>
 <p>You’ve made it to the end! I’ll summarize our journey so far:</p>
 <ul>
-<li>We saw how a plain-language statement can be decomposed into smaller, logical chunks to be stepped through and interrogated.</li>
-<li>We looked at the <span class="speech">“When”</span> and <span class="speech">“Who”</span> of our problem statement and explored temporally-based considerations such as global windows of time, relative time between events, and relative event sequencing.</li>
-<li>We considered how the order in which criteria are addressed relates to query and processing performance.</li>
-<li>I hope you see that as we work through the full statement, what emerges is a <span class="speech">“design map”</span> of sorts (which also helps with data product documentation).</li>
+<li>
+<p>We saw how a plain-language statement can be decomposed into smaller, logical chunks to be stepped through and interrogated.</p>
+</li>
+<li>
+<p>We looked at the <span class="speech">“When”</span> and <span class="speech">“Who”</span> of our problem statement and explored temporally-based considerations such as global windows of time, relative time between events, and relative event sequencing.</p>
+</li>
+<li>
+<p>We considered how the order in which criteria are addressed relates to query and processing performance.</p>
+</li>
+<li>
+<p>I hope you see that as we work through the full statement, what emerges is a <span class="speech">“design map”</span> of sorts (which also helps with data product documentation).</p>
+</li>
 </ul>
-<p>That’s all for now — I look forward to seeing you in Part 2!</p>
+<p>That’s all for now — I look forward to seeing you in <a href="../what" target="_blank">Part 2</a> where we explore the <span class="speech">“What”</span> of our problem statement.</p>
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
-<p style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
+<div style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
-</p>
+</div>
 
     </div>
   </article>
