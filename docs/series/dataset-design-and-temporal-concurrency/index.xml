@@ -6,15 +6,14 @@
     <description>Recent content in Dataset Design and Temporal Concurrency on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 26 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/series/dataset-design-and-temporal-concurrency/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 31 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/series/dataset-design-and-temporal-concurrency/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Dataset Design: Temporal Concurrency - What</title>
       <link>/post/dataset-design-and-temporal-concurrency/what/</link>
-      <pubDate>Tue, 26 Dec 2023 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 31 Dec 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/dataset-design-and-temporal-concurrency/what/</guid>
-      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Welcome back!
-In Part 1, we discussed the importance of giving proper treatment to understanding the who and when of a problem statement which provide the context within which a solution will be crafted.</description>
+      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Report Window... members between 30 and 50 years old... have had at least two inpatient visits within a six-week periodDependence vs.</description>
     </item>
     
     <item>

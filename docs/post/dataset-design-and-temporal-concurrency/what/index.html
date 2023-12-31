@@ -70,7 +70,7 @@
     <h1 class="article-title">Dataset Design: Temporal Concurrency - What</h1>
 
     
-    <span class="article-date">2023-12-26</span>
+    <span class="article-date">2023-12-31</span>
     
 
     <div class="article-content">
@@ -80,7 +80,7 @@
 </code></pre>
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="display: hidden;">
+<span style="display: none;">
 <p>
 <ul toggleGroup="0" context="definition">
 <li id="msg_tax_I">
@@ -106,41 +106,66 @@
 </ul>
 </p>
 </span>
+<span style="display: none;" id="msg_W">Report Window</span>
+<span style="display: none;" id="msg_o1">... members between 30 and 50 years old</span>
+<span style="display: none;" id="msg_o2">... have had at least two inpatient visits within a six-week period</span>
+<span style="display: none;" id="msg_o3">Dependence vs. Independence</span>
 <p><span class="decorativeText">Welcome back!</span></p>
 <p>In <a href="../who-and-when" target="blank">Part 1</a>, we discussed the importance of giving proper treatment to understanding the <em>who</em> and <em>when</em> of a problem statement which provide the context within which a solution will be crafted. In this article, we’ll discuss the quantitative building blocks of the problem statement itself.</p>
-<h2 id="metrics--dimensions">Metrics &amp; Dimensions</h2>
 <span role="toggle" context="posthoc" toggleGroup="1" class="">
 First, let's define the key measures and related metrics listed in the problem statement: 
 <hint toggleGroup="1">(show)</hint>
 </span>
 <ul>
 <li>
-<p><span class="bigMath"><code>\(\gamma_1\)</code></span>: <span id="msg_1">Average length of stay</span> <code>\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_1\)</code></span>: <span id="msg_g1">Average length of stay</span> <code>\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)</code></p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_2\)</code></span>: <span id="msg_2">Counts of lapses in medication adherence</span> <code>\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)</code> (there’s more to this operation which will be covered in Part 3)</p>
+<p><span class="bigMath"><code>\(\gamma_2\)</code></span>: <span id="msg_g2">Counts of lapses in medication adherence</span> <code>\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)</code> (there’s more to this operation which will be covered in Part 3)</p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_3\)</code></span>: <span id="msg_3">Cumulative count of lapses in medication adherence</span> <code>\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)</code> (yes, I have not defined <code>\(j\)</code>: that will be covered in Part 3)</p>
+<p><span class="bigMath"><code>\(\gamma_3\)</code></span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> <code>\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)</code> (yes, I have not defined <code>\(j\)</code>: that will be covered in Part 3)</p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_{4}\)</code></span>: <span id="msg_4">Number of unique members</span> <code>\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_{4}\)</code></span>: <span id="msg_g4">Number of unique members</span> <code>\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)</code></p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_5\)</code></span>: <span id="msg_5">Total expenditures</span> <code>\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_5\)</code></span>: <span id="msg_g5">Total expenditures</span> <code>\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)</code></p>
 </li>
 </ul>
-<h3 id="metrics-vsmeasures">Metrics vs. Measures</h3>
 <p>Note that for each of metrics, a <em>metric</em> and a <em>measure</em> were defined. The measure is the content of the metric, while the metric operates on the measure.</p>
 <blockquote>
 <p>For example, <span msg_id="1"><code>\(\gamma_1\)</code></span>’s measure is <em>days between dates</em> and the metric is <em>mean of {measure}</em>.</p>
 </blockquote>
-<h3 id="dimensions">Dimensions</h3>
-<p>The dimensions of the problem statement are the <em>who</em> and <em>when</em> of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>, so we won’t go into them here. Instead, I want to prepare you for the next article in this series that addresses the <em>how</em> of the problem statement.</p>
-<p>Recall the relationship between <em>metrics</em> and <em>measures</em>, the latter being content that is operated on by the former. What they often have in common is being able to be functionally expressed. Using <em>“Average length of stay”</em> as an example, <span msg_id="1"><code>\(\gamma_1\)</code></span> can be written as follows:</p>
-<p><code>\(\text{The measure: }\\ f(t_{i+1}, t_i) := t_{i+1}-t_i \Rightarrow \mathbb{F}\)</code>
-<code>\(\text{The metric (}\gamma_1\text{): }\\ g(\mathbb{F}, k) := k^{-1}{\sum_{j=1}^{k}{\mathbb{F}_j}}\\ \enspace\enspace \equiv k^{-1}{\sum_{j=1}^{k}{\big(t_{i+1}-t_{i}\big)_j}}\)</code></p>
-<p>, where <code>\(k\)</code> indexes the number of observations. <code>\(t\)</code> and <code>\(k\)</code> are the dimensions. Now, think about what influences the size of <code>\(k\)</code> and the values in <code>\(t\)</code> for each <code>\(k\)</code> to feed into the metric (<em>who</em> and <em>when</em>). Knowing what formulas to use is one thing, and as you have seen, the metrics needed are elementary; however, knowing <em>how</em> to apply them given a set of constraints is another, which is what we’ll discuss in the next article.</p>
+<img src="/decorative_line.png" class="decorative-line" />
+<p>Next, recall that the dimensions of the problem statement are the <em>who</em> and <em>when</em> of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>, so we won’t go into them here. Instead, I want to prepare you for the next article in this series that addresses the <em>how</em> of the problem statement.</p>
+<p>Recall the relationship between <em>metrics</em> and <em>measures</em>, the latter being content that is operated on by the former. What they often have in common is being able to be functionally expressed.</p>
+<p>Using <em>“Average length of stay”</em> as an example, <span msg_id="g1"><code>\(\gamma_1\)</code></span> can be written as follows:</p>
+<p><strong>The measure:</strong></p>
+<blockquote>
+<p><code>\(f(t_{i+1}, t_i) := t_{i+1}-t_i \Rightarrow \mathbb{F}\)</code></p>
+</blockquote>
+<p><strong>The metric <code>\((\gamma_1)\)</code>:</strong></p>
+<blockquote>
+<p><code>\(g(\mathbb{F}, k) := k^{-1}{\sum_{j=1}^{k}{\mathbb{F}_j}}\\ \enspace\enspace \equiv k^{-1}{\sum_{j=1}^{k}{\big(t_{i+1}-t_{i}\big)_j}}\)</code></p>
+</blockquote>
+<p>, where <code>\(k\)</code> indexes the number of observations.</p>
+<p>Parameters <span class="bigMath"><code>\(t\)</code></span> and <span class="bigMath"><code>\(k\)</code></span> are influenced by <em>Who</em> and <em>When</em>. While the metrics define <em>What</em> to do the final item to address is <em>How</em> to apply the metrics to the inputs given <em>Who</em> is involved and <em>When</em>:</p>
+<blockquote>
+<p><span msg_id="g1"><code>\(\Big\langle\gamma_1\)</code></span>
+, <span msg_id="g2"><code>\(\gamma_2\)</code></span>
+, <span msg_id="g3"><code>\(\gamma_3\)</code></span>
+, <span msg_id="g4"><code>\(\gamma_4\)</code></span>
+, <span msg_id="g5"><code>\(\gamma_5\Big\rangle\)</code></span>
+in the context of
+<code>\(\Big\langle\)</code><span msg_id="W">W</span>
+, <span msg_id="o1"><code>\(\omega_1\)</code></span>
+, <span msg_id="o2"><code>\(\omega_2\)</code></span>
+, <span msg_id="o3"><code>\(\omega_3\Big\rangle\)</code></span>
+expressed <code>\(\text{How}\)</code>?</p>
+</blockquote>
+<p>In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!</p>
+<img src="/decorative_line.png" class="decorative-line" />
 <p>Until next time, I wish you much success in your journey as a data practitioner!</p>
 <div style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>

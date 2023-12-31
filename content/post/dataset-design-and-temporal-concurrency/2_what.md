@@ -1,7 +1,7 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - What'
 author: "Chionesu George"
-date: 2023-12-26
+date: 2023-12-31
 date-modified: last-modified
 slug: what
 series: 
@@ -25,7 +25,7 @@ editor_options:
 
 <link rel="stylesheet" href="/markdown.css"/>
 <script src="/markdown.js"></script>
-<span style="display: hidden;">
+<span style="display: none;">
 <p>
 <ul toggleGroup="0" context="definition">
 <li id="msg_tax_I">
@@ -51,6 +51,10 @@ editor_options:
 </ul>
 </p>
 </span>
+<span style="display: none;" id="msg_W">Report Window</span>
+<span style="display: none;" id="msg_o1">... members between 30 and 50 years old</span>
+<span style="display: none;" id="msg_o2">... have had at least two inpatient visits within a six-week period</span>
+<span style="display: none;" id="msg_o3">Dependence vs. Independence</span>
 
 <span class="decorativeText">Welcome back!</span>
 
@@ -61,27 +65,27 @@ First, let's define the key measures and related metrics listed in the problem s
 <hint toggleGroup="1">(show)</hint>
 </span>
 
-- <span class="bigMath">`\(\gamma_1\)`</span>: <span id="msg_1">Average length of stay</span> `\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)`
+- <span class="bigMath">`\(\gamma_1\)`</span>: <span id="msg_g1">Average length of stay</span> `\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)`
 
-- <span class="bigMath">`\(\gamma_2\)`</span>: <span id="msg_2">Counts of lapses in medication adherence</span> `\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)` (there’s more to this operation which will be covered in Part 3)
+- <span class="bigMath">`\(\gamma_2\)`</span>: <span id="msg_g2">Counts of lapses in medication adherence</span> `\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)` (there’s more to this operation which will be covered in Part 3)
 
-- <span class="bigMath">`\(\gamma_3\)`</span>: <span id="msg_3">Cumulative count of lapses in medication adherence</span> `\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)` (yes, I have not defined `\(j\)`: that will be covered in Part 3)
+- <span class="bigMath">`\(\gamma_3\)`</span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> `\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)` (yes, I have not defined `\(j\)`: that will be covered in Part 3)
 
-- <span class="bigMath">`\(\gamma_{4}\)`</span>: <span id="msg_4">Number of unique members</span> `\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)`
+- <span class="bigMath">`\(\gamma_{4}\)`</span>: <span id="msg_g4">Number of unique members</span> `\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)`
 
-- <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_5">Total expenditures</span> `\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)`
+- <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_g5">Total expenditures</span> `\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)`
 
 Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
 
 > For example, <span msg_id="1">`\(\gamma_1\)`</span>’s measure is *days between dates* and the metric is *mean of {measure}*.
 
-<hr style="width:100%">
+<img src="/decorative_line.png" class="decorative-line" />
 
 Next, recall that the dimensions of the problem statement are the *who* and *when* of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>, so we won’t go into them here. Instead, I want to prepare you for the next article in this series that addresses the *how* of the problem statement.
 
 Recall the relationship between *metrics* and *measures*, the latter being content that is operated on by the former. What they often have in common is being able to be functionally expressed.
 
-Using *“Average length of stay”* as an example, <span msg_id="1">`\(\gamma_1\)`</span> can be written as follows:
+Using *“Average length of stay”* as an example, <span msg_id="g1">`\(\gamma_1\)`</span> can be written as follows:
 
 **The measure:**
 
@@ -93,9 +97,21 @@ Using *“Average length of stay”* as an example, <span msg_id="1">`\(\gamma_1
 
 , where `\(k\)` indexes the number of observations.
 
-<span class="bigMath">`\(t\)`</span> and <span class="bigMath">`\(k\)`</span> are the dimensions. Now, think about what influences the size of `\(k\)` and the values in `\(t\)` for each `\(k\)` to feed into the metric (*who* and *when*). *Who* and *When* shape the input, while the metrics define *What* to do to the input. The final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*.
+Parameters <span class="bigMath">`\(t\)`</span> and <span class="bigMath">`\(k\)`</span> are influenced by *Who* and *When*. While the metrics define *What* to do the final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*:
 
-In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>
+> <span msg_id="g1">`\(\Big\langle\gamma_1\)`</span>
+> , <span msg_id="g2">`\(\gamma_2\)`</span>
+> , <span msg_id="g3">`\(\gamma_3\)`</span>
+> , <span msg_id="g4">`\(\gamma_4\)`</span>
+> , <span msg_id="g5">`\(\gamma_5\Big\rangle\)`</span>
+> in the context of
+> `\(\Big\langle\)`<span msg_id="W">W</span>
+> , <span msg_id="o1">`\(\omega_1\)`</span>
+> , <span msg_id="o2">`\(\omega_2\)`</span>
+> , <span msg_id="o3">`\(\omega_3\Big\rangle\)`</span>
+> expressed `\(\text{How}\)`?
+
+In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!
 
 <img src="/decorative_line.png" class="decorative-line" />
 

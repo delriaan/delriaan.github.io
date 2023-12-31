@@ -1,7 +1,7 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - What'
 author: "Chionesu George"
-date: 2023-12-26
+date: 2023-12-31
 date-modified: last-modified
 slug: what
 series: 
@@ -35,13 +35,15 @@ tags$link(rel="stylesheet", href="/markdown.css");
 
 tags$script(src = "/markdown.js");
 
-# last_mod
-
-tags$span(style = "display: hidden;", taxonomy);
+tags$span(style = "display: none;", taxonomy);
+tags$span(style = "display: none;", id = "msg_W", "Report Window");
+tags$span(style = "display: none;", id = "msg_o1", "... members between 30 and 50 years old");
+tags$span(style = "display: none;", id = "msg_o2", "... have had at least two inpatient visits within a six-week period");
+tags$span(style = "display: none;", id = "msg_o3", "Dependence vs. Independence");
 
 hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
 
-break_time <- tags$p(
+break_time <- { tags$p(
   tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
   , tags$span(
       style = "font-size:4em;"
@@ -54,8 +56,14 @@ break_time <- tags$p(
       , "Take a Break!"
       )
   , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
-  )
+  )}
 
+who_when_what <- data.frame(
+  who = c()
+  , who = c()
+  , who = c()
+  , who = c()
+  )
 ```
 
 [Welcome back!]{.decorativeText} 
@@ -66,29 +74,28 @@ In [Part 1](../who-and-when){target="blank"}, we discussed the importance of giv
 drop_hint("First, let's define the key measures and related metrics listed in the problem statement:", context = "posthoc", toggleGroup = 1) 
 ```
 
-- [ $\gamma_1$]{.bigMath}: [Average length of stay]{#msg_1} $\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)$
+- [ $\gamma_1$]{.bigMath}: [Average length of stay]{#msg_g1} $\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)$
 
-- [ $\gamma_2$]{.bigMath}: [Counts of lapses in medication adherence]{#msg_2} $\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}$ (there's more to this operation which will be covered in Part 3)
+- [ $\gamma_2$]{.bigMath}: [Counts of lapses in medication adherence]{#msg_g2} $\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}$ (there's more to this operation which will be covered in Part 3)
   
-- [ $\gamma_3$]{.bigMath}: [Cumulative count of lapses in medication adherence]{#msg_3} $\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}$ (yes, I have not defined $j$: that will be covered in Part 3)
+- [ $\gamma_3$]{.bigMath}: [Cumulative count of lapses in medication adherence]{#msg_g3} $\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}$ (yes, I have not defined $j$: that will be covered in Part 3)
 
-- [ $\gamma_{4}$]{.bigMath}: [Number of unique members]{#msg_4} $\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}$
+- [ $\gamma_{4}$]{.bigMath}: [Number of unique members]{#msg_g4} $\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}$
   
-- [ $\gamma_5$]{.bigMath}: [Total expenditures]{#msg_5} $\\f(x)=\sum{x};\enspace x:=\text{cost}$
+- [ $\gamma_5$]{.bigMath}: [Total expenditures]{#msg_g5} $\\f(x)=\sum{x};\enspace x:=\text{cost}$
 
 Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
 
 >
 For example, [ $\gamma_1$]{msg_id=1}'s measure is *days between dates* and the metric is *mean of {measure}*.
 
-
-<hr style="width:100%">
+![](/decorative_line.png){.decorative-line}
 
 Next, recall that the dimensions of the problem statement are the *who* and *when* of the problem statement. These were discussed in [Part 1](../who-and-when){target="_blank"}, so we won't go into them here. Instead, I want to prepare you for the next article in this series that addresses the *how* of the problem statement.
 
 Recall the relationship between *metrics* and *measures*, the latter being content that is operated on by the former. What they often have in common is being able to be functionally expressed.
 
-Using *"Average length of stay"* as an example, [ $\gamma_1$]{msg_id=1} can be written as follows:
+Using *"Average length of stay"* as an example, [ $\gamma_1$]{msg_id=g1} can be written as follows:
 
 **The measure:**
 
@@ -102,9 +109,22 @@ $g(\mathbb{F}, k) := k^{-1}{\sum_{j=1}^{k}{\mathbb{F}_j}}\\ \enspace\enspace \eq
 
 , where $k$ indexes the number of observations. 
 
-[ $t$]{.bigMath} and [ $k$]{.bigMath} are the dimensions. Now, think about what influences the size of $k$ and the values in $t$ for each $k$ to feed into the metric (*who* and *when*). *Who* and *When* shape the input, while the metrics define *What* to do to the input. The final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*.
+Parameters [ $t$]{.bigMath} and [ $k$]{.bigMath} are influenced by *Who* and *When*. While the metrics define *What* to do the final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*:
 
-In Part 3, we'll do just that [&#128578;]{style="font-size:larger;"}
+> 
+[ $\Big\langle\gamma_1$]{msg_id=g1}
+, [ $\gamma_2$]{msg_id=g2}
+, [ $\gamma_3$]{msg_id=g3}
+, [ $\gamma_4$]{msg_id=g4}
+, [ $\gamma_5\Big\rangle$]{msg_id=g5}
+in the context of 
+$\Big\langle$[W]{msg_id=W}
+, [ $\omega_1$]{msg_id=o1}
+, [ $\omega_2$]{msg_id=o2}
+, [ $\omega_3\Big\rangle$]{msg_id=o3}
+ expressed $\text{How}$?
+
+In Part 3, we'll do just that [&#128578;]{style="font-size:larger;"}. See you in '24!
 
 ![](/decorative_line.png){.decorative-line}
 
