@@ -14,7 +14,7 @@
 
 @font-face {
   font-family: decorativeText;
-  src: url('/adine-kirnberg/Spirax-Regular.ttf');
+  src: url('../adine-kirnberg/Spirax-Regular.ttf');
 }
 
 body {
@@ -150,7 +150,7 @@ blockquote, .mathblock {
 }
 
 .bigMath span {
-  font-size: 25pt;
+  font-size: 15pt;
 }
 
 .medMath span {

@@ -56,8 +56,6 @@ editor_options:
 
 In <a href="../who-and-when" target="blank">Part 1</a>, we discussed the importance of giving proper treatment to understanding the *who* and *when* of a problem statement which provide the context within which a solution will be crafted. In this article, we’ll discuss the quantitative building blocks of the problem statement itself.
 
-## Metrics & Dimensions
-
 <span role="toggle" context="posthoc" toggleGroup="1" class="">
 First, let's define the key measures and related metrics listed in the problem statement: 
 <hint toggleGroup="1">(show)</hint>
@@ -73,14 +71,32 @@ First, let's define the key measures and related metrics listed in the problem s
 
 - <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_5">Total expenditures</span> `\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)`
 
-### Metrics vs. Measures
-
 Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
 
 > For example, <span msg_id="1">`\(\gamma_1\)`</span>’s measure is *days between dates* and the metric is *mean of {measure}*.
 
-### Dimensions
+<hr style="width:100%">
 
-The dimensions of the problem statement are the *who* and *when* of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>.
+Next, recall that the dimensions of the problem statement are the *who* and *when* of the problem statement. These were discussed in <a href="../who-and-when" target="_blank">Part 1</a>, so we won’t go into them here. Instead, I want to prepare you for the next article in this series that addresses the *how* of the problem statement.
+
+Recall the relationship between *metrics* and *measures*, the latter being content that is operated on by the former. What they often have in common is being able to be functionally expressed.
+
+Using *“Average length of stay”* as an example, <span msg_id="1">`\(\gamma_1\)`</span> can be written as follows:
+
+**The measure:**
+
+> `\(f(t_{i+1}, t_i) := t_{i+1}-t_i \Rightarrow \mathbb{F}\)`
+
+**The metric `\((\gamma_1)\)`:**
+
+> `\(g(\mathbb{F}, k) := k^{-1}{\sum_{j=1}^{k}{\mathbb{F}_j}}\\ \enspace\enspace \equiv k^{-1}{\sum_{j=1}^{k}{\big(t_{i+1}-t_{i}\big)_j}}\)`
+
+, where `\(k\)` indexes the number of observations.
+
+<span class="bigMath">`\(t\)`</span> and <span class="bigMath">`\(k\)`</span> are the dimensions. Now, think about what influences the size of `\(k\)` and the values in `\(t\)` for each `\(k\)` to feed into the metric (*who* and *when*). *Who* and *When* shape the input, while the metrics define *What* to do to the input. The final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*.
+
+In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>
+
+<img src="/decorative_line.png" class="decorative-line" />
 
 {{% blogdown/footer %}}
