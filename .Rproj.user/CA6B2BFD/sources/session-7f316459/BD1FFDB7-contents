@@ -1,0 +1,66 @@
+dir(
+  path = ifelse(Sys.getenv('GIT_REPOS') == '', Sys.getenv('GIT_Imperial'), Sys.getenv('GIT_REPOS'))
+  , pattern = "(javascript|footer).+R$"
+  , recursive = TRUE
+  , full.names = TRUE
+  ) |> 
+  purrr::walk(source);
+
+blogdown::stop_server();
+
+library(htmltools);
+
+# Javascript shortcode creation ----
+markdown.js <- { paste(
+  '\n  $(".medMath").each(function(){'
+  , '\tid = $("#omega-" + $(this).attr("omega_id") + "-def");'
+  , '\t$(this).attr("title", id.text());'
+  , '  });'
+  , '  $(\"[role^=\\\"toggle\\\"]\").each(function(){'
+  , '\ttoggle = $(this);'
+  , '\tif (toggle.attr(\"context\") == \"posthoc\"){'
+  , '\tobj = toggle.next();'
+  , '\tobj.hide().attr({\"context\" : toggle.attr(\"context\"), \"toggleGroup\" : toggle.attr(\"toggleGroup\")});'
+  , '\t}'
+  , '  });'
+  , sep = "\n"
+  ) |>
+  stringi::stri_replace_all_regex("[[:space:]]{4,10}", " ", vectorise_all = FALSE) |>
+  paste(collapse = "\n") |>
+  # Function `hint_js()` creates JS code.  This is piped into a string format that
+  # creates a string template for use with `sprintf()`
+  sprintf(fmt = hint_js(
+          tags = c("ul","p")
+          , contexts = c("definition", "problemStatement", "default")
+          , fade_speed = 10
+          , toggle.options = list(open = "(show)", close = "[hide]")
+          ) |>
+          as.character() |>
+          stringi::stri_replace_last_fixed("})\n</script>", "%s\n});\n</script>")
+    ) |>
+    # Next, extract the contents of the generated <script> tag:
+    xml2::read_html() |>
+    xml2::xml_find_all("//script") |>
+    xml2::xml_contents() |>
+    as.character();
+}
+
+cat(markdown.js); 
+# cat(markdown.js, file = "static/markdown.js");
+
+# Rebuild site ----
+blogdown::build_site(
+  local = TRUE
+  , run_hugo = TRUE
+  , build_rmd = list(
+      TRUE
+      , FALSE
+      , dir("content/post", pattern = "^[0-9]_(intro|who|what).+Rmd$", recursive = TRUE, full.names = TRUE)[3]
+      , dir("content/post", pattern = "^mos.+Rmd$", recursive = TRUE, full.names = TRUE)[2]
+      )[[3]]
+  );
+
+blogdown::serve_site(port = 4321)
+
+# Use the following in each article directory root
+# mklink /H setup.R ..\..\setup.R

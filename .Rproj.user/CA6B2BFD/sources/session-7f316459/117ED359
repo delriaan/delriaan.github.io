@@ -1,0 +1,28 @@
+{
+    "id": "117ED359",
+    "path": "C:/Users/sapie/GitHub/delriaan.github.io/content/post/dataset-design-and-temporal-concurrency/2_what.Rmd",
+    "project_path": "content/post/dataset-design-and-temporal-concurrency/2_what.Rmd",
+    "type": "r_markdown",
+    "hash": "624221028",
+    "contents": "",
+    "dirty": false,
+    "created": 1704057541517.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "126,85",
+        "scrollLine": "112",
+        "chunk_output_type": "console",
+        "working_dir": "project"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1704057579,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1704057579115,
+    "read_only": false,
+    "read_only_alternatives": []
+}
