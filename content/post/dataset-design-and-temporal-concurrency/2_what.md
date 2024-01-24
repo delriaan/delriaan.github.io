@@ -65,15 +65,15 @@ First, let's define the key measures and related metrics listed in the problem s
 <hint toggleGroup="1">(show)</hint>
 </span>
 
-- <span class="bigMath">`\(\gamma_1\)`</span>: <span id="msg_g1">Average length of stay</span> `\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)`
+- <span class="bigMath">`\(\gamma_1\)`</span>: <span id="msg_g1">Average length of stay</span> `\(\\\enspace\enspace\enspace\enspace\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)`
 
-- <span class="bigMath">`\(\gamma_2\)`</span>: <span id="msg_g2">Counts of lapses in medication adherence</span> `\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)` (there’s more to this operation which will be covered in Part 3)
+- <span class="bigMath">`\(\gamma_2\)`</span>: <span id="msg_g2">Counts of lapses in medication adherence</span> `\(\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)` (there’s more to this operation which will be covered in Part 3)
 
-- <span class="bigMath">`\(\gamma_3\)`</span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> `\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)` (yes, I have not defined `\(j\)`: that will be covered in Part 3)
+- <span class="bigMath">`\(\gamma_3\)`</span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> `\(\\\enspace\enspace\enspace\enspace f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)` (yes, I have not defined `\(j\)`: that will be covered in Part 3)
 
-- <span class="bigMath">`\(\gamma_{4}\)`</span>: <span id="msg_g4">Number of unique members</span> `\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)`
+- <span class="bigMath">`\(\gamma_{4}\)`</span>: <span id="msg_g4">Number of unique members</span> `\(\\\enspace\enspace\enspace\enspace f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)`
 
-- <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_g5">Total expenditures</span> `\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)`
+- <span class="bigMath">`\(\gamma_5\)`</span>: <span id="msg_g5">Total expenditures</span> `\(\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\text{cost}\)`
 
 Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
 

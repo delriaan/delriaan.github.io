@@ -74,15 +74,15 @@ In [Part 1](../who-and-when){target="blank"}, we discussed the importance of giv
 drop_hint("First, let's define the key measures and related metrics listed in the problem statement:", context = "posthoc", toggleGroup = 1) 
 ```
 
-- [ $\gamma_1$]{.bigMath}: [Average length of stay]{#msg_g1} $\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)$
+- [ $\gamma_1$]{.bigMath}: [Average length of stay]{#msg_g1} $\\\enspace\enspace\enspace\enspace\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)$
 
-- [ $\gamma_2$]{.bigMath}: [Counts of lapses in medication adherence]{#msg_g2} $\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}$ (there's more to this operation which will be covered in Part 3)
+- [ $\gamma_2$]{.bigMath}: [Counts of lapses in medication adherence]{#msg_g2} $\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}$ (there's more to this operation which will be covered in Part 3)
   
-- [ $\gamma_3$]{.bigMath}: [Cumulative count of lapses in medication adherence]{#msg_g3} $\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}$ (yes, I have not defined $j$: that will be covered in Part 3)
+- [ $\gamma_3$]{.bigMath}: [Cumulative count of lapses in medication adherence]{#msg_g3} $\\\enspace\enspace\enspace\enspace f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}$ (yes, I have not defined $j$: that will be covered in Part 3)
 
-- [ $\gamma_{4}$]{.bigMath}: [Number of unique members]{#msg_g4} $\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}$
+- [ $\gamma_{4}$]{.bigMath}: [Number of unique members]{#msg_g4} $\\\enspace\enspace\enspace\enspace f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}$
   
-- [ $\gamma_5$]{.bigMath}: [Total expenditures]{#msg_g5} $\\f(x)=\sum{x};\enspace x:=\text{cost}$
+- [ $\gamma_5$]{.bigMath}: [Total expenditures]{#msg_g5} $\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\text{cost}$
 
 Note that for each of metrics, a *metric* and a *measure* were defined. The measure is the content of the metric, while the metric operates on the measure.
 

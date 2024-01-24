@@ -1,0 +1,103 @@
+---
+title: 'Dataset Design: Temporal Concurrency - How'
+author: "Chionesu George"
+date: 2024-23-01
+date-modified: last-modified
+slug: what
+series: 
+  - Dataset Design and Temporal Concurrency
+categories:
+  - Data Engineering
+  - Theory
+tags:
+  - analytics
+  - engineering
+  - time
+  - data
+  - semantics
+editor_options: 
+  chunk_output_type: console
+---
+
+{{% blogdown/jquery %}}
+
+```{r SETUP, echo=FALSE}
+#| label: SETUP
+#| echo: false
+
+knitr::opts_chunk$set(echo = FALSE);
+
+options(article="dataset-design-and-temporal-concurrency");
+
+source(file = "setup.R", local = environment());
+
+hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
+
+break_time <- { tags$p(
+  tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
+  , tags$span(
+      style = "font-size:4em;"
+      , class = "speech"
+      , tags$img(
+          src = "/hourglass.png"
+          , caption="Take a Break!"
+          , style="height:3em; vertical-align:text-top; margin-top:-50px; float:left"
+          )
+      , "Take a Break!"
+      )
+  , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
+  )}
+
+who_when_what <- data.frame(who = c(), who = c(), who = c(), who = c());
+
+# HTML output (note that nothing is visible in the rendered page):
+tags$link(rel="stylesheet", href="/markdown.css");
+
+tags$script(src = "/markdown.js");
+
+tags$span(style = "display: none;", taxonomy);
+tags$span(style = "display: none;", id = "msg_W" , "Report Window");
+
+tags$span(style = "display: none;", id = "msg_o1", "... members between 30 and 50 years old");
+tags$span(style = "display: none;", id = "msg_o2", "... have had at least two inpatient visits within a six-week period");
+tags$span(style = "display: none;", id = "msg_o3", "Dependence vs. Independence");
+
+tags$span(style = "display: none;", id = "msg_h1", "Results by month");
+tags$span(style = "display: none;", id = "msg_h2", "All services received and corresponding facilities");
+tags$span(style = "display: none;", id = "msg_h3", "Member demographics");
+
+```
+
+[Welcome back!]{.decorativeText} 
+
+In [Part 2](../what){target="blank"}, we discussed the quantitative building blocks of the problem statement we've been working with. In this final article, I'll cover the *how* of the problem statement, focusing on considerations of both design and implementation of the deliverable.
+
+First, let's review the key criteria governing how to display or interact with results:
+
+- [ $h_1$]{.bigMath}: [Results by month]{#msg_h1}
+
+- [ $h_2$]{.bigMath}: [Services and facilities]{#msg_h2}
+  
+- [ $h_3$]{.bigMath}: [Member demographics]{#msg_h3} 
+
+The relevant part of the problem statement is as follows: 
+
+> ["... I need to see results by month; all services received and corresponding facilities; and member demographics."]{.quote}
+
+**Considerations:**
+
+- Does the requester mean to see the metrics at the ***intersection*** of the three criteria, or ***independently***? 
+
+   - [__Independently__:]{style="font-size:smaller;"}
+   
+   - [__Intersection__:]{style="font-size:smaller;"}
+
+- Does the data product need to be ***interactive*** or ***static***?
+
+   - [__Interactive__:]{style="font-size:smaller;"}
+   
+   - [__Static__:]{style="font-size:smaller;"}
+
+![](/decorative_line.png){.decorative-line}
+
+{{% blogdown/footer %}}
