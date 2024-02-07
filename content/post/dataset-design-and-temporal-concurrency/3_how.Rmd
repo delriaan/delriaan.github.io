@@ -1,9 +1,9 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - How'
 author: "Chionesu George"
-date: 2024-23-01
+date: 2024-01-23
 date-modified: last-modified
-slug: what
+slug: how
 series: 
   - Dataset Design and Temporal Concurrency
 categories:
@@ -57,15 +57,17 @@ tags$script(src = "/markdown.js");
 
 tags$span(style = "display: none;", taxonomy);
 tags$span(style = "display: none;", id = "msg_W" , "Report Window");
-
 tags$span(style = "display: none;", id = "msg_o1", "... members between 30 and 50 years old");
 tags$span(style = "display: none;", id = "msg_o2", "... have had at least two inpatient visits within a six-week period");
 tags$span(style = "display: none;", id = "msg_o3", "Dependence vs. Independence");
-
 tags$span(style = "display: none;", id = "msg_h1", "Results by month");
 tags$span(style = "display: none;", id = "msg_h2", "All services received and corresponding facilities");
 tags$span(style = "display: none;", id = "msg_h3", "Member demographics");
-
+tags$span(style = "display: none;", id = "msg_g1", "Average length of stay");
+tags$span(style = "display: none;", id = "msg_g2", "Counts of lapses in medication adherence");
+tags$span(style = "display: none;", id = "msg_g3", "Cumulative count of lapses in medication adherence");
+tags$span(style = "display: none;", id = "msg_g4", "Number of unique members");
+tags$span(style = "display: none;", id = "msg_g5", "Total expenditures")
 ```
 
 [Welcome back!]{.decorativeText} 
@@ -82,15 +84,37 @@ First, let's review the key criteria governing how to display or interact with r
 
 The relevant part of the problem statement is as follows: 
 
-> ["... I need to see results by month; all services received and corresponding facilities; and member demographics."]{.quote}
+> $H$: ["... I need to see results by month; all services received and corresponding facilities; and member demographics."]{.quote}.
 
-**Considerations:**
+Keep in mind that the task at hand is to project our measures 
+$\Big\langle$
+[ $\gamma_1$]{msg_id=g1}, 
+[ $\gamma_2$]{msg_id=g2}, 
+[ $\gamma_3$]{msg_id=g3}, 
+[ $\gamma_4$]{msg_id=g4}, 
+[ $\gamma_5$]{msg_id=g5}
+$\Big\rangle$
+in the context of 
+$\Big\langle$
+[ $W$]{msg_id=W}, 
+[ $\omega_1$]{msg_id=o1},
+[ $\omega_2$]{msg_id=o2},
+[ $\omega_3$]{msg_id=o3} 
+$\Big\rangle$
+over 
+$\Big\langle$
+[ ${h_1}$]{msg_id=h1}, 
+[ ${h_2}$]{msg_id=h2}, 
+[ ${h_3}$]{msg_id=h3}
+$\Big\rangle$ .
 
-- Does the requester mean to see the metrics at the ***intersection*** of the three criteria, or ***independently***? 
+**Considerations and Questions:**
 
-   - [__Independently__:]{style="font-size:smaller;"}
+- Does the requester want to see the metrics at the ***intersection*** of the three criteria, or ***independently***? 
+   - [__Intersection__:]{style="font-size:smaller;"}  $h_1 \wedge h_2 \wedge h_3$ (all must be **concurrently** true)  
    
-   - [__Intersection__:]{style="font-size:smaller;"}
+   - [__Independently__:]{style="font-size:smaller;"} $h_1 \vee h_2 \vee h_3$ (any one of the criteria must be true)
+
 
 - Does the data product need to be ***interactive*** or ***static***?
 

@@ -1,9 +1,9 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - How'
 author: "Chionesu George"
-date: 2024-23-01
+date: 2024-01-23
 date-modified: last-modified
-slug: what
+slug: how
 series: 
   - Dataset Design and Temporal Concurrency
 categories:
@@ -58,6 +58,11 @@ editor_options:
 <span style="display: none;" id="msg_h1">Results by month</span>
 <span style="display: none;" id="msg_h2">All services received and corresponding facilities</span>
 <span style="display: none;" id="msg_h3">Member demographics</span>
+<span style="display: none;" id="msg_g1">Average length of stay</span>
+<span style="display: none;" id="msg_g2">Counts of lapses in medication adherence</span>
+<span style="display: none;" id="msg_g3">Cumulative count of lapses in medication adherence</span>
+<span style="display: none;" id="msg_g4">Number of unique members</span>
+<span style="display: none;" id="msg_g5">Total expenditures</span>
 
 <span class="decorativeText">Welcome back!</span>
 
@@ -73,15 +78,37 @@ First, let’s review the key criteria governing how to display or interact with
 
 The relevant part of the problem statement is as follows:
 
-> <span class="quote">“… I need to see results by month; all services received and corresponding facilities; and member demographics.”</span>
+> `\(H\)`: <span class="quote">“… I need to see results by month; all services received and corresponding facilities; and member demographics.”</span>.
 
-**Considerations:**
+Keep in mind that the task at hand is to project our measures
+`\(\Big\langle\)`
+<span msg_id="g1">`\(\gamma_1\)`</span>,
+<span msg_id="g2">`\(\gamma_2\)`</span>,
+<span msg_id="g3">`\(\gamma_3\)`</span>,
+<span msg_id="g4">`\(\gamma_4\)`</span>,
+<span msg_id="g5">`\(\gamma_5\)`</span>
+`\(\Big\rangle\)`
+in the context of
+`\(\Big\langle\)`
+<span msg_id="W">`\(W\)`</span>,
+<span msg_id="o1">`\(\omega_1\)`</span>,
+<span msg_id="o2">`\(\omega_2\)`</span>,
+<span msg_id="o3">`\(\omega_3\)`</span>
+`\(\Big\rangle\)`
+over
+`\(\Big\langle\)`
+<span msg_id="h1">`\({h_1}\)`</span>,
+<span msg_id="h2">`\({h_2}\)`</span>,
+<span msg_id="h3">`\({h_3}\)`</span>
+`\(\Big\rangle\)` .
 
-- Does the requester mean to see the metrics at the ***intersection*** of the three criteria, or ***independently***?
+**Considerations and Questions:**
 
-  - <span style="font-size:smaller;">**Independently**:</span>
+- Does the requester want to see the metrics at the ***intersection*** of the three criteria, or ***independently***?
 
-  - <span style="font-size:smaller;">**Intersection**:</span>
+  - <span style="font-size:smaller;">**Intersection**:</span> `\(h_1 \wedge h_2 \wedge h_3\)` (all must be **concurrently** true)
+
+  - <span style="font-size:smaller;">**Independently**:</span> `\(h_1 \vee h_2 \vee h_3\)` (any one of the criteria must be true)
 
 - Does the data product need to be ***interactive*** or ***static***?
 

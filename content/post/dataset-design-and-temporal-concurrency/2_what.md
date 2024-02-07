@@ -99,17 +99,20 @@ Using *“Average length of stay”* as an example, <span msg_id="g1">`\(\gamma_
 
 Parameters <span class="bigMath">`\(t\)`</span> and <span class="bigMath">`\(k\)`</span> are influenced by *Who* and *When*. While the metrics define *What* to do the final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*:
 
-> <span msg_id="g1">`\(\Big\langle\gamma_1\)`</span>
-> , <span msg_id="g2">`\(\gamma_2\)`</span>
-> , <span msg_id="g3">`\(\gamma_3\)`</span>
-> , <span msg_id="g4">`\(\gamma_4\)`</span>
-> , <span msg_id="g5">`\(\gamma_5\Big\rangle\)`</span>
+> `\(\Big\langle\)`
+> <span msg_id="g1">`\(\gamma_1\)`</span>,
+> <span msg_id="g2">`\(\gamma_2\)`</span>,
+> <span msg_id="g3">`\(\gamma_3\)`</span>,
+> <span msg_id="g4">`\(\gamma_4\)`</span>,
+> <span msg_id="g5">`\(\gamma_5\)`</span>
+> `\(\Big\rangle\)`
 > in the context of
-> `\(\Big\langle\)`<span msg_id="W">W</span>
-> , <span msg_id="o1">`\(\omega_1\)`</span>
-> , <span msg_id="o2">`\(\omega_2\)`</span>
-> , <span msg_id="o3">`\(\omega_3\Big\rangle\)`</span>
-> expressed `\(\text{How}\)`?
+> `\(\Big\langle\)`
+> <span msg_id="W">`\(W\)`</span>,
+> <span msg_id="o1">`\(\omega_1\)`</span>,
+> <span msg_id="o2">`\(\omega_2\)`</span>,
+> <span msg_id="o3">`\(\omega_3\)`</span>
+> `\(\Big\rangle\)` expressed `\(\text{How}\)`?
 
 In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!
 

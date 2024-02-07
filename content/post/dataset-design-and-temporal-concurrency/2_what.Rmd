@@ -112,17 +112,20 @@ $g(\mathbb{F}, k) := k^{-1}{\sum_{j=1}^{k}{\mathbb{F}_j}}\\ \enspace\enspace \eq
 Parameters [ $t$]{.bigMath} and [ $k$]{.bigMath} are influenced by *Who* and *When*. While the metrics define *What* to do the final item to address is *How* to apply the metrics to the inputs given *Who* is involved and *When*:
 
 > 
-[ $\Big\langle\gamma_1$]{msg_id=g1}
-, [ $\gamma_2$]{msg_id=g2}
-, [ $\gamma_3$]{msg_id=g3}
-, [ $\gamma_4$]{msg_id=g4}
-, [ $\gamma_5\Big\rangle$]{msg_id=g5}
+$\Big\langle$
+[ $\gamma_1$]{msg_id=g1}, 
+[ $\gamma_2$]{msg_id=g2}, 
+[ $\gamma_3$]{msg_id=g3}, 
+[ $\gamma_4$]{msg_id=g4}, 
+[ $\gamma_5$]{msg_id=g5}
+$\Big\rangle$
 in the context of 
-$\Big\langle$[W]{msg_id=W}
-, [ $\omega_1$]{msg_id=o1}
-, [ $\omega_2$]{msg_id=o2}
-, [ $\omega_3\Big\rangle$]{msg_id=o3}
- expressed $\text{How}$?
+$\Big\langle$
+[ $W$]{msg_id=W}, 
+[ $\omega_1$]{msg_id=o1},
+[ $\omega_2$]{msg_id=o2},
+[ $\omega_3$]{msg_id=o3} 
+$\Big\rangle$ expressed $\text{How}$?
 
 In Part 3, we'll do just that [&#128578;]{style="font-size:larger;"}. See you in '24!
 
