@@ -1,5 +1,6 @@
 library(magrittr)
 library(rsvg)
+library(foreach)
 
 # :: ----
 hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
@@ -24,14 +25,11 @@ h_1 <- 12
 h_2 <- 10
 h_3 <- 5
 
-combinat::
-
 len <- c(h_1, h_2, h_3) |> prod()
 
-for(x in sample(h_1, h_1)){
-  for(y in sample(h_2, h_2)){
-    for(z in sample(h_3, h_3)){
-      assign("inspect", purrr::accumulate(c(x, y, z), c), envir = .GlobalEnv)
-    }
-  }
-}
+foreach(i = seq_len(h_1), .combine = c) %:%
+  foreach(j = seq(h_1+1, h_2), .combine = c) %:% 
+    foreach(k = seq(h_2+1, h_3), .combine = c) %do% {
+      c(i, j, k)
+    } |>
+  array(dim = c(h_3, h_2, h_1))

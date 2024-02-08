@@ -86,41 +86,30 @@ The relevant part of the problem statement is as follows:
 
 > $H$: ["... I need to see results by month; all services received and corresponding facilities; and member demographics."]{.quote}.
 
-Keep in mind that the task at hand is to project our measures 
-$\Big\langle$
+In keeping with the theme of temporal concurrency, the focus will be to explore the effect of our **how** criteria in expressing $\Big\langle$
 [ $\gamma_1$]{msg_id=g1}, 
 [ $\gamma_2$]{msg_id=g2}, 
 [ $\gamma_3$]{msg_id=g3}, 
 [ $\gamma_4$]{msg_id=g4}, 
 [ $\gamma_5$]{msg_id=g5}
-$\Big\rangle$
-in the context of 
-$\Big\langle$
+$\Big\rangle$ and $\Big\langle$
 [ $W$]{msg_id=W}, 
 [ $\omega_1$]{msg_id=o1},
 [ $\omega_2$]{msg_id=o2},
 [ $\omega_3$]{msg_id=o3} 
-$\Big\rangle$
-over 
-$\Big\langle$
-[ ${h_1}$]{msg_id=h1}, 
-[ ${h_2}$]{msg_id=h2}, 
-[ ${h_3}$]{msg_id=h3}
-$\Big\rangle$ .
+$\Big\rangle$:
 
-**Considerations and Questions:**
+$h_i$ are interdependent and concurrent:
 
-- Does the requester want to see the metrics at the ***intersection*** of the three criteria, or ***independently***? 
-   - [__Intersection__:]{style="font-size:smaller;"}  $h_1 \wedge h_2 \wedge h_3$ (all must be **concurrently** true)  
-   
-   - [__Independently__:]{style="font-size:smaller;"} $h_1 \vee h_2 \vee h_3$ (any one of the criteria must be true)
-
-
-- Does the data product need to be ***interactive*** or ***static***?
-
-   - [__Interactive__:]{style="font-size:smaller;"}
-   
-   - [__Static__:]{style="font-size:smaller;"}
+$$
+\begin{align*}
+\pmatrix{
+h_{11}^* & h_{12} & h_{13} \\
+h_{21} & h_{22}^* & h_{23} \\
+h_{31} & h_{32} & h_{33}^* \\
+}
+\end{align*}
+$$
 
 ![](/decorative_line.png){.decorative-line}
 

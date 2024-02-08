@@ -80,41 +80,30 @@ The relevant part of the problem statement is as follows:
 
 > `\(H\)`: <span class="quote">“… I need to see results by month; all services received and corresponding facilities; and member demographics.”</span>.
 
-Keep in mind that the task at hand is to project our measures
-`\(\Big\langle\)`
+In keeping with the theme of temporal concurrency, the focus will be to explore the effect of our **how** criteria in expressing `\(\Big\langle\)`
 <span msg_id="g1">`\(\gamma_1\)`</span>,
 <span msg_id="g2">`\(\gamma_2\)`</span>,
 <span msg_id="g3">`\(\gamma_3\)`</span>,
 <span msg_id="g4">`\(\gamma_4\)`</span>,
 <span msg_id="g5">`\(\gamma_5\)`</span>
-`\(\Big\rangle\)`
-in the context of
-`\(\Big\langle\)`
+`\(\Big\rangle\)` and `\(\Big\langle\)`
 <span msg_id="W">`\(W\)`</span>,
 <span msg_id="o1">`\(\omega_1\)`</span>,
 <span msg_id="o2">`\(\omega_2\)`</span>,
 <span msg_id="o3">`\(\omega_3\)`</span>
-`\(\Big\rangle\)`
-over
-`\(\Big\langle\)`
-<span msg_id="h1">`\({h_1}\)`</span>,
-<span msg_id="h2">`\({h_2}\)`</span>,
-<span msg_id="h3">`\({h_3}\)`</span>
-`\(\Big\rangle\)` .
+`\(\Big\rangle\)`:
 
-**Considerations and Questions:**
+`\(h_i\)` are interdependent and concurrent:
 
-- Does the requester want to see the metrics at the ***intersection*** of the three criteria, or ***independently***?
-
-  - <span style="font-size:smaller;">**Intersection**:</span> `\(h_1 \wedge h_2 \wedge h_3\)` (all must be **concurrently** true)
-
-  - <span style="font-size:smaller;">**Independently**:</span> `\(h_1 \vee h_2 \vee h_3\)` (any one of the criteria must be true)
-
-- Does the data product need to be ***interactive*** or ***static***?
-
-  - <span style="font-size:smaller;">**Interactive**:</span>
-
-  - <span style="font-size:smaller;">**Static**:</span>
+$$
+`\begin{align*}
+\pmatrix{
+h_{11}^* & h_{12} & h_{13} \\
+h_{21} & h_{22}^* & h_{23} \\
+h_{31} & h_{32} & h_{33}^* \\
+}
+\end{align*}`
+$$
 
 <img src="/decorative_line.png" class="decorative-line" />
 
