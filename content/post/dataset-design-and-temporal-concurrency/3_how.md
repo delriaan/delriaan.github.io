@@ -91,19 +91,22 @@ In keeping with the theme of temporal concurrency, the focus will be to explore 
 <span msg_id="o1">`\(\omega_1\)`</span>,
 <span msg_id="o2">`\(\omega_2\)`</span>,
 <span msg_id="o3">`\(\omega_3\)`</span>
+`\(\Big\rangle\)` by
+`\(\Big\langle\)`
+<span msg_id="h1">`\(h_1\)`</span>,
+<span msg_id="h2">`\(h_2\)`</span>,
+<span msg_id="h3">`\(h_3\)`</span>
 `\(\Big\rangle\)`:
 
-`\(h_i\)` are interdependent and concurrent:
+- `\(f(W, \omega_i)\to \gamma_j;\)`: ***What*** derived from ***who*** and ***when***
 
-$$
-`\begin{align*}
-\pmatrix{
-h_{11}^* & h_{12} & h_{13} \\
-h_{21} & h_{22}^* & h_{23} \\
-h_{31} & h_{32} & h_{33}^* \\
-}
-\end{align*}`
-$$
+- `\(g(\gamma_j, h_k):= R_{\gamma\times h}\)`: The `\(\gamma\)` by `\(h\)` report matrix defining ***how*** the metrics are aggregated.
+
+Now for the fun part: If `\(h\)` were limited to `\(h_2\)` and `\(h_3\)`, the report matrix `\(R\)` would be quite straight-forward to derive, appropriately aggregating `\(\gamma_j\)` by each `\(h\)`.
+
+**That’s not the fun part.** 😏
+
+The fun part is that `\(h_1\)` is a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let’s consider <span msg_id="g4">`\(\gamma_4\)`</span>. This is a clean, easy metric to aggregate across each of the `\(h\)`’s. However, <span msg_id="g1">`\(\gamma_1\)`</span> is a bit more complex.
 
 <img src="/decorative_line.png" class="decorative-line" />
 

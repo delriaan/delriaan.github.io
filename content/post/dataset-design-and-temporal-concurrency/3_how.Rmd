@@ -97,19 +97,22 @@ $\Big\rangle$ and $\Big\langle$
 [ $\omega_1$]{msg_id=o1},
 [ $\omega_2$]{msg_id=o2},
 [ $\omega_3$]{msg_id=o3} 
+$\Big\rangle$ by 
+$\Big\langle$
+[ $h_1$]{msg_id=h1},
+[ $h_2$]{msg_id=h2},
+[ $h_3$]{msg_id=h3} 
 $\Big\rangle$:
 
-$h_i$ are interdependent and concurrent:
+- $f(W, \omega_i)\to \gamma_j;$: ***What*** derived from ***who*** and ***when***
 
-$$
-\begin{align*}
-\pmatrix{
-h_{11}^* & h_{12} & h_{13} \\
-h_{21} & h_{22}^* & h_{23} \\
-h_{31} & h_{32} & h_{33}^* \\
-}
-\end{align*}
-$$
+- $g(\gamma_j, h_k):= R_{\gamma\times h}$: The $\gamma$ by $h$ report matrix defining ***how*** the metrics are aggregated.
+
+Now for the fun part: If $h$ were limited to $h_2$ and $h_3$, the report matrix $R$ would be quite straight-forward to derive, appropriately aggregating $\gamma_j$ by each $h$. 
+
+**That's not the fun part.**  &#128527;
+
+The fun part is that $h_1$ is a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let's consider [ $\gamma_4$]{msg_id=g4}. This is a clean, easy metric to aggregate across each of the $h$'s. However, [ $\gamma_1$]{msg_id=g1} is a bit more complex.
 
 ![](/decorative_line.png){.decorative-line}
 
