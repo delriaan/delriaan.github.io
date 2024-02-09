@@ -106,7 +106,7 @@ Now for the fun part: If `\(h\)` were limited to `\(h_2\)` and `\(h_3\)`, the re
 
 **That’s not the fun part.** 😏
 
-The fun part is that `\(h_1\)` is a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let’s consider <span msg_id="g4">`\(\gamma_4\)`</span>. This is a clean, easy metric to aggregate across each of the `\(h\)`’s. However, <span msg_id="g1">`\(\gamma_1\)`</span> is a bit more complex.
+The fun part is taking into account `\(h_1\)`, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let’s consider <span msg_id="g4">`\(\gamma_4\)`</span>. This is a clean, easy metric to aggregate across each of `\(h_k\)`. In contrast, <span msg_id="g1">`\(\gamma_1\)`</span> presents a temporal **windowing** problem with respect to <span msg_id="h1">`\(h_1\)`</span> both <span msg_id="h1">`\(h_1\)`</span> involve windows of time:
 
 <img src="/decorative_line.png" class="decorative-line" />
 

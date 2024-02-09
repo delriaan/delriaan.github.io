@@ -112,7 +112,9 @@ Now for the fun part: If $h$ were limited to $h_2$ and $h_3$, the report matrix 
 
 **That's not the fun part.**  &#128527;
 
-The fun part is that $h_1$ is a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let's consider [ $\gamma_4$]{msg_id=g4}. This is a clean, easy metric to aggregate across each of the $h$'s. However, [ $\gamma_1$]{msg_id=g1} is a bit more complex.
+The fun part is taking into account $h_1$, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let's consider [ $\gamma_4$]{msg_id=g4}. This is a clean, easy metric to aggregate across each of $h_k$. In contrast, [ $\gamma_1$]{msg_id=g1} presents a temporal **windowing** problem with respect to [ $h_1$]{msg_id=h1} both [ $h_1$]{msg_id=h1} involve windows of time:
+
+
 
 ![](/decorative_line.png){.decorative-line}
 

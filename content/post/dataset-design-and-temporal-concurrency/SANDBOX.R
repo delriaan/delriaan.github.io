@@ -1,8 +1,7 @@
-library(magrittr)
-library(rsvg)
-library(foreach)
-
-# :: ----
+library(book.of.workflow)
+load_unloaded(magrittr, rsvg, plotly, purrr)
+#
+# :: Image Manipulation ----
 hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
 
 img <- hourglass.png |> magick::image_data();
@@ -14,22 +13,40 @@ img_vec <- purrr::array_branch(img, 1) |>
 crop_x <- img_vec |> apply(1, \(i){ book.of.utilities::ratio(i, type = "cumulative", d = 4) }) |> colSums() |> (\(i) max(i) - i)()
 crop_y <- img_vec |> apply(2, \(i){ book.of.utilities::ratio(i, type = "cumulative", d = 4) }) |> rowSums() |> (\(i) max(i) - i)()
 
-
 which(crop_x == 0)
 which(crop_y == 0)
 
 magick::image_crop(hourglass.png, geometry = magick::geometry_area(y = seq_along(crop_y), x = which(crop_x > 0)))
 
-# :: ----
-h_1 <- 12
-h_2 <- 10
-h_3 <- 5
+# :: Other ----
 
-len <- c(h_1, h_2, h_3) |> prod()
+W <- list(start = 5, stop = 15)
+H <- local({
+  events <- c(0, 4, 8) |> rlang::set_names(paste0("Event ", LETTERS[1:3]));
+  imap(events, \(y, name){
+    x <- sample(1:5, 1);
+    xend <- x + sample(5:15, 1);
+    yend <- y
+    color <- rgb(runif(3, .1, .3) |> matrix(ncol = 3));
+    mget(ls())
+  })
+})
 
-foreach(i = seq_len(h_1), .combine = c) %:%
-  foreach(j = seq(h_1+1, h_2), .combine = c) %:% 
-    foreach(k = seq(h_2+1, h_3), .combine = c) %do% {
-      c(i, j, k)
-    } |>
-  array(dim = c(h_3, h_2, h_1))
+p <- plot_ly() |>
+  add_segments(x = W$start, xend = W$start, y = -3, yend = 13, color = I("#000000")
+               , mode = "markers", marker = list(size = 10, color = I("#000000"))
+               , name = "W (start)", legendgroup = "Report Window") |>
+  add_segments(x = W$stop, xend = W$stop, y = -3, yend = 13, color = I("#000000")
+               , mode = "markers", marker = list(size = 10, color = I("#000000"))
+               , name = "W (end)" , legendgroup = "Report Window")
+  
+reduce(H, .f = \(cur, nxt){
+    rlang::expr(add_segments(p = cur, !!!nxt, mode = "markers", marker = list(symbol = "diamond", size = 15))) |> eval()
+  }, .init = p) |>
+  layout(
+    margin = list(t = -5, b = -5)
+    , xaxis = list(title = list(text = "Time"), range = c(0, 20), zeroline = FALSE)
+    , yaxis = list(title = list(text = "")
+                   , range = c(-5, 15)
+                   , showgrid = FALSE, zeroline = FALSE, showline = FALSE, showticklabels = FALSE)
+    )
