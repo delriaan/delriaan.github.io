@@ -1,9 +1,11 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - How'
-author: "Chionesu George"
+slug: how
 date: 2024-01-23
 date-modified: last-modified
-slug: how
+author: "Chionesu George"
+params:
+  - dateForm = Jan 2020
 series: 
   - Dataset Design and Temporal Concurrency
 categories:

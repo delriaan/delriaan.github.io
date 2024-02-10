@@ -45,6 +45,15 @@ This article serves as the introduction to a short series drawing from my experi
     </item>
     
     <item>
+      <title>Dataset Design: Temporal Concurrency</title>
+      <link>/post/dataset-design-and-temporal-concurrency/</link>
+      <pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Measurements of Scale</title>
       <link>/post/measurements-of-scale/</link>
       <pubDate>Sat, 01 Jul 2023 00:00:00 +0000</pubDate>

@@ -1,11 +1,11 @@
 ---
 title: 'Dataset Design: Temporal Concurrency - Prologue'
-author: Chionesu George
+slug: introduction
 date: 2023-10-21
 date-modified: last-modified
+author: Chionesu George
 params:
   - dateForm = Jan 2020
-slug: introduction
 series: 
   - Dataset Design and Temporal Concurrency
 categories:
@@ -18,8 +18,10 @@ tags:
   - data
   - semantics
 toc:
-  toc_depth: 3
-  toc_float: true
+  - depth: 2
+  - float: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 {{% blogdown/jquery %}}
