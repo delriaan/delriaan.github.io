@@ -149,6 +149,15 @@ blockquote, .mathblock {
   display: block;
 }
 
+.party-popper {
+  margin-left: 2.5em;
+  margin-right: auto;
+  margin-top:1.15em;
+  width: 90%;
+  align: center;
+  display: block;
+}
+
 .bigMath span {
   font-size: 15pt;
 }

@@ -41,7 +41,7 @@ tags$span(style = "display: hidden;", taxonomy);
 
 hourglass.png <- magick::image_read("C:/Users/sapie/GitHub/delriaan.github.io/static/hourglass.png");
 
-break_time <- tags$p(
+break_time <- { tags$p(
   tags$hr(style = "border-bottom: solid 5px #555555; width:100%; ")
   , tags$span(
       style = "font-size:4em;"
@@ -54,7 +54,11 @@ break_time <- tags$p(
       , "Take a Break!"
       )
   , tags$hr(style = "border-top: solid 5px #555555; width:100%; ")
-  );
+)}
+
+tags$span(style = "display: none;", id = "msg_c1", "Has inpatient visits within 'W'");
+tags$span(style = "display: none;", id = "msg_c2", "Number of inpatient visits greater than one");
+tags$span(style = "display: none;", id = "msg_c3", "Time between inpatient admissions less than or equal to six weeks");
 
 ```
 
@@ -165,10 +169,10 @@ drop_hint("Before moving on, I want to point out that for performance considerat
           )
 ```
 
-[&nbsp;&nbsp; **1<sup>st</sup> $c_1$:** This is the most restrictive and is easily accomplished with a [join](https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators "Join (Relational Algebra)") operation over relations $M$ and $S$: $M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}$<br>
-&nbsp;&nbsp; **2<sup>nd</sup> $c_3$:** Resolving $c_3$ gives you $c_2$ for free (I'll leave that as *"thought homework"* for you to ponder)<br>
-&nbsp;&nbsp; **3<sup>rd</sup> $c_2$:** This is easily resolved by counting over $c_3$ and qualifying based on the prescribed threshold<br>
-[The second and third steps can easily be flipped depending on the number of `TRUE` cases at each step. Use your domain knowledge (or someone else's) in these cases or, if all else fails, use multple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.]{.speech}
+&nbsp;&nbsp; **1<sup>st</sup>** [ $c_1$]{msg_id=c1}: This is the most restrictive and is easily accomplished with a [join](https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators "Join (Relational Algebra)") operation over relations $M$ and $S$: $M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}$<br>
+&nbsp;&nbsp; **2<sup>nd</sup>** [ $c_3$]{msg_id=c3}: Resolving [ $c_3$]{msg_id=c3} gives you [ $c_2$]{msg_id=c2} for free (I'll leave that as *"thought homework"* for you to ponder)<br>
+&nbsp;&nbsp; **3<sup>rd</sup>** [ $c_2$]{msg_id=c2}: This is easily resolved by counting over [ $c_3$]{msg_id=c3} and qualifying based on the prescribed threshold<br>
+[The second and third steps can easily be flipped depending on the number of `TRUE` cases at each step. Use your domain knowledge (or someone else's) in these cases or, if all else fails, use multiple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.]{.speech}
 ]{toggleGroup=4 context="posthoc" style="display:block"}
 
 ![](/decorative_line.png){.decorative-line}

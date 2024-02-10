@@ -52,6 +52,9 @@ toc:
 </ul>
 </p>
 </span>
+<span style="display: none;" id="msg_c1">Has inpatient visits within 'W'</span>
+<span style="display: none;" id="msg_c2">Number of inpatient visits greater than one</span>
+<span style="display: none;" id="msg_c3">Time between inpatient admissions less than or equal to six weeks</span>
 
 <span class="decorativeText">Welcome back!</span>
 
@@ -150,10 +153,11 @@ Before moving on, I want to point out that for performance considerations, the o
 <hint toggleGroup="4">(show)</hint>
 </span>
 
-<span toggleGroup="4" context="posthoc" style="display:block">   **1<sup>st</sup> `\(c_1\)`:** This is the most restrictive and is easily accomplished with a [join](https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators "Join (Relational Algebra)") operation over relations `\(M\)` and `\(S\)`: `\(M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}\)`<br>
-   **2<sup>nd</sup> `\(c_3\)`:** Resolving `\(c_3\)` gives you `\(c_2\)` for free (I’ll leave that as *“thought homework”* for you to ponder)<br>
-   **3<sup>rd</sup> `\(c_2\)`:** This is easily resolved by counting over `\(c_3\)` and qualifying based on the prescribed threshold<br>
-<span class="speech">The second and third steps can easily be flipped depending on the number of `TRUE` cases at each step. Use your domain knowledge (or someone else’s) in these cases or, if all else fails, use multple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.</span></span>
+   **1<sup>st</sup>** <span msg_id="c1">`\(c_1\)`</span>: This is the most restrictive and is easily accomplished with a [join](https://en.wikipedia.org/wiki/Relational_algebra#Joins_and_join-like_operators "Join (Relational Algebra)") operation over relations `\(M\)` and `\(S\)`: `\(M \bowtie_{\theta \rightarrow \delta^I}{S}, \enspace\delta^I\equiv\text{member identifier}\)`<br>
+   **2<sup>nd</sup>** <span msg_id="c3">`\(c_3\)`</span>: Resolving <span msg_id="c3">`\(c_3\)`</span> gives you <span msg_id="c2">`\(c_2\)`</span> for free (I’ll leave that as *“thought homework”* for you to ponder)<br>
+   **3<sup>rd</sup>** <span msg_id="c2">`\(c_2\)`</span>: This is easily resolved by counting over <span msg_id="c3">`\(c_3\)`</span> and qualifying based on the prescribed threshold<br>
+<span class="speech">The second and third steps can easily be flipped depending on the number of `TRUE` cases at each step. Use your domain knowledge (or someone else’s) in these cases or, if all else fails, use multiple trial-and-error runs on sampled data (sampling at the member level, in this case) to get a sense of which order will have the best performance on the full set of observations.</span>
+\]{toggleGroup=4 context=“posthoc” style=“display:block”}
 
 <img src="/decorative_line.png" class="decorative-line" />
 

@@ -50,6 +50,115 @@ break_time <- { tags$p(
 
 who_when_what <- data.frame(who = c(), who = c(), who = c(), who = c());
 
+# Report Window: 
+W <- map(c(5, 90), \(x){
+    xend = x; 
+    y = -5; 
+    yend = 30; 
+    color = I("#000000");
+    line = list(width = 5);
+    name = ifelse(x == 5, "W (start)", "W (end)");
+    showlegend = FALSE;
+    mget(ls());
+  });
+
+# Monthly Breakout (criteria h_1): 
+M <- map(seq(0, 100, 25), \(x){
+    xend = x; 
+    y = -50; 
+    yend = 50; 
+    color = I("#555555");
+    line <- list(dash = "dash");
+    opacity = 0.2;
+    name = ""; 
+    showlegend = FALSE;
+    mget(ls());
+  });
+
+# Member Events: 
+E <- local({
+  # Generate the number of members:
+  mbrs <- rlang::set_names(
+    transpose(list(
+      c("circle", "diamond", "square", "hexagon", "triangle-up")
+      , sample(colors(distinct = TRUE), 5) |> plotly::toRGB()
+      ))
+    , glue::glue("Member {LETTERS[c(1:5)]}")
+    );
+  
+  .max_events <- 5;
+  
+  # Define member events for each member:
+  mbr_events <- replicate(
+    length(mbrs), {
+      .out <- sample(.max_events, 1);
+      .out <- replicate(
+        .out
+        , c(sample(1:20, 1)
+            , sample(30:60, 1, prob = runif(n = length(30:60), 0.1, 0.5))
+            )
+        ) |> 
+        as.vector() |> 
+        sort() |> 
+        matrix(ncol = 2, byrow = TRUE);
+      cbind(seq_len(nrow(.out)), .out) |> array_branch(1)
+    }, simplify = FALSE) |>
+    rlang::set_names(names(mbrs));
+  
+  # For each member ...
+  imap(mbr_events, \(events, legendgroup, offset){
+    y <- offset[legendgroup] |> unname();
+    
+    # For each member event ...
+    imap(events, \(.event, name, y){
+      legendgroup <- legendgroup;
+      showlegend <- name == 1;
+      if (showlegend){ name <- legendgroup }
+      x <- .event[2];
+      xend <- .event[3];
+      hovertext <- glue::glue("<b>{legendgroup}</b><br>t<sub>{x}</sub> to t<sub>{xend}</sub>");
+      hoverinfo <- "text"
+      .k <- (1:length(events)) - median(1:length(events));
+      yend <- y <- -2 + 3 * y + .k[.event[1]];
+      color <- mbrs[[legendgroup]][[2]];
+      stroke = I("#333333");
+      mode <- "markers";
+      marker <- list(symbol = mbrs[[legendgroup]][[1]], size = 15);
+      mget(ls());
+    }, y = y);
+  }, offset = seq_along(mbr_events) |> rlang::set_names(names(mbr_events))) |>
+  purrr::flatten();
+});
+
+p <- c(W, M, E) |> 
+  reduce(.f = \(cur, nxt){
+    rlang::expr(add_segments(p = cur, !!!nxt)) |> eval()
+  }, .init = plot_ly(height = 720)) |>
+  add_annotations(
+    text = "W<sub>start</sub>"
+    , x = 5, y = 1.05
+    , xref = "plot", yref = "paper"
+    , showarrow = FALSE
+    , font = list(size = 16, color = "black")
+    ) |>
+  add_annotations(
+    text = "W<sub>end</sub>"
+    , x = 90, y = 1.05
+    , xref = "plot", yref = "paper"
+    , showarrow = FALSE
+    , font = list(size = 16, color = "black")
+    ) |>
+  layout(
+    margin = list(t = -5, b = -5)
+    , xaxis = list(title = list(text = "<b>Time</b>: Report window (W) and h<sub>1</sub>")
+                   , range = c(-5, 100)
+                   , showgrid = FALSE, zeroline = FALSE, showline = FALSE, showticklabels = FALSE)
+    , yaxis = list(title = list(text = "")
+                   , range = c(-1, 15)
+                   , showgrid = FALSE, zeroline = FALSE, showline = FALSE, showticklabels = FALSE)
+    , paper_bgcolor = I("#999999")
+    );
+# p
 # HTML output (note that nothing is visible in the rendered page):
 tags$link(rel="stylesheet", href="/markdown.css");
 
@@ -112,10 +221,30 @@ Now for the fun part: If $h$ were limited to $h_2$ and $h_3$, the report matrix 
 
 **That's not the fun part.**  &#128527;
 
-The fun part is taking into account $h_1$, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, let's consider [ $\gamma_4$]{msg_id=g4}. This is a clean, easy metric to aggregate across each of $h_k$. In contrast, [ $\gamma_1$]{msg_id=g1} presents a temporal **windowing** problem with respect to [ $h_1$]{msg_id=h1} both [ $h_1$]{msg_id=h1} involve windows of time:
+The fun part is taking into account $h_1$, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, consider [ $\gamma_4$]{msg_id=g4}, an, easy metric to aggregate across each of $h_k$. Contrast that with [ $\gamma_1$]{msg_id=g1}, which presents a temporal **windowing** problem with respect to [ $h_1$]{msg_id=h1} since both involve windows of time:
 
+`r p`
 
+Multiple members with multiple events spanning multiple segments of time: 
+
+- How does one select the appropriate window of time for each member and event? 
+- By event end or beginning?
+- By any event within the window? 
+- How does one address multiple events for a single member within a single window?
+- ***Bonus question***: Is the arithmetic mean the best way to aggregate the data in the first place?
+
+Fortunately, the goal here isn't to resolve these questions but to illustrate the complexities of temporal concurrency at various levels. It's been my experience that dealing with the temporal aspects of an analytic use case can be challenging. Fun, right? &#128513;
 
 ![](/decorative_line.png){.decorative-line}
+
+## [&#127881;]{style="font-size:1.5em;"}[ Congratulations!]{.decorativeText} 
+
+Just a few remarks to close out this series:
+
+- I encourage you to get in the habit of framing your problem statements in terms of the ***what***, ***when***, ***who***, and ***how***. It's a simple way to ensure that you're considering the right questions at the right time (slight pun intended). Don't be in a rush to jump from problem statement to code: interrogate the problem statement like an 80's detective show.
+
+- Always investigate how time affects your problem statement as it relates to **inclusion criteria**, **metrics derivation**, and **reporting**. The way you go about retrieving data or feature engineering can be greatly influenced by the temporal aspects of your problem.
+
+- If possible, during the discovery phase of your analytics project, determine what form the results will take in the final data product. Knowing this can help guide your thought process when considering how much data to wrangle and transform within the data produce vs. within the upstream data pipeline. This is especially important when there are temporal dynamics to the analysis tied to dynamically calculated metrics: an example would be moving averages, cumulative sums, etc. in an interactive dashboard.
 
 {{% blogdown/footer %}}
