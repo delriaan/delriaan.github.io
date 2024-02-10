@@ -15,6 +15,9 @@ tags:
   - time
   - data
   - semantics
+toc:
+  - depth: 2
+  - float: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -114,8 +117,7 @@ Parameters <span class="bigMath">`\(t\)`</span> and <span class="bigMath">`\(k\)
 > <span msg_id="o3">`\(\omega_3\)`</span>
 > `\(\Big\rangle\)` expressed `\(\text{How}\)`?
 
-In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!
+In <a href="../how" target="_blank">Part 3</a>, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!
 
 <img src="/decorative_line.png" class="decorative-line" />
-
 {{% blogdown/footer %}}

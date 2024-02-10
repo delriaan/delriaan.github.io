@@ -15,6 +15,9 @@ tags:
   - time
   - data
   - semantics
+toc:
+  - depth: 2
+  - float: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -91,17 +94,13 @@ E <- local({
   # Define member events for each member:
   mbr_events <- replicate(
     length(mbrs), {
-      .out <- sample(.max_events, 1);
       .out <- replicate(
-        .out
-        , c(sample(1:20, 1)
-            , sample(30:60, 1, prob = runif(n = length(30:60), 0.1, 0.5))
-            )
+        sample(.max_events, 1)
+        , c(sample(1:20, 1), sample(30:60, 1, prob = runif(n = length(30:60), 0.1, 0.5)))
         ) |> 
-        as.vector() |> 
-        sort() |> 
-        matrix(ncol = 2, byrow = TRUE);
-      cbind(seq_len(nrow(.out)), .out) |> array_branch(1)
+        as.vector() |> sort() |> matrix(ncol = 2, byrow = TRUE);
+      
+      cbind(seq_len(nrow(.out)), .out) |> array_branch(1);
     }, simplify = FALSE) |>
     rlang::set_names(names(mbrs));
   
@@ -109,7 +108,7 @@ E <- local({
   imap(mbr_events, \(events, legendgroup, offset){
     y <- offset[legendgroup] |> unname();
     
-    # For each member event ...
+    # For each member event generate the code to render a segment ...
     imap(events, \(.event, name, y){
       legendgroup <- legendgroup;
       showlegend <- name == 1;
@@ -150,20 +149,17 @@ p <- c(W, M, E) |>
     ) |>
   layout(
     margin = list(t = -5, b = -5)
+    , paper_bgcolor = I("#999999")
     , xaxis = list(title = list(text = "<b>Time</b>: Report window (W) and h<sub>1</sub>")
                    , range = c(-5, 100)
                    , showgrid = FALSE, zeroline = FALSE, showline = FALSE, showticklabels = FALSE)
     , yaxis = list(title = list(text = "")
                    , range = c(-1, 15)
                    , showgrid = FALSE, zeroline = FALSE, showline = FALSE, showticklabels = FALSE)
-    , paper_bgcolor = I("#999999")
     );
-# p
 # HTML output (note that nothing is visible in the rendered page):
 tags$link(rel="stylesheet", href="/markdown.css");
-
 tags$script(src = "/markdown.js");
-
 tags$span(style = "display: none;", taxonomy);
 tags$span(style = "display: none;", id = "msg_W" , "Report Window");
 tags$span(style = "display: none;", id = "msg_o1", "... members between 30 and 50 years old");
@@ -182,6 +178,8 @@ tags$span(style = "display: none;", id = "msg_g5", "Total expenditures")
 [Welcome back!]{.decorativeText} 
 
 In [Part 2](../what){target="blank"}, we discussed the quantitative building blocks of the problem statement we've been working with. In this final article, I'll cover the *how* of the problem statement, focusing on considerations of both design and implementation of the deliverable.
+
+## The Setup
 
 First, let's review the key criteria governing how to display or interact with results:
 
@@ -213,38 +211,54 @@ $\Big\langle$
 [ $h_3$]{msg_id=h3} 
 $\Big\rangle$:
 
-- $f(W, \omega_i)\to \gamma_j;$: ***What*** derived from ***who*** and ***when***
+- $f(W, \omega_i)\to \gamma_j$
 
-- $g(\gamma_j, h_k):= R_{\gamma\times h}$: The $\gamma$ by $h$ report matrix defining ***how*** the metrics are aggregated.
+> ***What*** derived from ***who*** and ***when***
 
-Now for the fun part: If $h$ were limited to $h_2$ and $h_3$, the report matrix $R$ would be quite straight-forward to derive, appropriately aggregating $\gamma_j$ by each $h$. 
+- $g(\gamma_j, h_k):= R_{\gamma\times h}$
+
+> The $\gamma$ by $h$ report matrix defining ***how*** the metrics are aggregated.
+
+## The Fun Part
+
+If $h$ were limited to $h_2$ and $h_3$, the report matrix $R$ would be quite straight-forward to derive, appropriately aggregating $\gamma_j$ by each $h$. 
 
 **That's not the fun part.**  &#128527;
 
-The fun part is taking into account $h_1$, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, consider [ $\gamma_4$]{msg_id=g4}, an, easy metric to aggregate across each of $h_k$. Contrast that with [ $\gamma_1$]{msg_id=g1}, which presents a temporal **windowing** problem with respect to [ $h_1$]{msg_id=h1} since both involve windows of time:
+The fun part is taking into account $h_1$, a time-based requirement that adds a layer of complexity to the report matrix depending on the metric. For example, consider [ $\gamma_4$]{msg_id=g4}, an easy metric to aggregate across each of $h_k$. Contrast that with [ $\gamma_1$]{msg_id=g1}, which presents a temporal **windowing** problem with respect to [ $h_1$]{msg_id=h1} since both involve windows of time:
 
 `r p`
 
-Multiple members with multiple events spanning multiple segments of time: 
+Multiple members with multiple events spanning multiple segments of time:
 
 - How does one select the appropriate window of time for each member and event? 
+
 - By event end or beginning?
+
 - By any event within the window? 
+
 - How does one address multiple events for a single member within a single window?
+
 - ***Bonus question***: Is the arithmetic mean the best way to aggregate the data in the first place?
 
-Fortunately, the goal here isn't to resolve these questions but to illustrate the complexities of temporal concurrency at various levels. It's been my experience that dealing with the temporal aspects of an analytic use case can be challenging. Fun, right? &#128513;
+Fortunately, the goal here isn't to resolve these questions but to illustrate the complexities of temporal concurrency at various levels. It's been my experience that dealing with the temporal aspects of an analytic use case can be challenging. 
+
+Fun, right? &#128513;
 
 ![](/decorative_line.png){.decorative-line}
 
 ## [&#127881;]{style="font-size:1.5em;"}[ Congratulations!]{.decorativeText} 
 
-Just a few remarks to close out this series:
+You've made it to the end of this series: just a few closing thoughts:
 
-- I encourage you to get in the habit of framing your problem statements in terms of the ***what***, ***when***, ***who***, and ***how***. It's a simple way to ensure that you're considering the right questions at the right time (slight pun intended). Don't be in a rush to jump from problem statement to code: interrogate the problem statement like an 80's detective show.
+- I encourage you to get in the habit of framing your problem statements in terms of the ***what***, ***when***, ***who***, and ***how***. It's a simple way to ensure that you're considering the right questions at the right time (slight pun intended). Don't be in a rush to jump from problem statement to code: interrogate the problem statement like a 70's detective show.
 
-- Always investigate how time affects your problem statement as it relates to **inclusion criteria**, **metrics derivation**, and **reporting**. The way you go about retrieving data or feature engineering can be greatly influenced by the temporal aspects of your problem.
+- ***Always*** investigate how time affects your problem statement as it relates to **inclusion criteria**, **metrics derivation**, and **reporting**. The way you go about retrieving data or feature engineering can be greatly influenced by the temporal aspects of your problem.
 
-- If possible, during the discovery phase of your analytics project, determine what form the results will take in the final data product. Knowing this can help guide your thought process when considering how much data to wrangle and transform within the data produce vs. within the upstream data pipeline. This is especially important when there are temporal dynamics to the analysis tied to dynamically calculated metrics: an example would be moving averages, cumulative sums, etc. in an interactive dashboard.
+- If possible, during the discovery phase of your analytics project, determine what form the results will take in the final data product:
+   - Knowing this can help guide your thought process when considering how much data to wrangle and what engineering tasks should occur *within* the data product vs. upstream in the data pipeline.
+   - This is especially important when there are temporal dynamics to the analysis tied to dynamically calculated metrics: an example would be moving averages, cumulative sums, etc. in an *interactive* dashboard that responds to user input such as filters, date range sliders, etc.
+
+- Finally, dealing with temporal concurrency can be a real challenge, but don't back down from that challenge. Speaking from personal experience, once you become comfortable with the complexities of time, you'll find new ways to approach analytic initiatives and be able to enter into more complex problem spaces with confidence.
 
 {{% blogdown/footer %}}

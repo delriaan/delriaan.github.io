@@ -15,6 +15,9 @@ tags:
   - time
   - data
   - semantics
+toc:
+  - depth: 2
+  - float: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -127,8 +130,7 @@ $\Big\langle$
 [ $\omega_3$]{msg_id=o3} 
 $\Big\rangle$ expressed $\text{How}$?
 
-In Part 3, we'll do just that [&#128578;]{style="font-size:larger;"}. See you in '24!
+In [Part 3](../how){target="_blank"}, we'll do just that [&#128578;]{style="font-size:larger;"}. See you in '24!
 
 ![](/decorative_line.png){.decorative-line}
-
 {{% blogdown/footer %}}

@@ -6,7 +6,16 @@
     <description>Recent content in semantics on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 31 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/semantics/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/tags/semantics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design: Temporal Concurrency - How</title>
+      <link>/post/dataset-design-and-temporal-concurrency/how/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/how/</guid>
+      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Report Window... members between 30 and 50 years old... have had at least two inpatient visits within a six-week periodDependence vs.</description>
+    </item>
+    
     <item>
       <title>Dataset Design: Temporal Concurrency - What</title>
       <link>/post/dataset-design-and-temporal-concurrency/what/</link>
@@ -22,9 +31,7 @@
       <pubDate>Tue, 31 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/dataset-design-and-temporal-concurrency/who-and-when/</guid>
-      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Welcome back!
-Before getting started, let’s revisit out problem statement from the introduction:
-&#34;I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020.</description>
+      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Has inpatient visits within &#39;W&#39;Number of inpatient visits greater than oneTime between inpatient admissions less than or equal to six weeksWelcome back!</description>
     </item>
     
     <item>
@@ -35,15 +42,6 @@ Before getting started, let’s revisit out problem statement from the introduct
       <guid>/post/dataset-design-and-temporal-concurrency/introduction/</guid>
       <description>## dataset-design-and-temporal-concurrencyIntroduction Numerous articles have been published centered on data engineering and using data to satisfy a business inquiries. Best practices, techniques, and technology are inescapable concepts one will encounter. What I’d like to present are some design concepts drawn from my own experience specifically dealing with the time-centric aspects of data engineering in the context of deconstructing analytic problem statements.
 This article serves as the introduction to a short series drawing from my experiences as a data practitioner, specifically focusing on lessons I’ve learned in dealing with temporal co-occurrence.</description>
-    </item>
-    
-    <item>
-      <title>Dataset Design: Temporal Concurrency</title>
-      <link>/post/dataset-design-and-temporal-concurrency/</link>
-      <pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/post/dataset-design-and-temporal-concurrency/</guid>
-      <description></description>
     </item>
     
   </channel>

@@ -75,6 +75,8 @@
 
     <div class="article-content">
       
+      <nav id="TableOfContents"></nav>
+      
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <pre><code>## dataset-design-and-temporal-concurrency
 </code></pre>
@@ -118,19 +120,19 @@ First, let's define the key measures and related metrics listed in the problem s
 </span>
 <ul>
 <li>
-<p><span class="bigMath"><code>\(\gamma_1\)</code></span>: <span id="msg_g1">Average length of stay</span> <code>\(\\\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_1\)</code></span>: <span id="msg_g1">Average length of stay</span> <code>\(\\\enspace\enspace\enspace\enspace\gamma(x)=\bar{x};\enspace x := \big(t_{i+1}-t_{i}\big)\)</code></p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_2\)</code></span>: <span id="msg_g2">Counts of lapses in medication adherence</span> <code>\(\\f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)</code> (there’s more to this operation which will be covered in Part 3)</p>
+<p><span class="bigMath"><code>\(\gamma_2\)</code></span>: <span id="msg_g2">Counts of lapses in medication adherence</span> <code>\(\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\Big\{\matrix{0, \text{No lapse}\\1, \text{Lapse}}\)</code> (there’s more to this operation which will be covered in Part 3)</p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_3\)</code></span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> <code>\(\\f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)</code> (yes, I have not defined <code>\(j\)</code>: that will be covered in Part 3)</p>
+<p><span class="bigMath"><code>\(\gamma_3\)</code></span>: <span id="msg_g3">Cumulative count of lapses in medication adherence</span> <code>\(\\\enspace\enspace\enspace\enspace f(\gamma_2, j)=\sum_{i=1}^{j}{\gamma_2|j\le{i}}\)</code> (yes, I have not defined <code>\(j\)</code>: that will be covered in Part 3)</p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_{4}\)</code></span>: <span id="msg_g4">Number of unique members</span> <code>\(\\f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_{4}\)</code></span>: <span id="msg_g4">Number of unique members</span> <code>\(\\\enspace\enspace\enspace\enspace f(x)=\#x;\enspace x:=\text{the set of unduplicated member identifiers}\)</code></p>
 </li>
 <li>
-<p><span class="bigMath"><code>\(\gamma_5\)</code></span>: <span id="msg_g5">Total expenditures</span> <code>\(\\f(x)=\sum{x};\enspace x:=\text{cost}\)</code></p>
+<p><span class="bigMath"><code>\(\gamma_5\)</code></span>: <span id="msg_g5">Total expenditures</span> <code>\(\\\enspace\enspace\enspace\enspace f(x)=\sum{x};\enspace x:=\text{cost}\)</code></p>
 </li>
 </ul>
 <p>Note that for each of metrics, a <em>metric</em> and a <em>measure</em> were defined. The measure is the content of the metric, while the metric operates on the measure.</p>
@@ -152,21 +154,24 @@ First, let's define the key measures and related metrics listed in the problem s
 <p>, where <code>\(k\)</code> indexes the number of observations.</p>
 <p>Parameters <span class="bigMath"><code>\(t\)</code></span> and <span class="bigMath"><code>\(k\)</code></span> are influenced by <em>Who</em> and <em>When</em>. While the metrics define <em>What</em> to do the final item to address is <em>How</em> to apply the metrics to the inputs given <em>Who</em> is involved and <em>When</em>:</p>
 <blockquote>
-<p><span msg_id="g1"><code>\(\Big\langle\gamma_1\)</code></span>
-, <span msg_id="g2"><code>\(\gamma_2\)</code></span>
-, <span msg_id="g3"><code>\(\gamma_3\)</code></span>
-, <span msg_id="g4"><code>\(\gamma_4\)</code></span>
-, <span msg_id="g5"><code>\(\gamma_5\Big\rangle\)</code></span>
+<p><code>\(\Big\langle\)</code>
+<span msg_id="g1"><code>\(\gamma_1\)</code></span>,
+<span msg_id="g2"><code>\(\gamma_2\)</code></span>,
+<span msg_id="g3"><code>\(\gamma_3\)</code></span>,
+<span msg_id="g4"><code>\(\gamma_4\)</code></span>,
+<span msg_id="g5"><code>\(\gamma_5\)</code></span>
+<code>\(\Big\rangle\)</code>
 in the context of
-<code>\(\Big\langle\)</code><span msg_id="W">W</span>
-, <span msg_id="o1"><code>\(\omega_1\)</code></span>
-, <span msg_id="o2"><code>\(\omega_2\)</code></span>
-, <span msg_id="o3"><code>\(\omega_3\Big\rangle\)</code></span>
-expressed <code>\(\text{How}\)</code>?</p>
+<code>\(\Big\langle\)</code>
+<span msg_id="W"><code>\(W\)</code></span>,
+<span msg_id="o1"><code>\(\omega_1\)</code></span>,
+<span msg_id="o2"><code>\(\omega_2\)</code></span>,
+<span msg_id="o3"><code>\(\omega_3\)</code></span>
+<code>\(\Big\rangle\)</code> expressed <code>\(\text{How}\)</code>?</p>
 </blockquote>
-<p>In Part 3, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!</p>
+<p>In <a href="../how" target="_blank">Part 3</a>, we’ll do just that <span style="font-size:larger;">🙂</span>. See you in ’24!</p>
 <img src="/decorative_line.png" class="decorative-line" />
-<p>Until next time, I wish you much success in your journey as a data practitioner!</p>
+Until next time, I wish you much success in your journey as a data practitioner!
 <div style="border-top: solid 2px black; border-bottom: solid 2px black; background-color: #EFEFEF; font-size:smaller; text-align:center; ">
 <span style="font-family:Georgia; font-variant:italic; ">Life is data, but data is not life: analyze responsibly!</span>
 </div>
