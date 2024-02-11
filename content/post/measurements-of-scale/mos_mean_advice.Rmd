@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE);
 source(file = "setup.R", local = environment());
 
 tags$link(rel="stylesheet", href="/markdown.css");
-tags$script(src = "/markdown.js");
+tags$script(src = "/markdown.js")
 # last_mod
 ```
 
