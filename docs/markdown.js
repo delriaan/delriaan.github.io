@@ -23,8 +23,8 @@ $(document).ready(function(){
   $("[role^=\"toggle\"]").each(function(){
   	toggle = $(this);
   	if (toggle.attr("context") == "posthoc"){
-  	obj = toggle.next();
-  	obj.hide().attr({"context" : toggle.attr("context"), "toggleGroup" : toggle.attr("toggleGroup")});
+    	obj = toggle.next();
+    	obj.hide().attr({"context" : toggle.attr("context"), "toggleGroup" : toggle.attr("toggleGroup")});
   	}
   });
 });

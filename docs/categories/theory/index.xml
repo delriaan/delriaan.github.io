@@ -6,7 +6,16 @@
     <description>Recent content in Theory on Chionesu By Design</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 31 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/theory/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="/categories/theory/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dataset Design: Temporal Concurrency - How</title>
+      <link>/post/dataset-design-and-temporal-concurrency/how/</link>
+      <pubDate>Tue, 23 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>/post/dataset-design-and-temporal-concurrency/how/</guid>
+      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Report Window... members between 30 and 50 years old... have had at least two inpatient visits within a six-week periodDependence vs.</description>
+    </item>
+    
     <item>
       <title>Dataset Design: Temporal Concurrency - What</title>
       <link>/post/dataset-design-and-temporal-concurrency/what/</link>
@@ -22,9 +31,7 @@
       <pubDate>Tue, 31 Oct 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/dataset-design-and-temporal-concurrency/who-and-when/</guid>
-      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Welcome back!
-Before getting started, let’s revisit out problem statement from the introduction:
-&#34;I want to know trends related to total cost of care; inpatient average lengths of stay; lapses in medication adherence; and member counts for the period between January first of 2019 and the end of 2020.</description>
+      <description>## dataset-design-and-temporal-concurrency&amp;delta;I: Information-carrying columns&amp;delta;G: Grouping columns (categorical, descriptive)&amp;delta;Y: Measurements (e.g., purchase price, height, product ratings)&amp;delta;T: Temporal columns to include dates and temporal hierarchies&amp;delta;E: Record life-cycle tracking columns (for example, effective dates in slowly changing dimension parlance)Has inpatient visits within &#39;W&#39;Number of inpatient visits greater than oneTime between inpatient admissions less than or equal to six weeksWelcome back!</description>
     </item>
     
     <item>
@@ -52,7 +59,7 @@ This article serves as the introduction to a short series drawing from my experi
       <pubDate>Sun, 06 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/measurements-of-scale/measurements-of-scale-part-two/</guid>
-      <description>## Updated 2023-11-05 19:43:22References (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)And we’re back!
+      <description>## References (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)And we’re back!
 Be sure to check out Measurements of Scale part one, here. Now, we’ll tackle interval and ratio measurements.
 Warning: This entry is considerably longer than Part One. If you suffer from TL;DR, please use the “back” button to return to safety.</description>
     </item>
@@ -63,7 +70,7 @@ Warning: This entry is considerably longer than Part One. If you suffer from TL;
       <pubDate>Thu, 27 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/measurements-of-scale/measurements-of-scale-part-one/</guid>
-      <description>## measurements-of-scaleUpdated 2023-11-05 19:43:19References (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences.</description>
+      <description>## measurements-of-scaleReferences (show)Nominal, Ordinal, Interval, and Ratio Scales (Statistics by Jim)Scales of Measurement (Byju&#39;s Learning)Level of Measurement (Wikipedia)What is a Distribution in Statistics? (365 Data Science)A good understanding of measurements of scale (MoS) is essential in both metric design as well as conducting analytics in order to avoid misapplying mathematical operations to the wrong input type leading to misleading or incorrect inferences. References are provided above, so I leave the reader to … well, read.</description>
     </item>
     
     <item>
@@ -72,8 +79,8 @@ Warning: This entry is considerably longer than Part One. If you suffer from TL;
       <pubDate>Sat, 15 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>/post/measurements-of-scale/distributions-and-some-mean-advice/</guid>
-      <description>## Updated 2023-11-05 19:43:17Focal Thoughts:
-Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong “mean” can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported?</description>
+      <description>## Focal Thoughts:
+Simply reporting a measure of central tendency presents an incomplete picture of the data under study Choosing the wrong “mean” can mean trouble The values in a dataset should not be interpreted apart from the real-world elements they encode Average Value: Is it Informative? Inevitably, in reading anything involving reported statistics, the average value of some measurement will be reported. What exactly is being reported? Simply put, the “center” of observed values.</description>
     </item>
     
     <item>
