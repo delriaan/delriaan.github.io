@@ -1,0 +1,93 @@
+/* Stylized CSS button with text "Get New Result": */
+.get-new-result, #btn_treemap {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  padding: 15px 32px; /* Padding */
+  text-align: center; /* Centered text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Inline-block element */
+  font-size: 16px; /* Text size */
+  margin: 4px 2px; /* Margin */
+  cursor: pointer; /* Pointer/hand icon */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.get-new-result:hover, #btn_treemap {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Other CSS rules */
+
+
+h3,[id^="book"] {
+  font-weight: bold;
+}
+
+span[context="note"] {
+  cursor: pointer; /* Pointer/hand icon */
+}
+
+#btn_treemap {
+  margin-left: 40%;
+  margin-right: 30%;
+  margin-top: 0;
+  font-weight:bold; padding:5px;
+  display: block;
+  border-radius: 2px;
+  border: solid 2px #45a049;
+}
+
+#headline {
+  font-family:Georgia; 
+  color:#444444;
+}
+
+#predictions {
+  /* Total width is width + padding + border + margin */
+  width: 184px; 
+  padding:5px 10px 0 10px; 
+  margin-left:10px; 
+}
+
+#article {
+  display: block;
+  overflow: auto;
+  height: 400px;
+  border: solid 2px #999999;
+  padding: 5px;
+}
+
+/*
+main.content {
+  height:740px;
+  overflow:scroll;
+  z-index:1;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-shadow: 10px 10px 10px 10px lightblue;
+}
+*/
+
+.note::before {
+  content: "Note: ";
+  font-weight:bold;
+}
+
+.quote {
+  font-family: Georgia;
+}
+
+.plot-container ~ * {
+  background-color: transparent;
+}
+
+.block-math {
+  color:#3F6F3F;
+  font-size:smaller;
+  margin-left:5%;
+}
+
+.blockquote p, .blockquote ol, .blockquote ul {
+  color:#989898;
+}

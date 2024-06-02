@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.527">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Current Events Classifier - Prelude</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="site_libs/tabwid-1.1.3/tabwid.js"></script>
+<script src="markdown.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="markdown.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Current Events Classifier</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./results.html"> 
+<span class="menu-text">Results</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./appendix.html"> 
+<span class="menu-text">Appendix</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-goals" id="toc-the-goals" class="nav-link active" data-scroll-target="#the-goals">The Goals</a></li>
+  <li><a href="#the-journey" id="toc-the-journey" class="nav-link" data-scroll-target="#the-journey">The Journey</a></li>
+  <li><a href="#current-state" id="toc-current-state" class="nav-link" data-scroll-target="#current-state">Current State</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Prelude</h1>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">June 2, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This project is the result of a multi-month learning journey beginning in December 2023. The focus was on <em>natural-language processing</em> (NLP) and the <em>neural network</em> architecture.</p>
+<section id="the-goals" class="level2" style="font-weight:bold;">
+<h2 style="font-weight:bold;" class="anchored" data-anchor-id="the-goals">The Goals</h2>
+<section id="goal-1" class="level5">
+<h5 class="anchored" data-anchor-id="goal-1">Goal 1</h5>
+<p>I was already familiar with NLP techniques thanks to projects at my employer; however, I’d never tried to do anything that involved neural networks. I had a conceptual knowledge of how they worked, but there is no substitute for using the technology directly.</p>
+</section>
+<section id="goal-2" class="level5">
+<h5 class="anchored" data-anchor-id="goal-2">Goal 2</h5>
+<p>I wasn’t interested in reproducing toy examples I might find on the Internet, so I decided to draw from what I already had sufficient interest and experience with that would provide a challenge: <em>the Bible</em> and <em>current events</em>. The idea was to explore the possibility of taking a modern-day article (news or opinion) and classifying it based on one of the genres and corresponding books from the Bible. The underlying assumptions were simple:</p>
+<blockquote class="blockquote">
+<ol type="1">
+<li>The Bible is a <a href="https://www.biblestudytools.com/bible-study/topical-studies/when-was-the-bible-written.html" class="quote">“a collection of sixty-six books composed and compiled over 2,000 years by forty authors on three continents.”</a>; therefore, every category the human experience and expression can be found in its passages.</li>
+<li>News articles and opinion pieces also reflect much of the same experiences and expressions. Also, <span class="quote">today’s news is tomorrow’s history</span>.</li>
+<li>The <em>artifacts</em> of human life and society generate novelties over time, but the <em>motivations and behaviors</em> of people are nothing new: <span class="quote">same game, different players</span>.</li>
+</ol>
+</blockquote>
+<hr width="100%">
+</section>
+</section>
+<section id="the-journey" class="level2" style="font-weight:bold;">
+<h2 style="font-weight:bold;" class="anchored" data-anchor-id="the-journey">The Journey</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Go!</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Class “Equity”</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Functional Patterns</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">The Plunge</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Reflections</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>December 8th, 2023: I purchased the book <a href="https://www.amazon.com/dp/1633439844" class="quote" title="Deep Learning with R, Second Edition">Deep Learning with R, Second Edition</a>, and began the journey, one step at a time. After several weeks of reading, setting up the computing environment, practicing simple tasks based on examples, and numerous cycles bouncing back and forth between, <span class="quote">“I’m never going to get this!”</span> and <span class="quote">“My power level is <em>over 9000!</em>”</span>, it was time to take the plunge and merge existing NLP knowledge with what I was learning about <em>neural networks</em>, <em>Tensorflow</em>, and <em>Keras</em>.</p>
+<p>I had an existing framework for the NLP portion of the project using <a href="https://text2vec.org" title="text2vec">text2vec</a>. Part of this framework involved projecting the document-term matrix (DTM) onto the word embedding vector space and then concatenate the document-level topics distribution. The DTM, word embeddings, and topics are native <code>text2vec</code> constructs, so the challenge was to figure out a way to use what I already had in a <a href="https://tensorflow.rstudio.com" title="TensorFlow for R: An end-to-end open source machine learning platform">Tensorflow</a>-oriented framework.</p>
+<p>This is where I spent time learning how to create a custom preprocessing layer. Already having R6 class experience, it wasn’t too much of a challenge to follow the reading material fro the book. The challenging part was to integrate a text vectorization layer with the document topics and embedding vectors I’d already derived (being new to this, I was only <em>so</em> willing to re-invent the wheel, so to speak). More on this later.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>I was not prepared for how much time and effort I would end up spending time on trying to deal with class imbalance across train/validation/test (TVT) data splits. Something like the following was desired:</p>
+<div class="cell">
+<div class="cell-output-display">
+<span style="font-weight:bold">Class Proportions</span>
+</div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-6abd0e9c{}.cl-6ab41f4e{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6ab7f772{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6ab80c12{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6ab80c1c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-6abd0e9c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-6ab80c12"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">class_A</span></p></th><th class="cl-6ab80c12"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">class_B</span></p></th><th class="cl-6ab80c12"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">class_C</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-6ab80c1c"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">0.13</span></p></td><td class="cl-6ab80c1c"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">0.53</span></p></td><td class="cl-6ab80c1c"><p class="cl-6ab7f772"><span class="cl-6ab41f4e">0.33</span></p></td></tr></tbody></table></div>
+</div>
+<div class="cell-output-display">
+<span style="font-weight:bold">TVT Split Proportions</span>
+</div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-6acc820a{}.cl-6ac4d9e2{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6ac7acd0{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6ac7beaa{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6ac7beb4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-6acc820a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-6ac7beaa"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">train</span></p></th><th class="cl-6ac7beaa"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">val</span></p></th><th class="cl-6ac7beaa"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">test</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-6ac7beb4"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">0.7</span></p></td><td class="cl-6ac7beb4"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">0.15</span></p></td><td class="cl-6ac7beb4"><p class="cl-6ac7acd0"><span class="cl-6ac4d9e2">0.15</span></p></td></tr></tbody></table></div>
+</div>
+<div class="cell-output-display">
+<span style="font-weight:bold">Ideal Class-TVT Proportions</span>
+</div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-6adc419a{}.cl-6ad416d2{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6ad6ed08{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6ad6ff3c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6ad6ff3d{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6ad6ff46{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-6adc419a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-6ad6ff3c"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">train</span></p></th><th class="cl-6ad6ff3c"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">val</span></p></th><th class="cl-6ad6ff3c"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">test</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.091</span></p></td><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0195</span></p></td><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0195</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.371</span></p></td><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0795</span></p></td><td class="cl-6ad6ff3d"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0795</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6ad6ff46"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.231</span></p></td><td class="cl-6ad6ff46"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0495</span></p></td><td class="cl-6ad6ff46"><p class="cl-6ad6ed08"><span class="cl-6ad416d2">0.0495</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>However, the TVT split assignments were <em>stochastic</em>, so the ideal proportionality scenario was sometimes difficult to achieve, especially for genres with number of books over four or so. I had to come up with a method for achieving a class proportionality fidelity across TVT splits.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>I’m always looking for opportunities to use a function to encapsulate a parameterized workflow. Specifying layer definitions as repeating sets and encapsulating model configuration and training steps (e.g.&nbsp;defining callbacks, fit, and compile options; then fitting and evaluating the model) were two such scenarios. Find a parameterized pattern, functionalize, rinse and repeat.</p>
+<p>Creating a layer-set generator allowed me to pass the number of sets as a hyper-parameter to the model configuration function and was a huge time saver.</p>
+<p>In addition to automating balanced TVT dataset creation and layer generation, another set of patterns that needed to be addressed focused on monitoring model fitting as well as managing created models. I had originally relied on TensorBoard for monitoring model fitting and comparing runs … and then I stopped, mainly because I wanted direct access to model evaluation stats and custom logging in a framework that supported <em>easy automation</em>, <em>quick iteration</em>, <em>model ranking</em>, and <em>tagged model storage</em> for easy retrieval.</p>
+<p>Sometimes, tools can be helpful in the wrong direction, and there’s something to be said for having the freedom to learn <em>first</em> before settling on a set of tools or methods.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>It was finally time to focus on inference on new data. I wanted to use dynamic, current sources of data, so what better place to turn to than the news.</p>
+<p><span class="quote" style="font-weight:bold; ">Just Browsin’</span></p>
+<p>I did not (and do not) have all of the sites that I wanted to pull from set up for web-scraping. Setting up a framework for capturing and transforming web responses can be abstracted only so much due to variations in how a site’s content is structured, but the general idea was to capture or perform the following:</p>
+<ol type="1">
+<li>Send a request to the homepage URL to capture the links leading to the major sections of interest from the homepage (e.g., opinion, politics, law, etc.)</li>
+<li>Send requests for each of the section URLs and extract the article URLs from the responses.</li>
+<li>Iterate over the set of article URLs for each section (in a way that wouldn’t get me throttled).</li>
+</ol>
+<p><a href="https://www.theepochtimes.com">The Epoch Times</a> is the first article source to be used. AP News is the next planned source. I want to have three to five sources in total, but I haven’t put any thought in to what they would possibly be at this time.</p>
+<p><span class="quote" style="font-weight:bold; ">The Final Step</span></p>
+<p>Once I had the content, all that was left to do was parse out the article text, prepare the text in the same way the training corpora was, load the models, and make the predictions (I’m obviously leaving out the gory details of finding and parsing the web content like I needed). The process took more time than I would have thought — but it was worth it.</p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p>I cannot fully express how enriching and challenging this project has been. Having gone from no practical experience with neural-network architecture to building a set of models working in concert was immensely satisfying and worth every bit of frustration experienced along the way.</p>
+<p>I have a much greater appreciation for the effort required for these kinds of projects. Sourcing data, implementing tooling, experimentation and refinement, and all of the logistics of model creation are not tasks one can take lightly (though I’m sure experience makes the process itself easier to navigate).</p>
+<p>I’ll close with a few lessons learned and observations:</p>
+<ul>
+<li><p>Taking the time to produce good training data is <em>paramount</em>. I spent much more time on this than figuring out the model architecture.</p></li>
+<li><p>The volume of data is not the only focus. Knowing how to extract the latent information content from the data during the feature-engineering and augmentation phase can be of great benefit when the volume of data is not large or is of limited variety. Taking the data at face-value could result in missing important features.</p></li>
+<li><p>Mind how you initialize your layer weights … <em>seriously</em>. Earlier in my efforts to create the base genre classifier, I kept getting models that were consistently performing poorly. Part of the issue turned out to be using default weights initialization instead of thinking about the task at hand and specifying the initialization.</p></li>
+<li><p>I gained a better feel for the interactions among batch size, layer breadth and depth, regularization, dropout, normalization (<em>layer</em> vs.&nbsp;<em>batch</em>), and the number of possible classes for the output. Learning to interpret the fitting curves to make adjustments at various points in the processing pipeline was a related skill I picked up.</p></li>
+<li><p>It’s always darkest before daybreak. Don’t give up in the face of seemingly stymied progress. Give yourself some grace, <em>especially</em> when learning something new. The goal isn’t to emulate performance at someone else’s level (real or perceived). The goal is to learn the material in the way you need and then build from there. The first project completed in a new domain will be rough around all the edges — and that’s just fine.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="current-state" class="level2" style="font-weight:bold;">
+<h2 style="font-weight:bold;" class="anchored" data-anchor-id="current-state">Current State</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">NLP</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Models</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Automation</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>The <em>genre-to-book</em> mappings were taken from the <a href="https://www.kaggle.com/datasets/oswinrh/bible" title="English Bible Translations Dataset for Text Mining and NLP">Bible Corpus</a> dataset hosted on Kaggle. Other book-to-genre mappings exist; however, the ones from the Kaggle dataset provide strict groupings at the book level.</p>
+<p><span class="quote" style="font-weight:bold; ">Topic Modeling</span></p>
+<p><em>Latent Dirichlet Allocation</em> (LDA) topic modeling is handled by the <a href="https://text2vec.org/topic_modeling.html#latent_dirichlet_allocation" title="text2vec: Latent Direchlet Allocation topic modeling">text2vec</a> API with the workflow wrapped in custom R6 class <span class="quote">text2vec_workflow</span>. I chose to incorporate document-topics as features because part of the goal was to capture differences in what each genre was about by means of their topic distributions <em>within</em> and <em>across</em> genres and their associated books. The reasoning is related to some key features of the text as a whole:</p>
+<ul>
+<li>The presence of a <a href="https://www.gotquestions.org/metanarrative.html" title="Got Questions: metanarrative">metanarrative</a> threading its way through each book.</li>
+<li><em>Thematic</em> topics show up to varying degrees and proportions across books while <em>specific</em> topics are more confined to people, places, and bracketed windows of history, many of which being historic in additional to historical (for example, the creation event, the global flood, specific Roman provincial rulers, etc.).</li>
+</ul>
+<p>The number of topics was chosen (<span class="math inline">\(n=50\)</span>) was somewhat influenced by the preceding considerations. I didn’t want to use <span class="math inline">\(n=66\)</span> as it works against the idea of topics being meaningfully book-wise heterogeneous.</p>
+<p><span class="quote" style="font-weight:bold; ">Embeddings</span></p>
+<p>Embeddings creation is also handled by <span class="quote">text2vec</span> and are by word-tokens rather than sub-word tokens since this is not a text generative project and that the corpus is closed. The dimensionality of the vector space (<span class="math inline">\(d=264\)</span>) was simply chosen based on what would actually converge given the corpora as well as having the goal of being able to represent richness of content sometimes represented in relatively small regions of the corpora.</p>
+<p><span class="quote" style="font-weight:bold; ">Collocations</span></p>
+<p>Rounding out the <span class="quote">text2vec</span> roadshow, both embeddings and topics were enhanced with modeled <a href="https://text2vec.org/collocations.html" title="text2vec Collocations">collocations</a> which greatly helped.</p>
+<p><span class="quote" style="font-weight:bold; ">UDPipe</span></p>
+<p>The final NLP construct used for feature engineering was Universal Part-of-Speech (UPOS) profiling for each document: 1. Each document was tagged with a UPOS label using the <a href="https://bnosac.github.io/udpipe/en/index.html" title="udpipe: Tokenization, Parts of Speech Tagging, Lemmatization and Dependency Parsing">UDPipe</a> API. 2. UPOS frequency counts were tabulated for each document and collectively turned into a <span class="math inline">\(n \times k\)</span> array (<span class="math inline">\(n\)</span> documents by <span class="math inline">\(k\)</span> UPOS labels). 3. During the creation of TVT datasets, the array is scaled <em>after</em> the TVT splits are made.</p>
+<p>The embeddings, topics, and UPOS profiles provide information about the text from different perspectives, all of which being used to create the feature space for modeling.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p><span class="quote" style="font-weight:bold; ">Input Layer</span></p>
+<p>To combine text vectorization with the existing embeddings and topics, a text vectorization layer was piped into a custom preprocessing layer responsible for tensor multiplication. The basic flow is like the following:</p>
+<ol type="1">
+<li>text vectorization:<br> <span class="block-math"><span class="math inline">\(\text{DT}\big\{\text{n_docs, m_tokens}\big\}_\text{keras}\)</span></span></li>
+<li>Document topic distribution:<br> <span class="block-math"><span class="math inline">\(\text{DP}\big\{\text{n_docs, p_topics}\big\}:= \text{DT}_\text{text2vec}\times\text{PT}^\top\big\{\text{p_topics, m_tokens}\big\}_\text{text2vec}\)</span></span></li>
+<li>Document embedding vectors:<br> <span class="block-math"><span class="math inline">\(\text{DV}\big\{\text{n_docs, embed_dim}\big\}:=\text{DT}_\text{keras}\times\text{TV}\big\{\text{m_tokens, embed_dim}\big\}_\text{text2vec}\)</span></span></li>
+<li>Project topic vectors onto the embedding space:<br> <span class="block-math"><span class="math inline">\(\text{PV}\big\{\text{p_topics, embed_dim}\big\} := \text{PT}_\text{text2vec}\times\text{TV}_\text{text2vec}\)</span></span></li>
+<li>Concatenation:<br> <span class="block-math"><span class="math inline">\(\text{DV}\cup\big\{\text{DP}\times\text{PV}\big\}\cup\text{AN}\)</span></span></li>
+</ol>
+<p><span class="math inline">\(\text{AN}\)</span> is the document-level UPOS annotation profile intended to encode differences in the composition of the <em><strong>types</strong></em> of words in context of each document (in this case, a single chapter). <span class="math inline">\(\text{DV}\)</span> and <span class="math inline">\(\text{DP}\times\text{PV}\)</span> have the same shape but encode different information relative to the same embedding space; namely what a document is <em><strong>about</strong></em> and to what <em><strong>extent</strong></em>.</p>
+<p><span class="quote" style="font-weight:bold; ">Classification Models</span></p>
+<p>Regarding the classifiers, the current set consists of a <span class="quote">genre</span> classifier, and <strong>six</strong> <span class="quote">book</span> classifiers. Yes, I could have just tried for a 66-way classifier model …<br><br> … <span class="math inline">\(\text{but that wasn't the goal}\)</span> .<br><br>Also, the problem space is inherently <em>hierarchical</em> with mutually exclusive paths. Returning inferences for genre-book mismatches obviously would not be not acceptable. As such, each of the book classifiers were trained from the genre classifier with genre-specific training data.</p>
+<p>A simple “if-then” workflow controls inference on new data: <strong>if</strong> the genre classifier (<span class="math inline">\(G\)</span>) predicts the <span class="math inline">\(i^{th}\)</span> genre, use book classifier <span class="math inline">\(B_i\)</span> to predict the books. A summary of the models is found on the <a href=".\results.html" title="Results">Results</a> page.</p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>Nearly all of the development workflow is automation-friendly (with the exception of retrieving the some of the corpora). Three major design features make this possible:</p>
+<ol type="1">
+<li>The use of a <a href="https://www.yaml.info/index.html">YAML</a>-based configuration file containing settings and options that can be updated on the fly.</li>
+<li><a href="https://quarto.org">Quarto</a> documents that allow larger sections of code to be run in chunks as well as be outlined in the RStudio IDE.</li>
+<li>A simple <span class="quote"><em>“snippets”</em></span> API I created which allows specially-formatted code to be executed when called either within the same document or called from another document. This functionality is provided by the <a href="https://github.com/delriaan/book.of.workflow/tree/main/pkg">book.of.workflow</a> package.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
