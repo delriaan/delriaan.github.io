@@ -90,7 +90,7 @@ data_dictionary <- R6::R6Class(
           }
           return(invisible(self))
       }
-      , help <- \(i){
+      , help = \(i){
           #' Help Me Out!
           #' 
           #' \code{$help} will generate help documentation or text related to this class using \code{\link[docstring]{docstring}}
