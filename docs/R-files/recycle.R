@@ -3,5 +3,5 @@ recycle <- \(vals, out.length){
   #'
   #' @param vals A vector of values
   #' @param out.length An integer indicating the output length: \code{vals} will be recycled to this length.
-  vals[(c(1:n) - 1) %% length(vals) + 1]
+  vals[(seq_len(out.length) - 1) %% length(vals) + 1]
 }
