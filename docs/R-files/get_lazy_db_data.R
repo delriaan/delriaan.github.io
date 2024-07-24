@@ -20,13 +20,11 @@ get.lazy_db_data <- function(input, name = NULL, env = .GlobalEnv, key_cols = NU
     require(dplyr)
     , require(data.table)
     , require(cli)
-    , require(spUtil)
+    , require(spsUtil)
     , require(magrittr)
     , require(purrr)
     # Argument checks:
-    , assertive::assert_any_are_true(c(
-        rlang::is_empty(arrow_write_callback), is.function(arrow_write_callback)
-      ))
+    , rlang::is_empty(arrow_write_callback) || is.function(arrow_write_callback)
     ))
   
   name <- if (missing(name)){ NULL } else { rlang::enexpr(name) |> rlang::as_label() }
