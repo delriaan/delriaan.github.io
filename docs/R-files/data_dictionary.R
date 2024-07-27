@@ -7,41 +7,29 @@ data_dictionary <- R6::R6Class(
         
         return(invisible(self))
       }
-      , get_def = \(..., i = 0, .debug = FALSE){
+      , get_def = \(..., .debug = FALSE){
         #' Get a Dictionary Definition
         #' 
         #' @param ... \code{\link[rlang]{dots_list}} expressions that form REGEX patterns to use in search. Objects of class \code{definition} are returned
           if (.debug) browser()
-          action <- \(x, nm){
+          action <- \(nm){
+            x <- self$terms[[nm]]
+
             if (is(x, "definition")){
-              res <- grep(
-                pattern = pattern
-                , x = glue::glue("[{nm}] {x@summary}")
-                , value = TRUE
-                , ignore.case = TRUE
-                )
-              if (!rlang::is_empty(res)){
-                cli::cli_rule()
-                print(res)
-              }
+              res <- grepl(pattern = pattern, x = glue::glue("{x@term} {x@description}"), ignore.case = TRUE)
+              if (res) print(x)
             } else {
-              cli::cli_alert_warning("{nm} is not of class 'definition': ignoring ...")
+              cli::cli_alert_warning("{nm} is not of class 'definition': ignoring")
               NULL
             }
           }
           pattern = paste(sprintf("(%s)", as.character(rlang::enexprs(...))), collapse = "|");
-          queue <- mget(ls(self$terms), envir = self$terms)
+          queue <- ls(envir = self$terms)
           
           cat("\n")
           return(
             invisible(queue |>
-              purrr::iwalk(\(obj, nm){
-                if (is.list(obj)){
-                  walk(obj, action, nm)
-                } else {
-                  action(obj, nm)
-                }
-              }) |>
+              purrr::walk(action) |>
               purrr::compact()
             )
           )
@@ -56,7 +44,7 @@ data_dictionary <- R6::R6Class(
           
           # Create the definition object and signature:
           # The signature will change if the underlying definition changes
-          res <- definition(definition, description, context)
+          res <- definition(name, definition, description, context)
           
           tags <- 0
           
@@ -168,12 +156,11 @@ if ("print.definition" %in% ls()) rm(print.definition);
 print.definition <- S7::new_generic(name = "print", dispatch_args = "x")
 
 S7::method(print.definition, definition) <- function(x, ...){
-  expr_string <- glue::glue("{x@description} defined as follows:\n::   {as.character(x@definition)}") |>
+  expr_string <- glue::glue("{x@description} defined as follows:\n::   {as.character(x@definition)}\n\n") |>
     as.character()
   
-  on.exit({
-    cli::cli_rule(glue::glue("<{x@context}> {x@term}"))
-    cli::cli_alert_info(expr_string)
-  })
+  cli::cli_rule(glue::glue("<{x@context}> {x@term}"))
+  cli::cli_alert_info(expr_string)
+  cat("\n")
   return(invisible(x));
   }
