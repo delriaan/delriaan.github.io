@@ -12,23 +12,40 @@ data_dictionary <- R6::R6Class(
         #' 
         #' @param ... \code{\link[rlang]{dots_list}} expressions that form REGEX patterns to use in search. Objects of class \code{definition} are returned
           if (.debug) browser()
+          action <- \(x, nm){
+            if (is(x, "definition")){
+              res <- grep(
+                pattern = pattern
+                , x = glue::glue("[{nm}] {x@summary}")
+                , value = TRUE
+                , ignore.case = TRUE
+                )
+              if (!rlang::is_empty(res)){
+                cli::cli_rule()
+                print(res)
+              }
+            } else {
+              cli::cli_alert_warning("{nm} is not of class 'definition': ignoring ...")
+              NULL
+            }
+          }
           pattern = paste(sprintf("(%s)", as.character(rlang::enexprs(...))), collapse = "|");
-          
           queue <- mget(ls(self$terms), envir = self$terms)
           
-          return(invisible(queue |>
-            purrr::iwalk(\(x, nm){
-              if ("definition" %in% class(x)){
-                res <- grep(pattern = pattern, x = glue::glue("[{nm}] {x@summary}"), value = TRUE, ignore.case = TRUE)
-                
-                if (!rlang::is_empty(res)) cli::cli_alert_info(res)
-              } else {
-                cli::cli_alert_warning("{nm} is not of class 'definition': ignoring ...")
-                NULL
-              }
-            }) |>
-            purrr::compact()))
-        }
+          cat("\n")
+          return(
+            invisible(queue |>
+              purrr::iwalk(\(obj, nm){
+                if (is.list(obj)){
+                  walk(obj, action, nm)
+                } else {
+                  action(obj, nm)
+                }
+              }) |>
+              purrr::compact()
+            )
+          )
+      }
       , add = \(name, definition, description, context, ...){
           #' Add a definition
           #' 
@@ -59,9 +76,17 @@ data_dictionary <- R6::R6Class(
             
             # If the signatures don't match, conditionally overwrite; otherwise, do nothing:
             if (!identical(cur_sig, new_sig)){
-              if (svDialogs::okCancelBox("Overwrite exiting object?")){
+              if (svDialogs::okCancelBox(glue::glue("Overwrite exiting term ({name})?"))){
                 assign(name, res, envir = self$terms)
                 cli::cli_alert_success("{name} added/updated")
+              } else if (svDialogs::okCancelBox(glue::glue("Append to exiting term ({name})?"))){
+                # Verify whether or not the existing object is a list: if so, append ...
+                if (is.list(self$terms[[name]])){
+                  assign(name, rlang::list2(!!!self$terms[[name]], res), envir = self$terms)
+                } else {
+                  assign(name, list(self$terms[[name]], res), envir = self$terms)
+                }
+                cli::cli_alert_success("{name} updated")
               } else {
                 cli::cli_alert_info("No action taken")
               }
@@ -120,14 +145,12 @@ data_dictionary <- R6::R6Class(
   )
 
 # :: Define a <S7>[definition] class and print method for handling objects in `data_dictionary`: ----
-if ("print.definition" %in% ls()) rm(print.definition);
-print.definition <- S7::new_generic(name = "print", dispatch_args = "x");
-
 # S7 Class definition
 definition <- { S7::new_class(
   name = "definition"
   , properties = list(
-      definition = S7::new_property(
+      term = S7::class_character
+      , definition = S7::new_property(
         class = S7::class_expression
         , default = NULL
         , setter = function(self, value){
@@ -137,25 +160,20 @@ definition <- { S7::new_class(
         )
       , description = S7::new_property(class = S7::class_character, default = "(No description)")
       , context = S7::new_property(class = S7::class_character, default = "global")
-      , summary = S7::new_property(
-          class = S7::class_character
-          , default = ""
-          , getter = function(self){
-              glue::glue(
-                "<{self@context}> {self@description}:\n -> {self@definition}"
-                , .sep = " "
-                );
-            }
-          )
       )
   )
 }
 
-S7::method(print.definition, definition) <- function(x){
-  cli::cli_alert_info(glue::glue(
-    "<{x@context}> {x@description}:\n -> {x@definition}"
-    , .sep = " "
-    ));
+if ("print.definition" %in% ls()) rm(print.definition);
+print.definition <- S7::new_generic(name = "print", dispatch_args = "x")
+
+S7::method(print.definition, definition) <- function(x, ...){
+  expr_string <- glue::glue("{x@description} defined as follows:\n::   {as.character(x@definition)}") |>
+    as.character()
   
+  on.exit({
+    cli::cli_rule(glue::glue("<{x@context}> {x@term}"))
+    cli::cli_alert_info(expr_string)
+  })
   return(invisible(x));
-}
+  }
