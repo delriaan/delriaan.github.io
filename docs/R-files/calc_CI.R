@@ -33,7 +33,7 @@ calc.CI <- function(i, label, ci = 0.95){
           )
       )[
       , c("+/-", "valid") := .SD[, .(`+/-`, valid)] |>
-          purrr::imap(, \(x, y){
+          purrr::imap(\(x, y){
             purrr::modify_if(
               .x = x
               , .p = \(i) is.na(i)|is.nan(i)
