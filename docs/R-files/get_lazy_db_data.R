@@ -86,3 +86,72 @@ as_callback <- \(fun, ...){
   
   return(call_tree)
 }
+#
+query_helper <- \(include_pattern = "*", dboe_metadata, exclude_pattern = NULL, chatty = FALSE){
+  #' Query Helper
+  #' 
+  #' Search database metadata from the provided DBOE connection environment
+  #' 
+  #' @param include_pattern (string) A pattern that matches on column or table names
+  #' @param dboe_metadata A DBOE connection environment (e.g., \code{<DBOE OBJ>$<CONNECTION NAME>})
+  #' @param exclude_pattern (optional) A pattern that excludes matched results
+  #' @param chatty (logical | FALSE) Should execution messages be printed to console?
+  #' 
+  #' @return An unevaluated "lazy" SQL expression that can be evaluated and piped into additional \code{dbplyr} functions before collecting.
+  #' 
+  
+  assertive::assert_is_character(c(include_pattern, exclude_pattern %||% ""))
+  assertive::assert_is_identical_to_true(hasName(attributes(dboe_metadata), "DBOE"))
+  
+  .needle <- dboe_metadata %look.for% include_pattern %$% unique(tbl_name) |> sort()
+  if (!rlang::is_empty(exclude_pattern)){
+    .needle %<>% discard(\(x) x %ilike% exclude_pattern)
+  }
+  
+  # Retrieve frequency table of matching table names and columns:
+  x <- dboe_metadata$metamap[(tbl_name %in% .needle), unique(.SD[, tbl_name:col_name])] %$% table(col_name, tbl_name)
+  
+  # Retrieve vector of table names ordered by decreasing eigen values calculated from the matrix `x`:
+  .haystack <- list(
+      tables = eigen(t(x) %*% x) %$% rlang::set_names(values, colnames(x)) |>
+        (\(v){
+          if (chatty){
+            cli::cli_alert_info(paste("Eigen values", paste(glue::glue("{names(v)}: {round(v, 2)}", sep = "\n"), collapse = "\n"), sep = "\n"))
+          }
+          
+          return(v)
+        })()
+       
+    # Retrieve a vector of field names calculated from the named row sums over `x`:
+    , fields = rowSums(x) |> keep(\(x) x > 1) %>% .[! names(.) %ilike% "source|create|modif"]
+    )
+  
+  # Subset `x` based on the field names and table names in `.haystack`:
+  .join_schema <- x[names(.haystack$f), names(.haystack$t)] %>% 
+    .[, order(colSums(.), decreasing = TRUE)]
+  
+  
+  # Construct the dplyr "lazy" query and return:
+  res <- apply(.join_schema, 1, \(x) names(x)[x > 0]) |> 
+    as.vector() |> 
+    unique() |>
+    reduce(\(cur, nxt){
+      k <- .join_schema[, nxt, drop = FALSE]
+      cols <- glue::glue("'{rownames(k)[k[, 1] > 0]}'") |> paste(collapse = ",")
+      # browser()
+      sprintf("inner_join(%s, %s, by = c(%s))", cur, nxt, cols)
+    }) |>
+    sprintf(fmt = "%s") |>
+    str2lang()
+  
+  if (chatty){
+    print(.join_schema)
+    cat("\n")
+    cli::cli_alert_success("[{Sys.time()}] Assembled the following expression:")
+    print(res)
+    cli::cli_alert_info("If you did not save the result to an object, assign `.Last.value` to an object to do so.")
+  }
+  
+  # Return:
+  invisible(res)
+}
