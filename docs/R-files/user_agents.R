@@ -101,4 +101,4 @@ user_agents <- c("Dalvik/2.1.0 (Linux; U; Android 6.0; F80 PIABELLA Build/MRA58K
   , "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/533.19(KHTML, like Gecko) Chrome/82.0.3969.87.101 Chrome/360.16"
   )
 
-us_proxies_url <- "https://github.com/proxifly/free-proxy-list/blob/main/proxies/countries/US/data.json"
+us_proxies_url <- "https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.json"
