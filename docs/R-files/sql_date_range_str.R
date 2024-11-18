@@ -1,11 +1,19 @@
 sql_date_range_str <- \(col, start, end, fmt = NULL){
   #' SQL Date Range String
   #' 
-  #' @param col (string,symbol) The column name.
+  #' This function produces a conditional SQL string in one of two forms:\cr
+  #' \enumerate{
+  #' \item{\code{col BETWEEN start AND end}}
+  #' \item{\code{col[1] <= end AND col[2] >= start}}
+  #' }
+  #' 
+  #' @param col (string,symbol) The column name: provide two columns by using \code{\link[base]{c}}
   #' @param start,end (string) The start and end dates, respectively.
   #' @param fmt An alternate \code{\link[glue]{glue}}-friendly template format that references any of the preceding arguments.
   #' 
-  #' @return An object of class \code{SQL}.
+  #' @return An object of class \code{SQL} that can be used with \code{\link[dplyr]{filter}} or additionally handled with string-processing functions.
+  #' @export 
+  #' 
   assertive::assert_all_are_true(c(
     # Required Libraries:
     require(DBI)

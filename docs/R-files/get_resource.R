@@ -3,7 +3,12 @@ get_resource <- (\(){
   #'
   #' @param url The URL of the hosted R script. The \emph{.R} extension is optional and will be appended automatically.
   #'
-  #' @return an unevaluated expression containing the contents of the matched file (exact match excluding the file extension).
+  #' @return A function that returns an un-evaluated expression containing the contents of the matched file (exact match excluding the file extension).
+  #'
+  #' @note Data pulls from R source files located at \url{https://delriaan.github.io/R-files}
+  #'
+  #' @export
+
   f <- \(url, root = "https://delriaan.github.io/R-files"){
       url <- rlang::enexpr(url) |> as.character()
       url <- glue::glue("{root}/{url}{if (!grepl(\"[.]R$\", url)) \".R\"}")

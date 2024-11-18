@@ -14,6 +14,8 @@ get.lazy_db_data <- function(input, name = NULL, env = .GlobalEnv, key_cols = NU
   #' Additional arguments should be defaulted or dynamically set using objects in the environment of \code{get.lazy_db_data}. Data is only written to disk requiring the user to supply code to read the data into the session workspace.
   #' 
   #' @return A \code{\link[data.table]{data.table}} object
+  #' 
+  #' @export
   
   assertive::assert_all_are_true(c(
     # Required Libraries:
@@ -79,6 +81,13 @@ get.lazy_db_data <- function(input, name = NULL, env = .GlobalEnv, key_cols = NU
 }
 #
 as_callback <- \(fun, ...){
+  #' Callback Generator
+  #' 
+  #' @param fun (function) The target function to invoke as a callback.
+  #' @param ... \code{\link[rlang]{dots_list}} Arguments to pass to \code{fun}.
+  #' 
+  #' @return The function, populated with the supplied arguments
+  #' 
   # browser()
   args_list <- rlang::dots_list(..., .named = TRUE, .ignore_empty = "all", .homonyms = "last");
   call_tree <- fun
@@ -86,26 +95,33 @@ as_callback <- \(fun, ...){
   
   return(call_tree)
 }
+
 #
-query_helper <- \(include_pattern = "*", dboe_metadata, exclude_pattern = NULL, chatty = FALSE){
+query_helper <- \(dboe_metadata, include_pattern = "*", exclude_pattern = NULL, chatty = FALSE){
   #' Query Helper
   #' 
   #' Search database metadata from the provided DBOE connection environment
   #' 
-  #' @param include_pattern (string) A pattern that matches on column or table names
   #' @param dboe_metadata A DBOE connection environment (e.g., \code{<DBOE OBJ>$<CONNECTION NAME>})
-  #' @param exclude_pattern (optional) A pattern that excludes matched results
+  #' @param include_pattern (string | "*") A pattern that matches on column or table names to include
+  #' @param exclude_pattern (optional) An optional pattern that matches on column or table names to exclude
   #' @param chatty (logical | FALSE) Should execution messages be printed to console?
   #' 
   #' @return An unevaluated "lazy" SQL expression that can be evaluated and piped into additional \code{dbplyr} functions before collecting.
   #' 
+  #' @note Inclusion patterns are evaluated \emph{before} exclusion patterns.
+  #' 
+  #' @export
+  
+  require(data.table)
+  require(purrr)
   
   assertive::assert_is_character(c(include_pattern, exclude_pattern %||% ""))
   assertive::assert_is_identical_to_true(hasName(attributes(dboe_metadata), "DBOE"))
   
   .needle <- dboe_metadata %look.for% include_pattern %$% unique(tbl_name) |> sort()
   if (!rlang::is_empty(exclude_pattern)){
-    .needle %<>% discard(\(x) x %ilike% exclude_pattern)
+    .needle %<>% purrr:: discard(\(x) x %ilike% exclude_pattern)
   }
   
   # Retrieve frequency table of matching table names and columns:
@@ -116,14 +132,18 @@ query_helper <- \(include_pattern = "*", dboe_metadata, exclude_pattern = NULL, 
       tables = eigen(t(x) %*% x) %$% rlang::set_names(values, colnames(x)) |>
         (\(v){
           if (chatty){
-            cli::cli_alert_info(paste("Eigen values", paste(glue::glue("{names(v)}: {round(v, 2)}", sep = "\n"), collapse = "\n"), sep = "\n"))
+            cli::cli_alert_info(paste(
+              "Eigen values"
+              , paste(glue::glue("{names(v)}: {round(v, 2)}", sep = "\n"), collapse = "\n")
+              , sep = "\n"
+              ))
           }
           
           return(v)
         })()
        
     # Retrieve a vector of field names calculated from the named row sums over `x`:
-    , fields = rowSums(x) |> keep(\(x) x > 1) %>% .[! names(.) %ilike% "source|create|modif"]
+    , fields = rowSums(x) |> purrr::keep(\(x) x > 1) %>% .[!names(.) %ilike% exclude_pattern]
     )
   
   # Subset `x` based on the field names and table names in `.haystack`:
@@ -135,7 +155,7 @@ query_helper <- \(include_pattern = "*", dboe_metadata, exclude_pattern = NULL, 
   res <- apply(.join_schema, 1, \(x) names(x)[x > 0]) |> 
     as.vector() |> 
     unique() |>
-    reduce(\(cur, nxt){
+    purrr::reduce(\(cur, nxt){
       k <- .join_schema[, nxt, drop = FALSE]
       cols <- glue::glue("'{rownames(k)[k[, 1] > 0]}'") |> paste(collapse = ",")
       # browser()
@@ -150,6 +170,83 @@ query_helper <- \(include_pattern = "*", dboe_metadata, exclude_pattern = NULL, 
     cli::cli_alert_success("[{Sys.time()}] Assembled the following expression:")
     print(res)
     cli::cli_alert_info("If you did not save the result to an object, assign `.Last.value` to an object to do so.")
+  }
+  
+  # Return:
+  invisible(res)
+}
+#
+capture_query <- \(q){
+  capture.output(dplyr::show_query(q)) |> 
+    paste(collapse = "<br>") |> 
+    stringi::stri_replace_all_regex("\n", "<br>",  vectorize_all = FALSE) |>
+    stringi::stri_replace_all_regex("[[:space:]]{3}", " &nbsp;&nbsp;&nbsp; ",  vectorize_all = FALSE) |>
+    htmltools::HTML() |>
+    htmltools::tags$code()
+  }
+#
+export_lazy_queries <- \(queries, file = NULL, ..., env = rlang::caller_env(), query_names = names(queries), header_style = NULL){
+  #' Export Lazy Queries
+  #' 
+  #' Export the SQL statements generated by a "lazy" query using \code{\link{dplyr}[show_query]}
+  #' 
+  #' @param queries (string[]) One or more names of "lazy" query objects
+  #' @param file,... The output file path and additional arguments passed to \code{\link[htmltools]{save_html}}
+  #' @param env The environment to search for the objects indicated by argument \code{queries}
+  #' @param query_names (string[]) The name(s) of the query object(s)
+  #' @param header_style (string | NULL) A valid CSS string or output from a call to \code{\link[htmltools]{style}}
+  #' 
+  #' @return Invisibly, an HTML \code{body} element markup containing the generated query
+  #' @export
+  
+  if (rlang::is_empty(header_style)){
+    header_style <- htmltools::tags$style(
+      "color: #ACF;"
+      , "margin-bottom: 20px;"
+      , "border-top:solid 5px rgb(40, 60, 134);"
+      , "border-bottom:solid 5px rgb(40, 60, 134);"
+      , "padding: 10px;"
+      )
+  }
+  
+  res <- {
+    # First Element:
+    htmltools::tags$body(
+      htmltools::HTML("The SQL queries on this page were generated from <a href='https://dplyr.tidyverse.org/' target='_blank' title='dplyr'>dplyr</a> 'lazy' queries") |>
+        htmltools::tags$p()
+    # Second Element:
+      , queries |>
+          purrr::imap(\(q, nm){
+            if (is.list(q)){
+              htmltools::tags$p(
+                htmltools::tags$h2(id = nm, style = header_style, nm)
+                , purrr::imap(q, ~{
+                    # browser()
+                    htmltools::tags$p(
+                      tags$h3(id = .y, .y)
+                      , capture_query(env[[.x]])
+                      )
+                  })
+                )
+            } else {
+              # browser()
+              htmltools::tags$p(
+                htmltools::tags$h2(id = nm, style = header_style, nm)
+                , capture_query(env[[q]])
+                )
+            }
+          }) |>
+          htmltools::tagList()
+      )
+    }
+  
+  # Save:
+  if (!rlang::is_empty(file)){
+    if (!grepl("[.]html$", file)){
+      file <- paste0(file, ".html")
+    }
+    
+    htmltools::tags$html(res) |> htmltools::save_html(file = file, ...)
   }
   
   # Return:

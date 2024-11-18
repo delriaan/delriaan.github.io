@@ -139,13 +139,13 @@ definition <- { S7::new_class(
   , properties = list(
       term = S7::class_character
       , definition = S7::new_property(
-        class = S7::class_expression
-        , default = NULL
-        , setter = function(self, value){
-            self@definition <- value
-            self; 
-          }
-        )
+          class = S7::class_expression
+          , default = expression()
+          , setter = function(self, value){
+              self@definition <- value
+              self; 
+            }
+          )
       , description = S7::new_property(class = S7::class_character, default = "(No description)")
       , context = S7::new_property(class = S7::class_character, default = "global")
       )

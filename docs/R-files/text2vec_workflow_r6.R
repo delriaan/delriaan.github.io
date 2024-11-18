@@ -17,7 +17,7 @@ assertive::assert_all_are_true(c(
   dataset <- tfidf_mdl <- tf_idf <- NULL;
   version <- format(Sys.time(), "%Y%m%d-%H%M%S");
   workflow.steps <- "$make.vocab()$make.dtm()$make.tfidf()$make.tcm()$make.topics()$make.vectors()$make.dvm()"
-  make.vocab <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, voc = self$vocab$term, prune = FALSE, ...){
+  make.vocab <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, voc = self$vocab, prune = FALSE, ...){
 		#' Create the Vocabulary
 		#' 
 	  #' @param it An optional pre-processed token iterable
@@ -92,7 +92,7 @@ assertive::assert_all_are_true(c(
 		  # ~ Return ====
 		  invisible(self);
 	}
-  make.dtm <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, type = "dgTMatrix", ...){
+  make.dtm <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, type = "TsparseMatrix", ...){
 	  #' Create Document-Term Matrix
 	  #' 
 	  #' Create a document-term matrix via \code{\link[text2vec]{create_dtm.}}. 
@@ -113,7 +113,7 @@ assertive::assert_all_are_true(c(
 		  # ~ Return ====
 		  invisible(self);
 		}
-  make.tfidf <- \(dtm = self$dtm, type = "dgTMatrix", predict_context = FALSE, export = FALSE, ...){
+  make.tfidf <- \(dtm = self$dtm, type = "TsparseMatrix", predict_context = FALSE, export = FALSE, ...){
 	  #' Create Term-Frequency-Inverse-Document-Frequency Matrix
 	  #' 
 	  #' Create a document term matrix normalized as TFIDF via \code{\link[text2vec]{TfIdf}}. 
@@ -290,7 +290,7 @@ assertive::assert_all_are_true(c(
       purrr::reduce(rbind);
     
     if (sparse){
-      return(as(res, "dgCMatrix"))
+      return(as(res, "TsparseMatrix"))
     } else {
       return(res)
     }
