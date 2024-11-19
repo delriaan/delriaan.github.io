@@ -21,7 +21,7 @@ calc_adherence <- \(measure = c("MPR", "CMA", "CMG", "CSA", "CSG", "2", "7"), da
   #' Lam, Wai Yin, Fresco, Paula, Medication Adherence Measures: An Overview, BioMed Research International, 2015, 217047, 12 pages, 2015. https://doi.org/10.1155/2015/217047
   measure <- match.arg(measure)
 
-  assertive::assert_all_are_same_length(days_supply, service_date)
+  assertive::assert_are_same_length(days_supply, service_date)
 
   dT <- c(days_supply[1], diff(as.numeric(service_date)))
   fill_gap <- dT - days_supply
@@ -46,73 +46,65 @@ calc_adherence <- \(measure = c("MPR", "CMA", "CMG", "CSA", "CSG", "2", "7"), da
     purrr::modify_if(\(x) is.na(x) | is.infinite(x), ~dflts[measure])
 }
 
-get_adherence_defs <- \(browser_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"){
+get_adherence_defs <- \(html_source){
   #' Retrieve Medication Adherence Definitions
   #' 
   #' @references https://onlinelibrary.wiley.com/doi/10.1155/2015/217047
   #' 
   
-  cookies <- "cookies.txt"
+  .adherence_measures_source <- html_source |>
+    xml2::read_html() |>
+    xml2::xml_find_first("//section[@id='3D\"sec-0004\"' and @class='3D\"article-section__content\"']")
   
-  med_adherence_web_resp <<- "https://doi.org/10.1155/2015/217047" |>
-    httr2::request() |>
-    httr2::req_user_agent(browser_agent) |>
-    httr2::req_cookie_preserve(path = cookies) |>
-    httr2::req_headers(
-      Origin = "https://onlinelibrary.wiley.com"
-      , Accept = "text/html, */*; q=0.01"
-      , "Accept-Language" = "en-US,en;q=0.9,gl;q=0.8,ja;q=0.7,fr;q=0.6"
-      , Referer = "https://onlinelibrary.wiley.com/doi/10.1155/2015/217047"
-      , Priority = "u=0, i"
-      , "sec-ch-ua" = '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"'
-      , "sec-ch-ua-mobile" = "?0"
-      , "sec-ch-ua-platform" = "Windows"
-      , "sec-fetch-dest" = "document"
-      , "sec-fetch-mode" = "navigate"
-      , "sec-fetch-site" = "none"
-      , "sec-fetch-user" = "?1"
-      , "sec-gpc" = 1
-      , "upgrade-insecure-requests" = 1
-      ) |>
-    httr2::req_options(followlocation = 1) |>
-    # httr2::req_dry_run()
-    httr2::req_perform() |>
-    httr2::resp_body_html() 
-  
-  adherence_measures <- stringi::stri_pad_left(5:10, width = 4, pad = "0") |>
-    purrr::map(\(i){
-      med_adherence_web_resp |>
-      rvest::html_element(glue::glue("#sec-{i}")) |>
-      rvest::html_children() |>
-      purrr::map(rvest::html_text, trim = TRUE) |>
-      rlang::set_names(c("measures", "description"))
+  .tmp_obj <- .adherence_measures_source |>
+      xml2::xml_find_first("//table") |>
+      rvest::html_table() |>
+      as.data.table() |>
+      define(
+        setnames(.SD, c("measure", "equation")) |> na.omit()
+        , map(.SD, \(x) stri_enc_toascii(x) |> stri_replace_all_fixed("N/A", "", vectorize_all = FALSE) |> trimws())
+        , map(.SD, stri_replace_all_regex, pattern = "((\r|\n)+)|([=][0-9A-Za-z]+)+|(?<=[[:space:]a-zA-Z]{1,3})[=]", replacement = "", vectorize_all = FALSE)
+        , meas_id := stri_extract_first_regex(measure, "[A-Z]{3,4}") |> 
+            (\(x){
+              fifelse(
+                is.na(x)
+                , stri_trans_totitle(measure[is.na(x)]) |> 
+                    stri_extract_all_regex("[A-Z]", simplify = TRUE) |> 
+                    paste(collapse = "")
+                , x
+                )
+            })() ~ measure
+        )
+    
+  adherence_measures <- .adherence_measures_source |>
+    xml2::xml_children() |>
+    tail(6) |>
+    map(\(ns){ 
+      res <- xml2::xml_children(ns) |> 
+        xml2::xml_text() |> 
+        stri_enc_toascii() |> 
+        stri_replace_all_regex(pattern = "((\r|\n)+)|([=][0-9A-Za-z]+)+|(?<=[[:space:]a-zA-Z]{1,3})[=]", replacement = "", vectorize_all = FALSE) |>
+        trimws() |>
+        paste(collapse = "|")
+      
+      meas_id <- stri_extract_first_regex(res, "[A-Z]{3,4}")
+      if (res %ilike% "dichotomous"){ meas_id <- "DV" } else { stri_extract_first_fixed(adherence_measures$meas_id, res) }
+        # (\(x){
+        #     fifelse(
+        #       is.na(x)
+        #       , stri_trans_totitle(measure[is.na(x)]) |> 
+        #           stri_extract_all_regex("[A-Z]", simplify = TRUE) |> 
+        #           paste(collapse = "")
+        #       , x
+        #       )
+        # })()
+      
+      list(meas_id = meas_id, description = res)
     }) |>
-    data.table::rbindlist() |>
-    architect::define(
-      meas_id := stringi::stri_extract_last_regex(measures, "[A-Z]{3}") |>
-        (\(x) ifelse(is.na(x), seq_along(x), x))()
-      , ~meas_id + description
-      )
-  
-  tmp_obj <- med_adherence_web_resp |>
-    rvest::html_element("#tbl-0001") |>
-    rvest::html_table() |>
-    data.table::as.data.table() |>
-    architect::define(
-      data.table::setnames(.SD, tolower(names(.SD)))
-      , .SD[(measures != "")]
-      , purrr::map(.SD, \(x) textclean::replace_white(x) |> trimws())
-      , meas_id := stringi::stri_extract_last_regex(measures, "[A-Z]{3}") |>
-        (\(x) ifelse(is.na(x), seq_along(x), x))()
-      , ~measures + meas_id + equation
-      )
-  
-  adherence_measures <<- adherence_measures[tmp_obj, on = "meas_id"] |>
-    data.table::setcolorder("description", after = "equation") |>
-    data.table::setattr("url", "https://doi.org/10.1155/2015/217047")
-  
-  sapply(c("med_adherence_web_resp", "adherence_measures"),\(x) exists(x, envir = rlang::caller_env())) |>
-    assertive::assert_all_are_true()
-  
-  rm(tmp_obj)
+    append(list(list(meas_id = "PC", description = NA))) |>
+    # purrr::flatten() |>
+    rbindlist() |>
+    _[.tmp_obj, on = "meas_id"] |>
+    setcolorder("description", after = "equation")
 }
+
