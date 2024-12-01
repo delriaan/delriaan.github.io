@@ -1,26 +1,32 @@
-get_resource <- (\(){
+get_resource <- \(..., resolve = FALSE, root = "https://delriaan.github.io/R-files"){
   #' Get an R Script
   #'
-  #' @param url The URL of the hosted R script. The \emph{.R} extension is optional and will be appended automatically.
+  #' @param ... The file name(s) of the hosted R script(s). The \emph{.R} extension is optional and will be appended automatically.
+  #' @param resolve (logical) Evaluates the parsed expression in the calling environment when \code{TRUE}
+  #' @param root The root URL of the endpoint
   #'
-  #' @return A function that returns an un-evaluated expression containing the contents of the matched file (exact match excluding the file extension).
+  #' @return A list of expressions created from retrieved files.
   #'
   #' @note Data pulls from R source files located at \url{https://delriaan.github.io/R-files}
   #'
   #' @export
+  
+    files <- rlang::enexprs(...) |> as.character()
+    url_string <- glue::glue("{root}/{files}{if (!grepl(\"[.]R$\", files)) \".R\"}") |>
+      rlang::set_names(files)
 
-  f <- \(url, root = "https://delriaan.github.io/R-files"){
-      url <- rlang::enexpr(url) |> as.character()
-      url <- glue::glue("{root}/{url}{if (!grepl(\"[.]R$\", url)) \".R\"}")
-      req <- httr2::request(url)
-      httr2::req_perform(req) |>
-        httr2::resp_body_string() |>
-        sprintf(fmt = "{%s}") |>
-        str2lang()
-    
-      comment(res) <- root
-      return(res)
-  }
+    f <- purrr::slowly(\(u, f){
+        req <- rvest::read_html(u) |> 
+          rvest::html_element(xpath = "//body")|> 
+          rvest::html_text() |>
+          sprintf(fmt = "{%s}") |>
+          str2lang()
+      
+        comment(req) <- glue::glue("{f}: {u}")    
+        return(req)
+      }, rate = purrr::rate_delay(1))
 
-  purrr::possibly(purrr::slowly(f, rate = purrr::rate_delay(1)), otherwise = NULL)
-})()
+    res <- purrr::imap(url_string, purrr::possibly(f, otherwise = NULL))
+    if (resolve){ spsUtil::quiet(purrr::walk(res, eval, envir = rlang::caller_env())) }
+    invisible(res)
+}
