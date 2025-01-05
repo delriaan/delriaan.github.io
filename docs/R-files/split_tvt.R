@@ -120,7 +120,7 @@ viz_class_splits <- \(X, class_col = "class", tvt_col = "tvt"){
     , y = ~class_col
     , hoverinfo = "x+y+text"
     , text = ~sprintf(
-        fmt = "<b>Z</b>: %.2f<br>Of <b>%s</b>: %.2f%%<br>Of <b>%s</b>: %.2f%%"
+        fmt = "<b>Intensity</b>: %.2f\n<b>Of %s</b>: %.2f%%\n<b>Of %s</b>: %.2f%%"
         , (\(p_p, p_c){ (p_p/p_c) })(ex_class_P, P)
         , tvt_col
         , 100 * P / ex_tvt_P

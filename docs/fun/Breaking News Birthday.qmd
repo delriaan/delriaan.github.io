@@ -1,0 +1,60 @@
+---
+title: Honored Mom Celebrates 67th Birthday
+date: 2024-12-31
+page-layout: article
+grid: 
+  body-width: 800px
+author: Chionesu George
+keywords: [Mom, Birthday]
+output-file: breaking-news-birthday-2024.html
+---
+
+
+```{r}
+#| echo: false
+#| eval: true
+library(htmltools)
+# webserver <- servr::httd()
+
+img1 <- tags$img(
+    style = "float:left; width:300px; margin-right:10px; margin-bottom: 20px;"
+    , src = base64enc::dataURI(file = "C:\\Users\\sapie\\OneDrive\\Pictures\\George Family\\Resized_Resized_20240512_114304_1715536005685_1715536023201.jpeg")
+    , alt = "Best Mom ever =D"
+    )
+
+img2 <- tags$img(
+    style = "float:right; width:300px; margin-left:10px; margin-bottom: 20px;"
+    , src = base64enc::dataURI(file = "C:\\Users\\sapie\\OneDrive\\Pictures\\George Family\\123_1 1.jpeg")
+    , alt = "Fashion at its best!"
+    )
+
+```
+
+**Fuquay Varina, N.C., 2024-12-31**, Today, the world pauses to celebrate a truly extraordinary woman &mdash; Gayle George &mdash; who turns 67 years young! Known as the *"Best Mom in the World,"* she is the heart and soul of her family, bringing love, kindness, and wisdom to everyone around her.
+
+`r tagList(img1)`Pictured here radiating elegance and grace, Gayle is a shining star whose vibrant spirit continues to inspire. Whether she's rocking bold, colorful fashion or spreading joy in her church community, she is a beacon of positivity and love.
+
+Her family sends warm wishes for a fantastic birthday filled with laughter, happiness, and love. As we ring in her special day, here's to a bright and prosperous New Year ahead, filled with health, success, and blessings galore!
+
+Stay tuned for updates as Gayle continues to make the world a better place, one smile at a time. Happy Birthday, Gayle George! 🎂🌟
+
+<br><br><br><br>
+**This has been a special news report: ** *Gayle George, 67 and fabulous, leading the headlines today!*
+
+*Chionesu George contributed to this report.*
+
+`r tags$hr()`
+
+`r img2` 🌟 Step Into Style with Mom Fashion, Inc. 🌟
+🎨 *Bold. Beautiful. You.* 🎨
+
+Discover your perfect look with Mom Fashion, Inc., where vibrant fashion meets timeless elegance! 🌈✨
+
+👗 *Featured Look*: Effortlessly chic in colorful, geometric designs that celebrate YOU.
+
+💼 **Special Offer**: Book your Wardrobe Consultation today and receive 15% OFF! Use code STYLE15 at checkout.
+
+👉 ***Visit us now*** at [MomFashionInc.com]{style="color:#4141ff"} to claim your discount and transform your wardrobe into a masterpiece!
+
+📸 Fashion Forward Starts Here!
+

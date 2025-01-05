@@ -30,7 +30,12 @@ assertive::assert_all_are_true(c(
 		  # ~ Create the Token Iterator ====
 		  tictoc::tic("... creating the token iterable ...");
 		  if (rlang::is_empty(it)){
-		    it <- text2vec::itoken(
+        fun <- text2vec::itoken
+        if (osVersion |> grep(pattern = "Linux")){
+          fun <- text2vec::itoken_parallel
+        }
+        
+		    it <- fun(
 	        iterable = self$dataset[[private$dataset_doc_col]]
 	        , ids = self$dataset[[private$dataset_rec_idx]]
 	        , ...
