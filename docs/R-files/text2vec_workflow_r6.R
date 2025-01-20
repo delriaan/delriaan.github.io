@@ -31,7 +31,7 @@ assertive::assert_all_are_true(c(
 		  tictoc::tic("... creating the token iterable ...");
 		  if (rlang::is_empty(it)){
         fun <- text2vec::itoken
-        if (osVersion |> grep(pattern = "Linux")){
+        if (!rlang::is_empty(osVersion |> grep(pattern = "Linux"))){
           fun <- text2vec::itoken_parallel
         }
         

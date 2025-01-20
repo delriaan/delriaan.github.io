@@ -60,7 +60,7 @@ hyper_bayesian <- \(hp_data, scoring_data, candidate_hps, score_expr, score_stat
     magrittr::set_attr("dimnames", list(rownames(L), score.test))
   
   # :: Hypothesis/Candidate (the current hyperparameter set):
-  H <- table(paste(variable, value, sep = "=")) |> 
+  H <- table(paste(hp_variable, hp_value, sep = "=")) |> 
     softmax(decimals = 12, as_array = TRUE)
   
   # :: Calculate the Bayesian stats (see ?bayes):
