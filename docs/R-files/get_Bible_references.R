@@ -1,4 +1,5 @@
 #| Extract Bible passage references
+#| source("https://delriaan.github.io/R-files/get_Bible_references.R")
 
 .resources <- Sys.getenv("GIT_REPOS") |>
   file.path("resources/R") |>
@@ -9,12 +10,10 @@
   dir(pattern = "resource.+R", full.names = TRUE, recursive = TRUE) |>
   source()
 
-spsUtil::quiet(get_resource(make_regex))
-
 # :: Read text from clipboard
 text <- svDialogs::dlgInput(message = "Enter web address or text:", rstudio = FALSE)$res |>
   paste(collapse = "\n") |>
-  (\(x) ifelse(grepl("^http[s]", x), {
+  (\(x) ifelse(stringi::stri_detect_regex("^http[s]", x), {
       cli::cli_alert_info("URL detected: {x}")
       rvest::read_html(x) |> rvest::html_text() |> paste(collapse = "\n")
     }, x))() |>
