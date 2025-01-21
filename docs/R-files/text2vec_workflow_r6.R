@@ -561,3 +561,107 @@ text2vec_params <- { list(
 rm(.public, .active)
 gc()
 
+# Concept Graph Function:
+  concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, vector_space = t2v_obj$word_vectors){
+    #' Create a Concept Graph
+    #' 
+    #' This function creates a concept graph from a vector space. The graph is the result of a recursive search for the most similar tokens to a given root token.
+    #' 
+    #' @param root_token The root token from which to begin the recursive search
+    #' @param max_iter The maximum number of iterations to perform
+    #' @param top_n The top N most similar tokens to return
+    #' @param sim_threshold The similarity threshold to use
+    #' @param vector_space The vector space to search (created from an object of class `text2vec_workflow`)
+    #' 
+    #' @return A list containing the graph, the visualization, the recursion output, and the first four arguments of the function
+    
+    # Define the recursive function:
+    force(n)
+    force(sim_threshold)
+      
+    fun <- \(token){
+      token <- intersect(token, rownames(vector_space)) |> unique()
+      
+      v1 <- vector_space[token, , drop = FALSE]
+      z <- text2vec::sim2(v1, vector_space[!rownames(vector_space) %in% token, , drop = FALSE])
+      
+      res <- apply(z, 1, \(zz){
+          zz[zz >= sim_threshold] |>
+            . => .[order(., decreasing = TRUE)] |>
+            . => .[1:min(length(.), top_n)] |> 
+            na.omit()
+          }, simplify = FALSE) |>
+        purrr::compact() |>
+        purrr::flatten()
+      
+      return(res)
+    }
+    
+    # Call the recursive function:
+    output <- book.of.utilities::call.recursion(
+      root_token
+      , fun
+      , \(x) !identical(x, list())
+      , nxt = \(x){ names(x) }
+      , simplify = TRUE
+      , max.iter = max_iter
+      ) 
+  
+    # Create the concept graph:
+    viz_graph <- output[[1]] |> 
+     names() |> 
+     slider::slide(.after = 1L, .step = 2L, .f = \(x) list(tk1 = x[1], tk2 = x[2])) |> 
+     purrr::compact() |> 
+     data.table::rbindlist() |> 
+     unique() |>
+     igraph::graph_from_data_frame() |> 
+     (\(g){
+       igraph::V(g)$title <- igraph::V(g)$name
+       igraph::V(g)$mass <- igraph::degree(g, mode = "in") + 5
+       igraph::V(g)$size <- igraph::degree(g, mode = "in") + 5
+       # Vertex colors defined as follows:
+       # degree "in" = 0 "#333"
+       # degree quantile [0.25, 0.50]: "#A55"
+       # degree quantile [0.51, 0.75]: "#5A5"
+       # degree quantile [0.75, 1.00]: "#55A"
+       .colors <- igraph::degree(g, mode = "in") |> 
+         (`*`)(10) |>
+         as.numeric() |>
+         book.of.features::make.quantiles(
+           c(0.00, 0.25, 0.50, 0.75, 1.0)
+           , names = TRUE
+           , as.factor = TRUE
+           )
+       
+       igraph::V(g)$color <- ifelse(
+         igraph::V(g)$title == root_token
+         , "#CC3333FF"
+         , c(`0%` = "#00000055", `25%` = "#AC5C5C99", `50%` = "#5CAC5CAA", `75%` = "#5C5CACCC", `100%` = "#0C0CFCCC")[as.character(.colors)]
+         ) |> 
+         unname() |> 
+         as.list()
+       
+       return(g)
+     })()
+   
+    # Visualize the graph:
+    graph_viz <- viz_graph |>
+       visNetwork::visIgraph(physics = TRUE) |>
+       visNetwork::visPhysics(
+         solver = "barnesHut"
+         , barnesHut = list(centralGravity = 0.05, gravitationalConstant = -200, springLength = 100, springConstant = 0.01, damping = 0.2, avoidOverlap = 0.8)
+        ) |>
+       visNetwork::visOptions(width = 2180, height = 1440, collapse = TRUE, selectedBy = "title") |>
+       htmlwidgets::prependContent(htmltools::tags$h2(glue::glue("Root token: {root_token} | Max iterations: {max_iter}")))
+    
+    # Return the graph, the visualization, the recursion output, and the first four arguments of function `concept_graph()`:
+    mget(c(
+      "viz_graph"
+      , "graph_viz"
+      , "output"
+      , "root_token"
+      , "max_iter"
+      , "top_n"
+      , "sim_threshold"
+      ))
+ }

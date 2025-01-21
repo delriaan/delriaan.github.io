@@ -141,7 +141,7 @@ load_nlp_functions <- function(..., auto = FALSE){
     annotations_profile <- annotations |> 
       f_split(~doc_id) |> 
       purrr::map(\(x){ 
-        book.of.features::logic_map(x$upos, bvec = upos) |> 
+        book.of.features::logic_map(x$upos, bvec = upos, sparse = FALSE) |> 
           colSums() |> 
           matrix(nrow = 1, dimnames = list(NULL, upos))
       }) |> 
@@ -248,7 +248,9 @@ load_nlp_functions <- function(..., auto = FALSE){
   
   objs <- if (!auto){ 
     svDialogs::dlg_list(
-      choices = ls(all.names = TRUE) |> setdiff(c("env", "f_list", "..."))
+      choices = ls(all.names = TRUE) |> 
+          setdiff(c("env", "f_list", "...")) |>
+          . => `[`(., !. == "pos_xform")
       , preselect = .preselect
       , title = "Choose one or more functions to load: "
       , multiple = TRUE
