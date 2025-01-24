@@ -121,6 +121,70 @@ load_nlp_functions <- function(..., auto = FALSE){
     sapply(k, fun, i) |> t() |> colSums() |>scale() |> as.vector()
   }  
   
+  pos_profiler <- \(corpora, udpipe_path, id = paste0("doc_", seq_len(length(corpora))), max_len = 1024, workers = 1L){
+    #' Universal Part-of-Speech Profiler
+    #' 
+    #' @param corpora A vector of corpora to annotate
+    #' @param udpipe_path The annotator model path
+    #' @param id The document identifier (same length as `corpora`)
+    #' @param max_len The maximum document length to sample
+    #' @param workers The number of parallel workers (must be >= 2L)
+    #' 
+    #' @return An array of Universal Part-of-Speech tags (UPOS) occurrence frequencies per document.
+    assertive::assert_all_are_true(c(
+      is.numeric(max_len)
+      , is.numeric(workers)
+      , is.character(corpora)
+      , is.character(udpipe_path)
+      ));
+    
+    # `proc_fun` is the engine:
+      proc_fun <- \(inputs, ...){
+        upos_labels <- c("ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ"
+          , "NOUN", "NUM", "PART", "PRON", "PROPN", "PUNCT", "SCONJ"
+          , "SYM", "VERB", "X") |> 
+          rlang::set_names();
+  
+        x <- inputs[1];
+        doc_id <- inputs[2] |> as.character();
+        
+        res <- udpipe::udpipe_annotate(
+          object = udpipe::udpipe_load_model(udpipe_path)
+          , x = stringi::stri_enc_toutf8(x) |> 
+                stringi::stri_sub(length = max_len)
+          , doc_id = doc_id
+          ) |> 
+          data.table::as.data.table();
+        
+        cbind(res, book.of.features::logic_map(fvec = res$upos, bvec = upos_labels, sparse = FALSE))
+      }
+    
+    # `action_fun` is the vechicle:
+      action_fun <- list(
+        # Synchronous execution:
+        \(inputs, ...) purrr::imap(inputs, proc_fun) |> purrr::reduce(rbind)
+        # Asynchronous execution (via 'parallel' and 'parallelly'):
+        , \(inputs, workers){
+            library(furrr)
+            library(future.callr)
+            furrr_opts <- furrr_options(
+              scheduling = Inf
+              , seed = TRUE
+              , globals = c("udpipe_path", "max_len")
+              , packages = c("data.table", "magrittr")
+              )
+          
+            plan(tweak(callr, workers = workers))
+          
+            future_map(inputs, proc_fun, .options = furrr_opts) |> purrr::reduce(rbind)
+          }
+        )[[1 + (workers > 1L)]];
+  
+      
+  # Execute and return:
+    purrr::map2(corpora, id, as.list) |> action_fun(workers);
+}
+
   pos_xform <- \(x, object, parallel.cores = 1L, upos = c("ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN", "PUNCT", "SCONJ", "SYM", "VERB", "X"), ...){
     #' Part-of-Speech Transform
     #' 

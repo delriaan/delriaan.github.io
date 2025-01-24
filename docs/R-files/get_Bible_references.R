@@ -11,12 +11,15 @@
   source()
 
 # :: Read text from clipboard
-text <- svDialogs::dlgInput(message = "Enter web address or text:", rstudio = FALSE)$res |>
-  paste(collapse = "\n") |>
-  (\(x) ifelse(stringi::stri_detect_regex("^http[s]", x), {
+text <- svDialogs::dlgInput(message = "Enter web address, text, or 'clipboard' to read from the clipboard:", rstudio = FALSE)$res
+if (text == "clipboard"){ 
+  text <- readClipboard() |> paste(collapse = " ")
+}
+
+text <- (\(x) ifelse(stringi::stri_detect_regex(x, "^http"), {
       cli::cli_alert_info("URL detected: {x}")
       rvest::read_html(x) |> rvest::html_text() |> paste(collapse = "\n")
-    }, x))() |>
+    }, x))(text) |>
   stringi::stri_replace_all_regex("\n|\t", " ", vectorize_all = FALSE) |> 
   paste(collapse = "")
 
@@ -25,7 +28,7 @@ text <- svDialogs::dlgInput(message = "Enter web address or text:", rstudio = FA
     # Book number (optional)
     "([0-9[:space:]]+)?"
     # Book and chapter
-    , "[A-Z][a-z]{3,20}[[:space:]][0-9]{1,3}"
+    , "([A-Z][a-z]{1,20}[[:space:]])+[0-9]{1,3}"
     # No verse (optional)
     , "([;[:space:]]+)?"
     # Anchor verse
@@ -40,8 +43,7 @@ text <- svDialogs::dlgInput(message = "Enter web address or text:", rstudio = FA
     purrr::reduce(c) |> 
     na.omit() |>
     trimws() |>
-    unique() |>
-    sort()
+    unique()
 
 # :: Show results and save to clipboard:
 print(res)

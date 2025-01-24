@@ -95,7 +95,6 @@ as_callback <- \(fun, ...){
   
   return(call_tree)
 }
-
 #
 query_helper <- \(dboe_metadata, include_pattern = "*", exclude_pattern = NULL, chatty = FALSE){
   #' Query Helper
