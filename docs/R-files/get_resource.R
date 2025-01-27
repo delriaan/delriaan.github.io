@@ -1,1 +1,44 @@
-#| Extract Bible passage references #| source("https://delriaan.github.io/R-files/get_Bible_references.R")   local({   # :: Read text from clipboard   url <- svDialogs::dlgInput(message = "Enter web address, text, or 'clipboard' to read from the clipboard:", rstudio = FALSE)$res    if (url == "clipboard"){      if (grepl("Windows", osVersion)){        cli::cli_alert_info("Reading from clipboard ...")     }     doc <- readClipboard() |> paste(collapse = " ")   } else {     doc <- (\(x) if (stringi::stri_detect_regex(x, "^http")){         cli::cli_alert_info("URL detected: {x}")         res <- list()         res$html <- rvest::read_html(x)                res$plain <- res$html |>            rvest::html_text2() |>            # sapply(\(x) as.character(x)) |>            # paste(collapse = " ") |>           stringi::stri_replace_all_fixed("&mdash;", "-", vectorize_all = FALSE) |>           stringi::stri_replace_all_regex("\n|\t\r", " ", vectorize_all = FALSE)                # browser()         # res$plain <- rvest::html_text(res$html)          res     } else {x})(url)    }    # :: Extract patterns     .pattern <- paste0(       # Book number (optional)       "([0-9[:space:]]+)?"       # Book and chapter       , "([A-Z][a-z]{1,20}[[:space:]])+[0-9]{1,3}"       # No verse (optional)       # , "([;[:space:]]+)?"       # Anchor verse       , "([:][0-9]{1,3})?"       # Verse range (optional, use '.' instead of '-')       , "(.[0-9]{1,3})?"       # Verse range set (optional)       , "([,;[:space:]]+[0-9]{1,3}([:][0-9]{1,3})?(.[0-9]{1,3})?)?"       )      res <- stringi::stri_extract_all_regex(doc$plain, .pattern, simplify = TRUE) |>        purrr::reduce(c) |>        na.omit() |>       trimws() |>       unique()    # :: Show results and save to clipboard:   print(res)   writeClipboard(paste(res, collapse = "; ")) })
+get_rscript <- \(..., resolve = TRUE, root = "https://delriaan.github.io/R-files"){
+  #' Get an R Script
+  #'
+  #' @param ... The file name(s) of the hosted R script(s). The \emph{.R} extension is optional and will be appended automatically.
+  #' @param resolve (logical) Evaluates the parsed expression in the calling environment when \code{TRUE}
+  #' @param root The root URL of the endpoint
+  #'
+  #' @return \cr \itemize{
+  #' \item{\code{resolve = TRUE}: A list of strings indicating the file and URL sourced.}
+  #' \item{\code{resolve = FALSE}: A list of expressions created from retrieved files, each provided with a 'comment' attribute of the file and URL used.}
+  #' }
+  #'
+  #' @note Data pulls from R source files located at \url{https://delriaan.github.io/R-files}
+  #'
+  #' @export
+  
+    files <- rlang::enexprs(...) |> as.character()
+    # env <- rlang::caller_env()
+  
+    url_string <- glue::glue("{root}/{gsub(files, pattern = '[.]R', replacement = '') |> unlist()}.R") |>
+      rlang::set_names(files)
+
+    f <- purrr::slowly(\(u, f){
+        if (!resolve){
+          req <- rvest::read_html(u) |> 
+            rvest::html_element(xpath = "//body")|> 
+            rvest::html_text() |>
+            sprintf(fmt = "{%s}") |>
+            str2lang()        
+          comment(req) <- glue::glue("{f}: {u}")
+          return(req)
+        } else {
+          source(u)
+          return(glue::glue("{f}: {u}"))
+        }
+      }, rate = purrr::rate_delay(1))
+    # browser()
+    
+    purrr::imap(url_string, purrr::possibly(f, otherwise = NULL))
+    # if (resolve){ spsUtil::quiet(purrr::walk(res, eval, envir = env)) }
+    # invisible(res)
+}
+
+get_resource <- get_rscript
