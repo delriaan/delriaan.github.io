@@ -9,14 +9,18 @@ assertive::assert_all_are_true(c(
   , require(lexicon)
   , require(udpipe)
   , require(tictoc)
+  , require(igraph)
   ))
 
 # Public and active objects are initially saved in separate environments:
 .public <- new.env();
 .public %$% {
   dataset <- tfidf_mdl <- tf_idf <- NULL;
+  
   version <- format(Sys.time(), "%Y%m%d-%H%M%S");
+  
   workflow.steps <- "$make.vocab()$make.dtm()$make.tfidf()$make.tcm()$make.topics()$make.vectors()$make.dvm()"
+  
   make.vocab <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, voc = self$vocab, prune = FALSE, ...){
 		#' Create the Vocabulary
 		#' 
@@ -76,6 +80,7 @@ assertive::assert_all_are_true(c(
 			# ~ Return ====
 			invisible(self);
 	}
+  
   make.tcm <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, ...){
 		#' Create Term Co-occurrence Matrix
 		#' 
@@ -97,6 +102,7 @@ assertive::assert_all_are_true(c(
 		  # ~ Return ====
 		  invisible(self);
 	}
+  
   make.dtm <- \(it = self$token.iter, vectorizer = self$t2v.vectorizer, type = "TsparseMatrix", ...){
 	  #' Create Document-Term Matrix
 	  #' 
@@ -118,6 +124,7 @@ assertive::assert_all_are_true(c(
 		  # ~ Return ====
 		  invisible(self);
 		}
+  
   make.tfidf <- \(dtm = self$dtm, type = "TsparseMatrix", predict_context = FALSE, export = FALSE, ...){
 	  #' Create Term-Frequency-Inverse-Document-Frequency Matrix
 	  #' 
@@ -148,6 +155,7 @@ assertive::assert_all_are_true(c(
 		  # ~ Return ====
 		  invisible(self);
 		}
+  
   make.dvm <- \(dtm = c("tf_idf_predict", "tf_idf", "dtm"), vec = self$word_vectors, tokenizer = private$tokenizer, export = FALSE){
 	  #' Create Document-Vector Matrix
 	  #' 
@@ -160,6 +168,7 @@ assertive::assert_all_are_true(c(
 	  #' 
 	  #' @return The class object invisibly.
 
+      # Select the type of DTM to use (the same call is found the class method 'make.topics()'):
       dtm <- get(match.arg(dtm, choices = ls(self, sorted = FALSE), several.ok = TRUE)[1], envir = self);
       
       if (is.character(dtm)){
@@ -189,6 +198,7 @@ assertive::assert_all_are_true(c(
   		  invisible(self);
 	    }
 		}
+  
   make.vectors <- \(){
 	  #' Create Global Vectors
 	  #' 
@@ -224,12 +234,13 @@ assertive::assert_all_are_true(c(
 			# ~ Return ====
 			invisible(self);
 		}
-  make.topics <- \(dtm = self$dtm, tokenizer = private$tokenizer, predict_context = FALSE, export = FALSE){
+  
+  make.topics <- \(dtm = c("tf_idf_predict", "tf_idf", "dtm"), tokenizer = private$tokenizer, predict_context = FALSE, export = FALSE){
     #' Fit the LDA Topic Model
     #' 
     #' Create an LDA topic matrix from class member \code{dtm}.
     #' 
-    #' @param dtm A document-term matrix or vector of text to be turned into a document-term matrix.
+    #' @param dtm One of the following:\cr\itemize{\item{A document-term matrix} \item{A TF-IDF matrix} \item{A vector of text to be turned into a document-term matrix}}
     #' @param tokenizer A tokenizer function (must return a list).
     #' @param predict_context (logical) Should the existing LDA model be used for predictions?
     #' @param export (logical) Should the document-topic matrix be exported for assignment to the workspace?
@@ -242,6 +253,9 @@ assertive::assert_all_are_true(c(
       self$lda_mdl <- do.call(text2vec::LDA$new, private$topic_params$lda_params)
       tictoc::toc(log = TRUE); 
     }
+    
+    # Select the type of DTM to use (the same call is found the class method 'make.dvm()'):
+    dtm <- get(match.arg(dtm, choices = ls(self, sorted = FALSE), several.ok = TRUE)[1], envir = self);
     
     # Fit (or predict with) the LDA model ====
     tictoc::tic("... calculating LDA topic distribution ...")
@@ -269,13 +283,14 @@ assertive::assert_all_are_true(c(
       invisible(self);
     }
   }
+  
   vector_eyes <- \(docs, voc = self$vocab$term, tokenizer = private$tokenizer, sparse = TRUE){
     #' Create a Document-Term Matrix
     #' 
     #' @param docs A list containing text to vectorize.
     #' @param dtm A document-term matrix or vector of text to be turned into a document-term matrix.
     #' @param tokenizer A tokenizer function (must return a list, one per document).
-    #' @param sparse (logical) Should the output be a sparse matrix of class "dgCMatrix"?
+    #' @param sparse (logical) Should the output be a sparse matrix of class "TsparseMatrix"?
     #' 
     #' @return A document-term matrix. 
     #' 
@@ -292,14 +307,16 @@ assertive::assert_all_are_true(c(
         voc_freqs <- colSums(as.matrix(token_counts) %*% voc_matches);
         array(voc_freqs, dim = c(1, length(voc)), dimnames = list(NULL, voc))
       }) |> 
-      purrr::reduce(rbind);
+      purrr::reduce(rbind) |>
+      as("TsparseMatrix")
     
-    if (sparse){
-      return(as(res, "TsparseMatrix"))
+    if (!sparse){
+      return(as.matrix(res))
     } else {
       return(res)
     }
   }
+  
   get.private <- \(..., list.only = TRUE){ 
 	  #' Return a member from \code{$private}
 	  #' 
@@ -318,6 +335,7 @@ assertive::assert_all_are_true(c(
 	    mget(res, envir = private)
 	   }
 	}
+  
   set.private <- \(...){
 	  #' Update a member in \code{$private}
 	  #' 
@@ -344,6 +362,7 @@ assertive::assert_all_are_true(c(
 		  
 		  invisible(self); 
   }
+  
   set.dataset <- \(doc){
     #' Set/Replace the dataset
     #' 
@@ -361,8 +380,15 @@ assertive::assert_all_are_true(c(
     
     invisible(self)
   }
+  
   upgrade <- \(obj){
-    # Transfer Class Objects to New Instance
+    #' Transfer Class Objects to New Instance
+    #' 
+    #' This function will make a deep copy of an existing \code{text2vec_workflow} object and transfer the contents to a new instance with upgraded features.
+    #' 
+    #' @param obj An object of class \code{text2vec_workflow}
+    #' 
+    #' @return An modified object of class \code{text2vec_workflow}
     temp <- new.env()
     
     temp$private <- obj$.__enclos_env__$private
@@ -391,7 +417,10 @@ assertive::assert_all_are_true(c(
     
     return(out)
   }
-  initialize <- \(dataset, dataset_rec_idx, dataset_doc_col, dataset_dt_key, glove_params, topic_params, stop_words = stopwords::stopwords(), no_stem = TRUE, ...){
+  
+  initialize <- \(dataset, dataset_rec_idx, dataset_doc_col, dataset_dt_key
+    , glove_params, topic_params, stop_words = stopwords::stopwords()
+    , no_stem = TRUE, ...){
 		#' Class Constructor
 		#' 
 		#' @section \code{glove_params}:
@@ -446,6 +475,7 @@ assertive::assert_all_are_true(c(
 	    
 	    invisible(self);
   	}
+  
   export <- \(){
       #' Export objects from the class environment
       out <- self$clone(deep = TRUE);
@@ -454,25 +484,36 @@ assertive::assert_all_are_true(c(
       rm(token.iter, dtm, tcm, vocab, dvm, topics, perplexity, make.vectors, envir = out)
       return(out);
     }
-	reference <- function(){
+	
+  reference <- function(){
     #' text2vec Reference
     #' 
     #' \code{$reference()} will open a browser window to the \code{text2vec} documentation page
     browseURL("https://text2vec.org") 
   }
-  perplexity <- function(predict_context = FALSE, X = self$dtm, topic_word_distribution = self$lda_mdl$topic_word_distribution, doc_topic_distribution = self[[c("topics", "topics_predict")[1 + predict_context]]]){
+  
+	perplexity <- function(
+    predict_context = FALSE
+    , dtm = c("tf_idf_predict", "tf_idf", "dtm")
+    , topic_word_distribution = self$lda_mdl$topic_word_distribution
+    , doc_topic_distribution = self[[c("topics", "topics_predict")[1 + predict_context]]]
+    ){
       #' Topic Perplexity
       #' 
-      #' See \code{\link[text2vec]{perplexity}} for more information
+      #' @param X,topic_word_distribution,doc_topic_distribution See \code{\link[text2vec]{perplexity}}
       #' 
       #' @return Invisibly, the perplexity value.
-      assertive::assert_any_are_true(c("dtm", "lda_mdl", "lda_topic_distr") %in% ls(self));
+      assertive::assert_any_are_true(c("dtm", "tf_idf", "lda_mdl", "lda_topic_distr") %in% ls(self));
     
-      perplexity <- text2vec::perplexity(X = X, topic_word_distribution = topic_word_distribution, doc_topic_distribution = doc_topic_distribution);
-      cli::cli_alert_info(glue::glue("Perplexity: {perplexity}"));
+      # Select the type of DTM to use (the same call is found the class method 'make.dvm()'):
+      dtm <- get(match.arg(dtm, choices = ls(self, sorted = FALSE), several.ok = TRUE)[1], envir = self);
+      
+      perplexity <- text2vec::perplexity(X = dtm, topic_word_distribution = topic_word_distribution, doc_topic_distribution = doc_topic_distribution);
+      cli::cli_alert_info("Perplexity: {perplexity}");
       return(invisible(perplexity))
-  }
-  help <- \(i){
+    }
+  
+	help <- \(i){
 		#' Help Me Out!
 		#' 
 		#' \code{$help} will generate help documentation or text related to this class using \code{\link[docstring]{docstring}}
@@ -482,10 +523,11 @@ assertive::assert_all_are_true(c(
 		#' @return Invisibly, the class environment
 		
     if (missing(i)){
-      i <- tcltk::tk_select.list(
+      i <- svDialogs::dlg_list(
         title = "Choose a function to view documentation"
         , choices = text2vec_workflow$public_methods |> names()
-        )
+        , rstudio = FALSE
+        )$res
     } else {
       i <- rlang::enexpr(i) |> rlang::as_label();
     }
@@ -496,15 +538,16 @@ assertive::assert_all_are_true(c(
 		} else { 
 		  cat(c(workflow.steps = "A string with the typical workflow represented")[i]) 
 		}
+	  
 		invisible(self);
 	}
  }
 	
 .active <- new.env();
 .active %$% {
-  tokenizer <- function(){
-    self$get.private("tokenizer", list.only = FALSE) %>% .[[1]];
-  }
+  tokenizer <- function(){ self$get.private("tokenizer", list.only = FALSE) %>% .[[1]] }
+  
+  text2vec_hompage <- function(browser = NULL){ browseURL("https://text2vec.org/index.html", browser = browser) }
 }
 
 # Define the class with pre-defined objects:
@@ -533,7 +576,8 @@ text2vec_params <- { list(
           , convergence_tol = 0.01
           , n_check_convergence = 10
           )
-      )
+      ) |> 
+      magrittr::set_attr("comment", "https://text2vec.org/glove.html")
     }
   , topics = { list(
       vocab_params = list(
@@ -552,188 +596,181 @@ text2vec_params <- { list(
           , convergence_tol = 0.01
           , n_check_convergence = 10
           )
-      )
+      ) |> 
+      magrittr::set_attr("comment", "https://text2vec.org/topic_modeling.html")
     }
-  )
-}
+  )}
 
 # Clean Up:
 rm(.public, .active)
 gc()
 
-# <snippet: concept graph :: Concept Graph Function> ----
-  read.snippet(action = parse, doc = NULL, concept, graph);
-
-  concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, object, chatty = FALSE){
-    #' Create a Concept Graph
-    #' 
-    #' This function creates a concept graph from a vector space. The graph is the result of a recursive search for the most similar tokens to a given root token.
-    #' 
-    #' @param root_token (stirng) The root token from which to begin the recursive search
-    #' @param max_iter (number) The maximum number of iterations to perform
-    #' @param top_n (number) The top N most similar tokens to return
-    #' @param sim_threshold (number) The similarity threshold to use in the range (0, 1]
-    #' @param object An object of class 'text2vec_workflow'
-    #' @param vector_space The vector space to search (created from an object of class `text2vec_workflow`)
-    #' @param chatty (logical) Should the function be return execution messages?
-    #' 
-    #' @return A list containing the graph, the visualization, the recursion output, and the first four arguments of the function
+concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, object, chatty = FALSE){
+  #' Create a Concept Graph
+  #' 
+  #' This function creates a \emph{"concept graph"} from a vector space and is the result of a recursive search for the most similar tokens to a given root token constrained by a set of thresholds.
+  #' 
+  #' @param root_token (string) The root token from which to begin the recursive search
+  #' @param max_iter (number) The maximum number of iterations to perform
+  #' @param top_n (number) The top N most similar tokens to return
+  #' @param sim_threshold (number) The similarity threshold to use in the range (0, 1]
+  #' @param object An object of class \code{text2vec_workflow}
+  #' @param chatty (logical) Should the function return execution messages?
+  #' 
+  #' @return A list containing the graph, the visualization, the recursion output, and the first four arguments of the function
+  
+  force(n)
+  force(sim_threshold)
+  
+  # Argument assertions:
+  assertive::assert_all_are_true(c(
+    length(sim_threshold) %in% c(1,2)
+    , all(is.numeric(sim_threshold))
+    , ifelse(length(sim_threshold) == 2, all(sign(sim_threshold) %in% c(-1, 1)), TRUE)
+    , is.numeric(top_n) || is.integer(n)
+    , length(n) == 1
+    , top_n > 0
+    ))
+  
+  assertive::assert_is_identical_to_true(is(object, "text2vec_workflow"))
+  
+  # Force sim_threshold to be a monotonically increasing numeric vector:
+  sim_threshold <- sort(sim_threshold)
+  
+  # Define the recursive function:
+  recurse <- \(token){
+    #| `token`: The input vector of tokens
+    #| Returns a named vector of cosine similarity scores or an empty vector.
     
-    force(n)
-    force(sim_threshold)
+    # Ensure the token is in the vector space:
+    token <- intersect(token, rownames(object$word_vectors)) |> unique()
     
-    # Argument assertions:
-    assertive::assert_all_are_true(c(
-      length(sim_threshold) %in% c(1,2)
-      , all(is.numeric(sim_threshold))
-      , ifelse(length(sim_threshold) == 2, all(sign(sim_threshold) %in% c(-1, 1)), TRUE)
-      , is.numeric(top_n) || is.integer(n)
-      , length(n) == 1
-      , top_n > 0
-      ))
+    # assertion check for empty value:
+    assertive::assert_any_are_true(length(token) > 0)
     
-    assertive::assert_is_identical_to_true(is(object, "text2vec_workflow"))
+    v1 <- object$word_vectors[token, , drop = FALSE]
     
-    # vector_space <- object$word_vectors
+    # Calculate the similarity of vectors not in `v1` using the cosine similarity method:
+    z <- text2vec::sim2(v1, object$word_vectors[!rownames(object$word_vectors) %in% token, , drop = FALSE])
     
-    # Force sim_threshold to be a monotonically increasing numeric vector:
-    sim_threshold <- sort(sim_threshold)
-    
-    # Define the recursive function:
-    recurse <- \(token){
-      #| `token`: The input vector of tokens
-      #| Returns a named vector of cosine similarity scores or an empty vector.
+    # Derive the result: note the use of argument 'simplify' which forces a list output:
+    res <- apply(z, 1, \(current_scores){
+        # Check for the case where all values are less than the threshold:
+        if (all(abs(current_scores) < max(sim_threshold))){
+          if (chatty) cli::cli_alert_warning("All (absolute) values less than the maximum threshold of {max(sim_threshold)} (max value: {max(current_scores, na.rm = TRUE)})")
+          return(numeric())
+        }
       
-      # Ensure the token is in the vector space:
-      token <- intersect(token, rownames(object$word_vectors)) |> unique()
-      
-      # assertion check for empty value:
-      assertive::assert_any_are_true(length(token) > 0)
-      
-      v1 <- object$word_vectors[token, , drop = FALSE]
-      
-      # Calculate the similarity of vectors not in `v1` using the cosine similarity method:
-      z <- text2vec::sim2(v1, object$word_vectors[!rownames(object$word_vectors) %in% token, , drop = FALSE])
-      
-      # Derive the result: note the use of argument 'simplify' which forces a list output:
-      res <- apply(z, 1, \(current_scores){
-          # Check for the case where all values are less than the threshold:
-          if (all(abs(current_scores) < max(sim_threshold))){
-            if (chatty) cli::cli_alert_warning("All (absolute) values less than the maximum threshold of {max(sim_threshold)} (max value: {max(current_scores, na.rm = TRUE)})")
-            return(numeric())
-          }
+        # `i` is a scalar index:
+        i <- if (length(sim_threshold) == 1){
+                # The default check for similarity above or equal to the threshold:
+                current_scores >= sim_threshold
+              } else {
+                # The following checks for values (dis)similarity at or beyond the thresholds:
+                current_scores >= sim_threshold[2] | current_scores <= sim_threshold[1]
+              }
         
-          # `i` is a scalar index:
-          i <- if (length(sim_threshold) == 1){
-                  # The default check for similarity above or equal to the threshold:
-                  current_scores >= sim_threshold
-                } else {
-                  # The following checks for values (dis)similarity at or beyond the thresholds:
-                  current_scores >= sim_threshold[2] | current_scores <= sim_threshold[1]
-                }
-          
-          # Subset then reverse order by absolute value:
-          current_scores <- current_scores[i] |>. => .[order(abs(.), decreasing = TRUE)]
-          
-          if (length(current_scores) < top_n){
-           if (chatty)  cli::cli_warn("Result set of length {length(current_scores)}L less than requested length ({top_n}L)")
+        # Subset then reverse order by absolute value:
+        current_scores <- current_scores[i] |>. => .[order(abs(.), decreasing = TRUE)]
+        
+        if (length(current_scores) < top_n){
+         if (chatty)  cli::cli_warn("Result set of length {length(current_scores)}L less than requested length ({top_n}L)")
+        }
+        
+        # Return (if the call to na.omit() results in an empty value, recursion will stop).
+        if (hasName(attributes(token), "scores")){
+          if (any(token %in% names(current_scores))){
+            current_scores[token] <- attr(token, "scores")[token] + current_scores[token]
           }
-          
-          # Return (if the call to na.omit() results in an empty value, recursion will stop).
-          if (hasName(attributes(token), "scores")){
-            if (any(token %in% names(current_scores))){
-              current_scores[token] <- attr(token, "scores")[token] + current_scores[token]
-            }
-          }
-          
-          current_scores[1:min(length(current_scores), top_n)] |> na.omit()
-        }, simplify = FALSE) |>
-        purrr::compact() |>
-        purrr::flatten()
-      
-      return(res)
-    }
-    
-    # Call the recursive function:
-    output <- book.of.utilities::call.recursion(
-      root_token
-      , fun = recurse
-      , test = \(x) !identical(x, list())
-      , nxt = \(x){ magrittr::set_attr(names(x), "scores", x) }
-      , simplify = TRUE
-      , max.iter = max_iter
-      ) |>
+        }
+        
+        current_scores[1:min(length(current_scores), top_n)] |> na.omit()
+      }, simplify = FALSE) |>
+      purrr::compact() |>
       purrr::flatten()
     
-    # `token_weights` is a vector of mean token similarity scores over the history of recursive calls:
-    token_weights <- split(output, f = names(output)) |> 
-      purrr::map_dbl(\(o){ o <- unlist(o); weighted.mean(o, w = seq_along(o)) })
+    return(res)
+  }
   
-    # Create the concept graph:
-    viz_graph <- output |> 
-     names() |> 
-     slider::slide(.after = 1L, .step = 2L, .f = \(x) list(tk1 = x[1], tk2 = x[2])) |> 
-     purrr::compact() |> 
-     data.table::rbindlist() |> 
-     unique() |>
-     igraph::graph_from_data_frame() |> 
-     (\(g){
-       igraph::V(g)$title <- igraph::V(g)$name
-       # igraph::V(g)$mass <- igraph::degree(g, mode = "in") + 5
-       w <- exp(token_weights[igraph::V(g)$name]) |>
-        purrr::modify_if(\(x) is.na(x) | is.nan(x), ~0.01)
-       
-       igraph::V(g)$prank <- igraph::page_rank(g, personalized = w)$vector
-       igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> apply(2, sum, na.rm = TRUE), of.max)
-       igraph::V(g)$size <- igraph::degree(g, mode = "in") + igraph::V(g)$mass
-       
-       # Vertex colors defined as follows:
-       # degree "in" = 0 "#333"
-       # degree quantile [0.25, 0.50]: "#A55"
-       # degree quantile [0.51, 0.75]: "#5A5"
-       # degree quantile [0.75, 1.00]: "#55A"
-       .colors <- igraph::degree(g, mode = "in") |> 
-         (`*`)(10) |>
-         as.numeric() |>
-         book.of.features::make.quantiles(
-           c(0.00, 0.25, 0.50, 0.75, 1.0)
-           , names = TRUE
-           , as.factor = TRUE
-           )
-       
-       igraph::V(g)$group <- paste(igraph::V(g)$title, .colors, sep = ",")
-       
-       igraph::V(g)$color <- ifelse(
-          igraph::V(g)$title == root_token
-          , "#FF33FFFF"
-          , c(`0%` = "#33333355", `25%` = "#CDECDE99", `50%` = "#5CAC5CAA", `75%` = "#5C5CACCC", `100%` = "#0C0CFCCC")[as.character(.colors)]
-          ) |> 
-         unname() |> 
-         as.list()
-       
-       comment(g) <- glue::glue(
-        .sep = "\n"
-        , "Mass is defined as a function of token-weighted page rank."
-        , "Size is defined as a function of 'in'-degree and mass."
-        , "Color is defined as a function of 'in'-degree quantiles."
-        )
-       
-       return(g)
-     })()
-   
-    # Visualize the graph:
-    out_title <- glue::glue(
-      "Root token: {paste(root_token, collapse = '::')}"
-      , "Max iterations: {max_iter}"
-      , "Top N: {top_n}"
-      , "Similarity threshold: {paste(sim_threshold, collapse = \", \")}"
-      , .sep = " | "
+  # Call the recursive function:
+  output <- book.of.utilities::call.recursion(
+    root_token
+    , fun = recurse
+    , test = \(x) !identical(x, list())
+    , nxt = \(x){ magrittr::set_attr(names(x), "scores", x) }
+    , simplify = TRUE
+    , max.iter = max_iter
+    ) |>
+    purrr::flatten()
+  
+  # `token_weights` is a vector of mean token similarity scores over the history of recursive calls:
+  token_weights <- split(output, f = names(output)) |> 
+    purrr::map_dbl(\(o){ o <- unlist(o); weighted.mean(o, w = seq_along(o)) })
+
+  # Create the concept graph:
+  viz_graph <- output |> 
+    names() |> 
+    slider::slide(.after = 1L, .step = 2L, .f = \(x) list(tk1 = x[1], tk2 = x[2])) |> 
+    purrr::compact() |> 
+    data.table::rbindlist() |> 
+    unique() |>
+    igraph::graph_from_data_frame() |> 
+    (\(g){
+     igraph::V(g)$title <- igraph::V(g)$name
+     w <- exp(token_weights[igraph::V(g)$name]) |>
+      purrr::modify_if(\(x) is.na(x) | is.nan(x), ~0.01)
+     
+     igraph::V(g)$prank <- igraph::page_rank(g, personalized = w)$vector
+     igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> apply(2, sum, na.rm = TRUE), of.max)
+     igraph::V(g)$size <- igraph::degree(g, mode = "in") + igraph::V(g)$mass
+     
+     # Vertex colors defined as follows:
+     # - degree "in" = 0 "#333"
+     # - degree quantile [0.25, 0.50]: "#A55"
+     # - degree quantile [0.51, 0.75]: "#5A5"
+     # - degree quantile [0.75, 1.00]: "#55A"
+     .colors <- igraph::degree(g, mode = "in") |> 
+       (`*`)(10) |>
+       as.numeric() |>
+       book.of.features::make.quantiles(
+         c(0.00, 0.25, 0.50, 0.75, 1.0)
+         , names = TRUE
+         , as.factor = TRUE
+         )
+     
+     igraph::V(g)$group <- paste(igraph::V(g)$title, .colors, sep = ",")
+     
+     igraph::V(g)$color <- ifelse(
+        igraph::V(g)$title == root_token
+        , "#FF33FFFF"
+        , c(`0%` = "#33333355", `25%` = "#CDECDE99", `50%` = "#5CAC5CAA", `75%` = "#5C5CACCC", `100%` = "#0C0CFCCC")[as.character(.colors)]
+        ) |> 
+       unname() |> 
+       as.list()
+     
+     comment(g) <- glue::glue(
+      .sep = "\n"
+      , "Mass is defined as a function of token-weighted page rank."
+      , "Size is defined as a function of 'in'-degree and mass."
+      , "Color is defined as a function of 'in'-degree quantiles."
       )
-    
-    graph_viz <- viz_graph |>
-      visNetwork::visIgraph(physics = TRUE) |>
-        visNetwork::visLayout(improvedLayout = TRUE) |>
-        visNetwork::visPhysics(
+     
+     return(g)
+  })()
+ 
+  # Visualize the graph:
+  out_title <- glue::glue(
+    "Root token: {paste(root_token, collapse = '::')}"
+    , "Max iterations: {max_iter}"
+    , "Top N: {top_n}"
+    , "Similarity threshold: {paste(sim_threshold, collapse = \", \")}"
+    , .sep = " | "
+    )
+  
+  graph_viz <- viz_graph |>
+    visNetwork::visIgraph(physics = TRUE) |>
+      visNetwork::visLayout(improvedLayout = TRUE) |>
+      visNetwork::visPhysics(
         solver = "barnesHut"
         , barnesHut = list(
             centralGravity = 0.05
@@ -752,17 +789,14 @@ gc()
         , selectedBy = list(variable = "group", multiple = TRUE)
         ) |>
         htmlwidgets::prependContent(htmltools::tags$h2(out_title))
-    
-    # Return the graph, the visualization, the recursion output, and the first four arguments of function `concept_graph()`:
-    mget(c(
-      "root_token"
-      , "token_weights"
-      , "max_iter"
-      , "top_n"
-      , "sim_threshold"
-      , "output"
-      , "viz_graph"
-      , "graph_viz"
-      ))
- }
-# </snippet>
+  
+  # Return the graph, the visualization, the recursion output, and the first four arguments of function `concept_graph()`:
+  mget(c(
+    "root_token"
+    , "token_weights"
+    , "output"
+    , "viz_graph"
+    , "graph_viz"
+    )) |>
+    append(list(params = mget(c("max_iter", "top_n", "sim_threshold"))))
+}
