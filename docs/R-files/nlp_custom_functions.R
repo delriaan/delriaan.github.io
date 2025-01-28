@@ -1,3 +1,5 @@
+Sys.setenv(`_R_USE_PIPEBIND_` = TRUE)
+
 load_nlp_functions <- function(..., auto = FALSE){
   #' Load NLP Functions
   #' 
@@ -7,6 +9,7 @@ load_nlp_functions <- function(..., auto = FALSE){
   #' @param auto (logical) Automatically load matched functions?
   #' 
   #' @return None: the matched functions are assigned to the calling environment.
+  #' 
   assertive::assert_all_are_true(c(
     # Required Libraries:
     require(magrittr)
@@ -179,11 +182,11 @@ load_nlp_functions <- function(..., auto = FALSE){
             future_map(inputs, proc_fun, .options = furrr_opts) |> purrr::reduce(rbind)
           }
         )[[1 + (workers > 1L)]];
-  
-      
-  # Execute and return:
-    purrr::map2(corpora, id, as.list) |> action_fun(workers);
-}
+    
+        
+    # Execute and return:
+      purrr::map2(corpora, id, as.list) |> action_fun(workers);
+  }
 
   pos_xform <- \(x, object, parallel.cores = 1L, upos = c("ADJ", "ADP", "ADV", "AUX", "CCONJ", "DET", "INTJ", "NOUN", "NUM", "PART", "PRON", "PROPN", "PUNCT", "SCONJ", "SYM", "VERB", "X"), ...){
     #' Part-of-Speech Transform
@@ -314,7 +317,7 @@ load_nlp_functions <- function(..., auto = FALSE){
     svDialogs::dlg_list(
       choices = ls(all.names = TRUE) |> 
           setdiff(c("env", "f_list", "...")) |>
-          . => `[`(., !. == "pos_xform")
+          . => (`[`)(., !. == "pos_xform")
       , preselect = .preselect
       , title = "Choose one or more functions to load: "
       , multiple = TRUE
