@@ -1,11 +1,7 @@
-if (!exists("get_resource", envir = rlang::caller_env())){
+if (!"AllianceConnect" %in% rownames(installed.packages())){
   Sys.getenv("GIT_REPOS") |> file.path("resources/R/get_resource.R") |> source()
 }
 
-if (!exists("get_user_agent")){
-  Sys.getenv("GIT_REPOS") |> file.path("resources/R/user_agents.R") |> source()
-}
- 
 calc_adherence <- \(measure = c("MPR", "CMA", "CMG", "CSA", "CSG", "2", "7"), days_supply, service_date, .debug = FALSE){
   #' Medication Adherence Calculator
   #' 
@@ -21,29 +17,35 @@ calc_adherence <- \(measure = c("MPR", "CMA", "CMG", "CSA", "CSG", "2", "7"), da
   #' Lam, Wai Yin, Fresco, Paula, Medication Adherence Measures: An Overview, BioMed Research International, 2015, 217047, 12 pages, 2015. https://doi.org/10.1155/2015/217047
   measure <- match.arg(measure)
 
+  if (.debug) browser()
   assertive::assert_are_same_length(days_supply, service_date)
 
   dT <- c(days_supply[1], diff(as.numeric(service_date)))
   fill_gap <- dT - days_supply
 
-  # Evaluated equation definitions:
-  eqns <- list(
-      MPR = days_supply/(dT + fill_gap)
-      , CMA = cumsum(days_supply) / cumsum(dT + fill_gap)
-      , CMG = (\(x) ifelse(x < 0, 0, x))(cumsum(fill_gap)/cumsum(dT))
-      , CSA = days_supply/dT
-      , CSG = sum(fill_gap)/sum(dT)
-      , `2` = NA
-      , `7` = NA
-      )
-
-  # Default values:
-  dflts <- c(MPR = 0, `2` = NA, CMA = 1, CMG = 0, CSA = 0, CSG = 0, `7` = NA)
-
-  if (.debug) browser()
   
-  eqns[[measure]] |>
-    purrr::modify_if(\(x) is.na(x) | is.infinite(x), ~dflts[measure])
+  # Default adherence measure values:
+  dflts <- c(MPR = 0, `2` = NA, CMA = 1, CMG = NA, CSA = 0, CSG = 0, `7` = NA)
+
+  # Evaluated adherence measure values:
+  eqns <- list(
+    MPR = days_supply/(dT + fill_gap)
+    , CMA = cumsum(days_supply) / cumsum(dT + fill_gap)
+    , CMG = (\(cfill, cdt){ 
+          x <- ifelse(is.na(cdt) | cdt == 0, NA, cfill/cdt)
+          ifelse(is.na(x), x, ifelse(x < 0, 0, x))
+        })(cfill = cumsum(fill_gap), cdt = cumsum(dT))
+    , CSA = days_supply/dT
+    , CSG = sum(fill_gap)/sum(dT)
+    , `2` = NA
+    , `7` = NA
+    )
+
+  ifelse(
+    is.na(eqns[[measure]]) | is.infinite(eqns[[measure]])
+    , dflts[measure]
+    , eqns[[measure]]
+    )
 }
 
 get_adherence_defs <- \(html_source){
