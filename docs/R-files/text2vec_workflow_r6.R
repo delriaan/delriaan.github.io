@@ -605,7 +605,7 @@ text2vec_params <- { list(
 rm(.public, .active)
 gc()
 
-concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, object, chatty = FALSE){
+concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, object, physics = FALSE, chatty = FALSE){
   #' Create a Concept Graph
   #' 
   #' This function creates a \emph{"concept graph"} from a vector space and is the result of a recursive search for the most similar tokens to a given root token constrained by a set of thresholds.
@@ -615,6 +615,7 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
   #' @param top_n (number) The top N most similar tokens to return
   #' @param sim_threshold (number) The similarity threshold to use in the range (0, 1]
   #' @param object An object of class \code{text2vec_workflow}
+  #' @param physics (logical | list) Either \code{TRUE}, \code{FALSE}, or a list of options as per \code{\link[visNetwork]{visPhysics}} 
   #' @param chatty (logical) Should the function return execution messages?
   #' 
   #' @return A list containing the graph, the visualization, the recursion output, and the first four arguments of the function
@@ -623,180 +624,176 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
   force(sim_threshold)
   
   # Argument assertions:
-  assertive::assert_all_are_true(c(
-    length(sim_threshold) %in% c(1,2)
-    , all(is.numeric(sim_threshold))
-    , ifelse(length(sim_threshold) == 2, all(sign(sim_threshold) %in% c(-1, 1)), TRUE)
-    , is.numeric(top_n) || is.integer(n)
-    , length(n) == 1
-    , top_n > 0
-    ))
-  
-  assertive::assert_is_identical_to_true(is(object, "text2vec_workflow"))
+    assertive::assert_all_are_true(c(
+      length(sim_threshold) %in% c(1,2)
+      , all(is.numeric(sim_threshold))
+      , ifelse(length(sim_threshold) == 2, all(sign(sim_threshold) %in% c(-1, 1)), TRUE)
+      , is.numeric(top_n) || is.integer(n)
+      , length(n) == 1
+      , top_n > 0
+      ))
+    
+    assertive::assert_is_identical_to_true(is(object, "text2vec_workflow"))
   
   # Force sim_threshold to be a monotonically increasing numeric vector:
-  sim_threshold <- sort(sim_threshold)
+    sim_threshold <- sort(sim_threshold)
   
   # Define the recursive function:
-  recurse <- \(token){
-    #| `token`: The input vector of tokens
-    #| Returns a named vector of cosine similarity scores or an empty vector.
-    
-    # Ensure the token is in the vector space:
-    token <- intersect(token, rownames(object$word_vectors)) |> unique()
-    
-    # assertion check for empty value:
-    assertive::assert_any_are_true(length(token) > 0)
-    
-    v1 <- object$word_vectors[token, , drop = FALSE]
-    
-    # Calculate the similarity of vectors not in `v1` using the cosine similarity method:
-    z <- text2vec::sim2(v1, object$word_vectors[!rownames(object$word_vectors) %in% token, , drop = FALSE])
-    
-    # Derive the result: note the use of argument 'simplify' which forces a list output:
-    res <- apply(z, 1, \(current_scores){
-        # Check for the case where all values are less than the threshold:
-        if (all(abs(current_scores) < max(sim_threshold))){
-          if (chatty) cli::cli_alert_warning("All (absolute) values less than the maximum threshold of {max(sim_threshold)} (max value: {max(current_scores, na.rm = TRUE)})")
-          return(numeric())
-        }
+    recurse <- \(token){
+      #| `token`: The input vector of tokens
+      #| Returns a named vector of cosine similarity scores or an empty vector.
       
-        # `i` is a scalar index:
-        i <- if (length(sim_threshold) == 1){
-                # The default check for similarity above or equal to the threshold:
-                current_scores >= sim_threshold
-              } else {
-                # The following checks for values (dis)similarity at or beyond the thresholds:
-                current_scores >= sim_threshold[2] | current_scores <= sim_threshold[1]
-              }
-        
-        # Subset then reverse order by absolute value:
-        current_scores <- current_scores[i] |>. => .[order(abs(.), decreasing = TRUE)]
-        
-        if (length(current_scores) < top_n){
-         if (chatty)  cli::cli_warn("Result set of length {length(current_scores)}L less than requested length ({top_n}L)")
-        }
-        
-        # Return (if the call to na.omit() results in an empty value, recursion will stop).
-        if (hasName(attributes(token), "scores")){
-          if (any(token %in% names(current_scores))){
-            current_scores[token] <- attr(token, "scores")[token] + current_scores[token]
+      # Ensure the token is in the vector space:
+      token <- intersect(token, rownames(object$word_vectors)) |> unique()
+      
+      # assertion check for empty value:
+      assertive::assert_any_are_true(length(token) > 0)
+      
+      v1 <- object$word_vectors[token, , drop = FALSE]
+      
+      # Calculate the similarity of vectors not in `v1` using the cosine similarity method:
+      z <- text2vec::sim2(v1, object$word_vectors[!rownames(object$word_vectors) %in% token, , drop = FALSE])
+      
+      # Derive the result: note the use of argument 'simplify' which forces a list output:
+      res <- apply(z, 1, \(current_scores){
+          # Check for the case where all values are less than the threshold:
+          if (all(abs(current_scores) < max(sim_threshold))){
+            if (chatty) cli::cli_alert_warning("All (absolute) values less than the maximum threshold of {max(sim_threshold)} (max value: {max(current_scores, na.rm = TRUE)})")
+            return(numeric())
           }
-        }
         
-        current_scores[1:min(length(current_scores), top_n)] |> na.omit()
-      }, simplify = FALSE) |>
-      purrr::compact() |>
-      purrr::flatten()
-    
-    return(res)
-  }
+          # `i` is a scalar index:
+          i <- if (length(sim_threshold) == 1){
+                  # The default check for similarity above or equal to the threshold:
+                  current_scores >= sim_threshold
+                } else {
+                  # The following checks for values (dis)similarity at or beyond the thresholds:
+                  current_scores >= sim_threshold[2] | current_scores <= sim_threshold[1]
+                }
+          
+          # Subset then reverse order by absolute value:
+          current_scores <- current_scores[i] |>. => .[order(abs(.), decreasing = TRUE)]
+          
+          if (length(current_scores) < top_n){
+          if (chatty)  cli::cli_warn("Result set of length {length(current_scores)}L less than requested length ({top_n}L)")
+          }
+          
+          # Return (if the call to na.omit() results in an empty value, recursion will stop).
+          if (hasName(attributes(token), "scores")){
+            if (any(token %in% names(current_scores))){
+              current_scores[token] <- attr(token, "scores")[token] + current_scores[token]
+            }
+          }
+          
+          current_scores[1:min(length(current_scores), top_n)] |> na.omit()
+        }, simplify = FALSE) |>
+        purrr::compact() |>
+        purrr::flatten()
+      
+      return(res)
+    }
   
   # Call the recursive function:
-  output <- book.of.utilities::call.recursion(
-    root_token
-    , fun = recurse
-    , test = \(x) !identical(x, list())
-    , nxt = \(x){ magrittr::set_attr(names(x), "scores", x) }
-    , simplify = TRUE
-    , max.iter = max_iter
-    ) |>
-    purrr::flatten()
+    output <- book.of.utilities::call.recursion(
+      root_token
+      , fun = recurse
+      , test = \(x) !identical(x, list())
+      , nxt = \(x){ magrittr::set_attr(names(x), "scores", x) }
+      , simplify = TRUE
+      , max.iter = max_iter
+      ) |>
+      purrr::flatten()
   
   # `token_weights` is a vector of mean token similarity scores over the history of recursive calls:
-  token_weights <- split(output, f = names(output)) |> 
-    purrr::map_dbl(\(o){ o <- unlist(o); weighted.mean(o, w = seq_along(o)) })
+    token_weights <- split(output, f = names(output)) |> 
+      purrr::map_dbl(\(o){ o <- unlist(o); weighted.mean(o, w = seq_along(o)) })
 
   # Create the concept graph:
-  viz_graph <- output |> 
-    names() |> 
-    slider::slide(.after = 1L, .step = 2L, .f = \(x) list(tk1 = x[1], tk2 = x[2])) |> 
-    purrr::compact() |> 
-    data.table::rbindlist() |> 
-    unique() |>
-    igraph::graph_from_data_frame() |> 
-    (\(g){
-     igraph::V(g)$title <- igraph::V(g)$name
-     w <- exp(token_weights[igraph::V(g)$name]) |>
-      purrr::modify_if(\(x) is.na(x) | is.nan(x), ~0.01)
-     
-     igraph::V(g)$prank <- igraph::page_rank(g, personalized = w)$vector
-     igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> apply(2, sum, na.rm = TRUE), of.max)
-     igraph::V(g)$size <- igraph::degree(g, mode = "in") + igraph::V(g)$mass
-     
-     # Vertex colors defined as follows:
-     # - degree "in" = 0 "#333"
-     # - degree quantile [0.25, 0.50]: "#A55"
-     # - degree quantile [0.51, 0.75]: "#5A5"
-     # - degree quantile [0.75, 1.00]: "#55A"
-     .colors <- igraph::degree(g, mode = "in") |> 
-       (`*`)(10) |>
-       as.numeric() |>
-       book.of.features::make.quantiles(
-         c(0.00, 0.25, 0.50, 0.75, 1.0)
-         , names = TRUE
-         , as.factor = TRUE
-         )
-     
-     igraph::V(g)$group <- paste(igraph::V(g)$title, .colors, sep = ",")
-     
-     igraph::V(g)$color <- ifelse(
-        igraph::V(g)$title == root_token
-        , "#FF33FFFF"
-        , c(`0%` = "#33333355", `25%` = "#CDECDE99", `50%` = "#5CAC5CAA", `75%` = "#5C5CACCC", `100%` = "#0C0CFCCC")[as.character(.colors)]
-        ) |> 
-       unname() |> 
-       as.list()
-     
-     comment(g) <- glue::glue(
-      .sep = "\n"
-      , "Mass is defined as a function of token-weighted page rank."
-      , "Size is defined as a function of 'in'-degree and mass."
-      , "Color is defined as a function of 'in'-degree quantiles."
-      )
-     
-     return(g)
-  })()
+    viz_graph <- output |> 
+      names() |> 
+      # Reverse the order since the creation of `output` is a queue:
+      rev() |>
+      slider::slide(.after = 1L, .step = 2L, .f = \(x) list(tk1 = x[1], tk2 = x[2])) |> 
+      purrr::compact() |> 
+      data.table::rbindlist() |> 
+      unique() |>
+      igraph::graph_from_data_frame() |> 
+      (\(g){
+        igraph::V(g)$title <- igraph::V(g)$name
+          w <- exp(token_weights[igraph::V(g)$name]) |>
+            purrr::modify_if(\(x) is.na(x) | is.nan(x), ~0.01)
+          
+          igraph::V(g)$prank <- igraph::page_rank(g, personalized = w)$vector
+          igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> apply(2, sum, na.rm = TRUE), of.max)
+          igraph::V(g)$size <- igraph::degree(g, mode = "in") + igraph::V(g)$mass
+          igraph::V(g)$mass <- purrr::modify_if(igraph::V(g)$mass, igraph::V(g)$title == root_token, \(x) max(x) * 10)
+          
+          # Vertex colors defined as follows:
+          # - degree "in" = 0 "#333"
+          # - degree quantile [0.25, 0.50]: "#A55"
+          # - degree quantile [0.51, 0.75]: "#5A5"
+          # - degree quantile [0.75, 1.00]: "#55A"
+          .colors <- igraph::degree(g, mode = "in") |> 
+            (`*`)(10) |>
+            as.numeric() |>
+            book.of.features::make.quantiles(
+              c(0.00, 0.25, 0.50, 0.75, 1.0)
+              , names = TRUE
+              , as.factor = TRUE
+              )
+          
+          igraph::V(g)$group <- paste(igraph::V(g)$title, .colors, sep = ",")
+          
+          igraph::V(g)$color <- ifelse(
+              igraph::V(g)$title == root_token
+              , "#FF33FFFF"
+              , c(`0%` = "#33333355", `25%` = "#CDECDE99", `50%` = "#5CAC5CAA", `75%` = "#5C5CACCC", `100%` = "#0C0CFCCC")[as.character(.colors)]
+              ) |> 
+            unname() |> 
+            as.list()
+          
+          comment(g) <- glue::glue(
+            .sep = "\n"
+            , "Mass is defined as a function of token-weighted page rank."
+            , "Size is defined as a function of 'in'-degree and mass."
+            , "Color is defined as a function of 'in'-degree quantiles."
+            )
+          
+          return(g)
+        })()
  
   # Visualize the graph:
-  out_title <- glue::glue(
-    "Root token: {paste(root_token, collapse = '::')}"
-    , "Max iterations: {max_iter}"
-    , "Top N: {top_n}"
-    , "Similarity threshold: {paste(sim_threshold, collapse = \", \")}"
-    , .sep = " | "
-    )
+    out_title <- glue::glue(
+      "Root token: {paste(root_token, collapse = '::')}"
+      , "Max iterations: {max_iter}"
+      , "Top N: {top_n}"
+      , "Similarity threshold: {paste(sim_threshold, collapse = \", \")}"
+      , .sep = " | "
+      )
   
-  graph_viz <- viz_graph |>
-    visNetwork::visIgraph(physics = TRUE) |>
+  # Dynamically set visNetwork objects:
+    graph_viz <- viz_graph
+
+    if (is.logical(physics)){
+      graph_viz <- visNetwork::visIgraph(viz_graph, physics = physics)
+    } else if (is.list(physics)){
+      graph_viz <- rlang::inject(visNetwork::visIgraph(viz_graph, physics = TRUE) |>
+        visNetwork::visPhysics(!!!physics))
+    } else {
+      graph_viz <- visNetwork::visIgraph(viz_graph)
+    }
+  
+    graph_viz <- graph_viz |>
       visNetwork::visLayout(improvedLayout = TRUE) |>
-      visNetwork::visPhysics(
-        solver = "barnesHut"
-        , barnesHut = list(
-            centralGravity = 0.05
-            , gravitationalConstant = -300
-            , springLength = 150
-            , springConstant = 0.1
-            , damping = 0.5
-            , avoidOverlap = 0.8
-            )
-        , timestep = 0.1
-        ) |>
       visNetwork::visOptions(
         width = 2180
         , height = 1440
         , collapse = TRUE
         , selectedBy = list(variable = "group", multiple = TRUE)
         ) |>
-        htmlwidgets::prependContent(htmltools::tags$h2(out_title))
+      htmlwidgets::prependContent(htmltools::tags$h2(out_title))
   
   # Return the graph, the visualization, the recursion output, and the first four arguments of function `concept_graph()`:
-  mget(c(
-    "root_token"
-    , "token_weights"
-    , "output"
-    , "viz_graph"
-    , "graph_viz"
-    )) |>
-    append(list(params = mget(c("max_iter", "top_n", "sim_threshold"))))
+    mget(c("root_token", "token_weights", "output", "viz_graph", "graph_viz")) |>
+      append(list(params = mget(c("max_iter", "top_n", "sim_threshold"))))
 }
