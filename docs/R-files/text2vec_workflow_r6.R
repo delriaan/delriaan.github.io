@@ -709,7 +709,7 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
       purrr::map_dbl(\(o){ o <- unlist(o); weighted.mean(o, w = seq_along(o)) })
 
   # Create the concept graph:
-    viz_graph <- output |> 
+    i_graph <- output |> 
       names() |> 
       # Reverse the order since the creation of `output` is a queue:
       rev() |>
@@ -724,7 +724,8 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
             purrr::modify_if(\(x) is.na(x) | is.nan(x), ~0.01)
           
           igraph::V(g)$prank <- igraph::page_rank(g, personalized = w)$vector
-          igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> apply(2, sum, na.rm = TRUE), of.max)
+          igraph::V(g)$mass <- 50 * book.of.utilities::ratio(object$tf_idf[, igraph::V(g)$name, drop = FALSE] |> 
+            apply(2, sum, na.rm = TRUE), of.max)
           igraph::V(g)$size <- igraph::degree(g, mode = "in") + igraph::V(g)$mass
           igraph::V(g)$mass <- purrr::modify_if(igraph::V(g)$mass, igraph::V(g)$title == root_token, \(x) max(x) * 10)
           
@@ -759,8 +760,11 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
             , "Color is defined as a function of 'in'-degree quantiles."
             )
           
+          igraph::E(g)$title <- igraph::ends(graph = g, es = igraph::E(g)) |>
+            apply(1, \(x) sprintf("{%s %s %s}", x[1], ifelse(igraph::is.directed(g), "->", ":"), x[2]))
+        
           return(g)
-        })()
+      })()
  
   # Visualize the graph:
     out_title <- glue::glue(
@@ -772,18 +776,17 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
       )
   
   # Dynamically set visNetwork objects:
-    graph_viz <- viz_graph
-
+  makeActiveBinding("viz_graph", \(){
     if (is.logical(physics)){
-      graph_viz <- visNetwork::visIgraph(viz_graph, physics = physics)
+      graph_viz <- visNetwork::visIgraph(i_graph, physics = physics)
     } else if (is.list(physics)){
-      graph_viz <- rlang::inject(visNetwork::visIgraph(viz_graph, physics = TRUE) |>
+      graph_viz <- rlang::inject(visNetwork::visIgraph(i_graph, physics = TRUE) |>
         visNetwork::visPhysics(!!!physics))
     } else {
-      graph_viz <- visNetwork::visIgraph(viz_graph)
+      graph_viz <- visNetwork::visIgraph(i_graph)
     }
   
-    graph_viz <- graph_viz |>
+    graph_viz |>
       visNetwork::visLayout(improvedLayout = TRUE) |>
       visNetwork::visOptions(
         width = 2180
@@ -792,8 +795,11 @@ concept_graph <- \(root_token, max_iter = 2L, top_n = 3L, sim_threshold = 0.1, o
         , selectedBy = list(variable = "group", multiple = TRUE)
         ) |>
       htmlwidgets::prependContent(htmltools::tags$h2(out_title))
+    }, env = environment())
   
   # Return the graph, the visualization, the recursion output, and the first four arguments of function `concept_graph()`:
-    mget(c("root_token", "token_weights", "output", "viz_graph", "graph_viz")) |>
-      append(list(params = mget(c("max_iter", "top_n", "sim_threshold"))))
+    # mget(c("root_token", "token_weights", "output", "i_graph", "graph_viz")) |>
+    #   append(list(params = mget(c("max_iter", "top_n", "sim_threshold"))))
+  rm(n)
+  environment()
 }
